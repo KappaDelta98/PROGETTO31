@@ -656,6 +656,8 @@
       log('Ricevuti dati live dal database.');
     }
 
+    window.updateFromRemote = updateFromRemote;
+
     // Esempio manuale da console browser:
     // updateFromRemote({ temperature: 21.5, humidity: 49, soil: 66, tank: 80 });
 
@@ -663,6 +665,43 @@
     log('Dashboard caricata in modalità demo.');
     setInterval(demoTick, 3000);
     window.addEventListener('resize', drawChart);
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
+      authDomain: "vasotest-7133a.firebaseapp.com",
+      databaseURL: "https://vasotest-7133a-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "vasotest-7133a",
+      storageBucket: "vasotest-7133a.firebasestorage.app",
+      messagingSenderId: "291811803411",
+      appId: "1:291811803411:web:c01e2b199a7f812b911ae6",
+      measurementId: "G-WRRE3DV7DR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const latestRef = ref(db, "vaso/latest");
+
+    onValue(latestRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        console.log("Dati Firebase ricevuti:", data);
+
+        if (typeof window.updateFromRemote === "function") {
+          window.updateFromRemote(data);
+        } else {
+          console.error("La funzione updateFromRemote non è disponibile globalmente.");
+        }
+      } else {
+        console.warn("Nessun dato trovato in /vaso/latest");
+      }
+    }, (error) => {
+      console.error("Errore lettura Firebase:", error);
+    });
   </script>
 </body>
 </html>
