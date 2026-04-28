@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VASO IDRO - Dashboard Online</title>
+  <style>
+    :root {
+      --bg: #07130f;
+      --panel: rgba(14, 31, 24, 0.86);
+      --panel-2: rgba(19, 44, 34, 0.88);
+      --text: #eafff4;
+      --muted: #8ebca6;
+      --line: rgba(130, 255, 190, 0.18);
+      --green: #38ff9c;
+      --green-2: #00c875;
+      --yellow: #ffd166;
+      --orange: #ff9f1c;
+      --red: #ff4d6d;
+      --cyan: #45d3ff;
+      --blue: #6587ff;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
+        radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
+        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%);
+      overflow-x: hidden;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(4, 15, 10, 0.76);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(56,255,156,.24), rgba(69,211,255,.12));
+      border: 1px solid rgba(56,255,156,.35);
+      box-shadow: 0 0 30px rgba(56,255,156,.14);
+      font-size: 25px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.1rem, 3vw, 1.7rem);
+      letter-spacing: 0.04em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(10, 27, 20, 0.72);
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 0.88rem;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 15px var(--green);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 22px 18px 42px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .overview {
+      min-height: 340px;
+      position: relative;
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .overview::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      right: -110px;
+      bottom: -150px;
+      background: radial-gradient(circle, rgba(56,255,156,.13), transparent 68%);
+      pointer-events: none;
+    }
+
+    .kicker {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 800;
+      font-size: 0.74rem;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: clamp(2.1rem, 7vw, 4.6rem);
+      line-height: 0.92;
+      margin: 0 0 16px;
+      letter-spacing: -0.06em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 0 0 22px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button, .button {
+      border: 0;
+      cursor: pointer;
+      color: #03100b;
+      background: linear-gradient(135deg, var(--green), #9dffca);
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-weight: 800;
+      box-shadow: 0 12px 22px rgba(56,255,156,.16);
+    }
+
+    button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .plant-visual {
+      position: relative;
+      width: min(220px, 100%);
+      aspect-ratio: 1/1.22;
+      margin: auto;
+    }
+
+    .leaf {
+      position: absolute;
+      border-radius: 100% 0 100% 0;
+      background: linear-gradient(135deg, #38ff9c, #0c8f56);
+      transform-origin: bottom right;
+      box-shadow: inset 8px 8px 18px rgba(255,255,255,.16), 0 18px 35px rgba(0,0,0,.22);
+    }
+
+    .leaf.l1 { width: 95px; height: 56px; left: 44px; top: 40px; transform: rotate(-38deg); }
+    .leaf.l2 { width: 105px; height: 60px; right: 28px; top: 80px; transform: rotate(28deg) scaleX(-1); }
+    .leaf.l3 { width: 82px; height: 48px; left: 62px; top: 108px; transform: rotate(-18deg); opacity: .9; }
+    .stem { position: absolute; left: 50%; top: 80px; width: 10px; height: 140px; border-radius: 999px; background: linear-gradient(#52ffad, #0b7f4d); transform: translateX(-50%); }
+    .pot { position: absolute; bottom: 0; left: 28px; right: 28px; height: 116px; background: linear-gradient(180deg, #173a2b, #0d241a); border: 1px solid rgba(56,255,156,.2); border-radius: 18px 18px 45px 45px; box-shadow: inset 0 14px 28px rgba(255,255,255,.04); }
+    .water { position: absolute; left: 42px; right: 42px; bottom: 22px; height: 34px; border-radius: 0 0 32px 32px; background: linear-gradient(180deg, rgba(69,211,255,.35), rgba(69,211,255,.08)); }
+
+    .side-panel { padding: 22px; }
+    .side-panel h2, .section-title { margin: 0 0 14px; font-size: 1.1rem; }
+
+    .big-number {
+      font-size: clamp(3rem, 8vw, 5rem);
+      line-height: 1;
+      margin: 18px 0 6px;
+      letter-spacing: -0.07em;
+    }
+
+    .muted { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .metric {
+      padding: 20px;
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      font-size: 1.35rem;
+    }
+
+    .metric h3 { margin: 0; font-size: .94rem; color: var(--muted); font-weight: 700; }
+    .value { font-size: 2.15rem; font-weight: 900; letter-spacing: -0.05em; margin-top: 12px; }
+    .unit { font-size: 1rem; color: var(--muted); letter-spacing: 0; }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      margin-top: 13px;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green-2), var(--green));
+      transition: width .45s ease, background .45s ease;
+    }
+
+    .wide {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .chart-card { padding: 22px; }
+    canvas { width: 100%; height: 260px; display: block; }
+
+    .log {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #b7f9d7;
+      font-size: .82rem;
+      line-height: 1.55;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding: 18px 4px 0;
+      color: var(--muted);
+      font-size: .85rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .offline .dot { background: var(--red); box-shadow: 0 0 15px var(--red); }
+    .offline #connectionText { color: var(--red); }
+
+    @media (max-width: 940px) {
+      .hero, .overview, .wide { grid-template-columns: 1fr; }
+      .plant-visual { max-width: 190px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { align-items: flex-start; }
+      .status-pill { font-size: .76rem; padding: 8px 10px; }
+      .grid { grid-template-columns: 1fr; }
+      .overview { padding: 21px; }
+      .metric { min-height: 155px; }
+      .actions button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">🌱</div>
+        <div>
+          <h1>VASO IDRO</h1>
+          <p>Dashboard online controllo vaso</p>
+        </div>
+      </div>
+      <div id="statusPill" class="status-pill">
+        <span class="dot"></span>
+        <span id="connectionText">Modalità demo</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="card overview">
+        <div>
+          <div class="kicker">Sistema attivo</div>
+          <h2 class="title">Controllo vaso in tempo reale</h2>
+          <p class="subtitle">Questa pagina è pronta per essere pubblicata online gratis. Al momento mostra dati simulati; quando colleghiamo l'ESP a Firebase, gli stessi riquadri riceveranno dati reali.</p>
+          <div class="actions">
+            <button onclick="toggleDemo()" id="demoBtn">Ferma demo</button>
+            <button class="secondary" onclick="resetHistory()">Reset grafico</button>
+          </div>
+        </div>
+        <div class="plant-visual" aria-hidden="true">
+          <div class="stem"></div>
+          <div class="leaf l1"></div>
+          <div class="leaf l2"></div>
+          <div class="leaf l3"></div>
+          <div class="pot"></div>
+          <div class="water" id="waterVisual"></div>
+        </div>
+      </div>
+
+      <div class="card side-panel">
+        <h2>Salute pianta</h2>
+        <p class="muted">Indice calcolato da umidità substrato, livello acqua e temperatura.</p>
+        <div class="big-number"><span id="health">--</span><span class="unit">%</span></div>
+        <div class="bar"><div id="healthBar" class="fill"></div></div>
+        <p class="muted" id="advice">In attesa dati...</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card metric">
+        <div>
+          <div class="metric-top"><h3>Temperatura aria</h3><div class="icon">🌡️</div></div>
+          <div class="value"><span id="temp">--</span><span class="unit"> °C</span></div>
+        </div>
+        <div class="bar"><div id="tempBar" class="fill"></div></div>
+      </article>
+
+      <article class="card metric">
+        <div>
+          <div class="metric-top"><h3>Umidità aria</h3><div class="icon">💧</div></div>
+          <div class="value"><span id="hum">--</span><span class="unit"> %</span></div>
+        </div>
+        <div class="bar"><div id="humBar" class="fill"></div></div>
+      </article>
+
+      <article class="card metric">
+        <div>
+          <div class="metric-top"><h3>Umidità substrato</h3><div class="icon">🪴</div></div>
+          <div class="value"><span id="soil">--</span><span class="unit"> %</span></div>
+        </div>
+        <div class="bar"><div id="soilBar" class="fill"></div></div>
+      </article>
+
+      <article class="card metric">
+        <div>
+          <div class="metric-top"><h3>Livello serbatoio</h3><div class="icon">🚰</div></div>
+          <div class="value"><span id="tank">--</span><span class="unit"> %</span></div>
+        </div>
+        <div class="bar"><div id="tankBar" class="fill"></div></div>
+      </article>
+    </section>
+
+    <section class="wide">
+      <article class="card chart-card">
+        <h2 class="section-title">Andamento umidità substrato</h2>
+        <canvas id="chart" width="900" height="320"></canvas>
+      </article>
+
+      <article class="card chart-card">
+        <h2 class="section-title">Log sistema</h2>
+        <div class="log" id="log"></div>
+      </article>
+    </section>
+
+    <div class="footer">
+      <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
+      <span>Versione pagina: online-demo v1.0</span>
+    </div>
+  </main>
+
+  <script>
+    // =============================================================
+    // CONFIGURAZIONE DATI
+    // =============================================================
+    // Per ora la dashboard usa dati demo.
+    // Nel prossimo step collegheremo Firebase Realtime Database così:
+    // /vaso/latest = {
+    //   temperature: 21.4,
+    //   humidity: 48,
+    //   soil: 63,
+    //   tank: 78,
+    //   timestamp: 1710000000000
+    // }
+
+    const state = {
+      demo: true,
+      data: {
+        temperature: 21.0,
+        humidity: 47,
+        soil: 62,
+        tank: 82,
+        timestamp: Date.now()
+      },
+      history: []
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function fmt(v, decimals = 0) { return Number(v).toFixed(decimals).replace('.', ','); }
+
+    function colorForPercent(v) {
+      if (v < 25) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
+      if (v < 45) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
+      return 'linear-gradient(90deg, #00c875, #38ff9c)';
+    }
+
+    function colorForTemp(v) {
+      if (v < 12 || v > 34) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
+      if (v < 16 || v > 30) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
+      return 'linear-gradient(90deg, #00c875, #38ff9c)';
+    }
+
+    function setBar(id, value, color) {
+      const node = el(id);
+      node.style.width = clamp(value, 0, 100) + '%';
+      if (color) node.style.background = color;
+    }
+
+    function computeHealth(d) {
+      const soilScore = 100 - Math.abs(68 - d.soil) * 2.0;
+      const tankScore = d.tank;
+      const tempScore = 100 - Math.abs(23 - d.temperature) * 5.0;
+      const humScore = 100 - Math.abs(55 - d.humidity) * 1.1;
+      return Math.round(clamp((soilScore * 0.42) + (tankScore * 0.22) + (tempScore * 0.2) + (humScore * 0.16), 0, 100));
+    }
+
+    function adviceFor(d, health) {
+      if (d.tank < 20) return 'Serbatoio basso: conviene ricaricare acqua.';
+      if (d.soil < 35) return 'Substrato secco: serve irrigazione o controllo pompa.';
+      if (d.soil > 85) return 'Substrato molto umido: ridurre irrigazione e controllare drenaggio.';
+      if (d.temperature > 30) return 'Temperatura alta: evitare sole diretto nelle ore calde.';
+      if (health > 80) return 'Condizione buona: parametri nella zona ideale.';
+      return 'Parametri discreti: continua il monitoraggio.';
+    }
+
+    function render() {
+      const d = state.data;
+      const health = computeHealth(d);
+
+      el('temp').textContent = fmt(d.temperature, 1);
+      el('hum').textContent = fmt(d.humidity);
+      el('soil').textContent = fmt(d.soil);
+      el('tank').textContent = fmt(d.tank);
+      el('health').textContent = fmt(health);
+      el('advice').textContent = adviceFor(d, health);
+      el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
+
+      setBar('tempBar', clamp((d.temperature / 40) * 100, 0, 100), colorForTemp(d.temperature));
+      setBar('humBar', d.humidity, colorForPercent(d.humidity));
+      setBar('soilBar', d.soil, colorForPercent(d.soil));
+      setBar('tankBar', d.tank, colorForPercent(d.tank));
+      setBar('healthBar', health, colorForPercent(health));
+
+      el('waterVisual').style.height = (18 + clamp(d.tank, 0, 100) * 0.55) + 'px';
+      drawChart();
+    }
+
+    function log(message) {
+      const line = `[${new Date().toLocaleTimeString('it-IT')}] ${message}`;
+      el('log').innerHTML = line + '<br>' + el('log').innerHTML;
+    }
+
+    function pushHistory() {
+      state.history.push({ t: Date.now(), soil: state.data.soil });
+      if (state.history.length > 48) state.history.shift();
+    }
+
+    function drawChart() {
+      const canvas = el('chart');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.035)';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = 24 + i * ((h - 48) / 4);
+        ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(w - 20, y); ctx.stroke();
+      }
+
+      ctx.fillStyle = 'rgba(234,255,244,0.55)';
+      ctx.font = '22px system-ui';
+      ctx.fillText('100%', 8, 32);
+      ctx.fillText('0%', 20, h - 24);
+
+      const data = state.history;
+      if (data.length < 2) return;
+
+      const left = 46, right = w - 22, top = 22, bottom = h - 28;
+      const step = (right - left) / (data.length - 1);
+
+      const grad = ctx.createLinearGradient(0, top, 0, bottom);
+      grad.addColorStop(0, 'rgba(56,255,156,0.65)');
+      grad.addColorStop(1, 'rgba(56,255,156,0.02)');
+
+      ctx.beginPath();
+      data.forEach((p, i) => {
+        const x = left + i * step;
+        const y = bottom - (clamp(p.soil, 0, 100) / 100) * (bottom - top);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.lineTo(right, bottom);
+      ctx.lineTo(left, bottom);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.beginPath();
+      data.forEach((p, i) => {
+        const x = left + i * step;
+        const y = bottom - (clamp(p.soil, 0, 100) / 100) * (bottom - top);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#38ff9c';
+      ctx.lineWidth = 4;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    function demoTick() {
+      if (!state.demo) return;
+      const d = state.data;
+      d.temperature = clamp(d.temperature + (Math.random() - 0.48) * 0.35, 16, 31);
+      d.humidity = clamp(d.humidity + (Math.random() - 0.5) * 1.2, 35, 78);
+      d.soil = clamp(d.soil + (Math.random() - 0.52) * 1.8, 22, 88);
+      d.tank = clamp(d.tank - Math.random() * 0.22, 0, 100);
+      d.timestamp = Date.now();
+      pushHistory();
+      render();
+    }
+
+    function toggleDemo() {
+      state.demo = !state.demo;
+      el('demoBtn').textContent = state.demo ? 'Ferma demo' : 'Avvia demo';
+      el('connectionText').textContent = state.demo ? 'Modalità demo' : 'Demo ferma';
+      el('statusPill').classList.toggle('offline', !state.demo);
+      log(state.demo ? 'Demo riavviata.' : 'Demo fermata. Pronta per dati reali.');
+    }
+
+    function resetHistory() {
+      state.history = [];
+      for (let i = 0; i < 16; i++) {
+        state.history.push({ t: Date.now() - (16 - i) * 5000, soil: clamp(state.data.soil + (Math.random() - 0.5) * 8, 0, 100) });
+      }
+      render();
+      log('Grafico reinizializzato.');
+    }
+
+    // =============================================================
+    // PUNTO DI INGRESSO PER DATI REALI
+    // =============================================================
+    // Quando colleghiamo Firebase, basterà chiamare questa funzione
+    // ogni volta che arriva un nuovo snapshot dal database.
+    function updateFromRemote(payload) {
+      state.demo = false;
+      el('demoBtn').textContent = 'Avvia demo';
+      el('connectionText').textContent = 'Dati live';
+      el('statusPill').classList.remove('offline');
+
+      state.data = {
+        temperature: Number(payload.temperature ?? payload.temp ?? state.data.temperature),
+        humidity: Number(payload.humidity ?? payload.hum ?? state.data.humidity),
+        soil: Number(payload.soil ?? payload.soilHumidity ?? state.data.soil),
+        tank: Number(payload.tank ?? payload.waterLevel ?? state.data.tank),
+        timestamp: Number(payload.timestamp ?? Date.now())
+      };
+
+      pushHistory();
+      render();
+      log('Ricevuti dati live dal database.');
+    }
+
+    // Esempio manuale da console browser:
+    // updateFromRemote({ temperature: 21.5, humidity: 49, soil: 66, tank: 80 });
+
+    resetHistory();
+    log('Dashboard caricata in modalità demo.');
+    setInterval(demoTick, 3000);
+    window.addEventListener('resize', drawChart);
+  </script>
+</body>
+</html>
