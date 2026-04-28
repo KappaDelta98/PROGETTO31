@@ -303,19 +303,6 @@
     .chart-card { padding: 22px; }
     canvas { width: 100%; height: 260px; display: block; }
 
-    .log {
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.08);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      color: #b7f9d7;
-      font-size: .82rem;
-      line-height: 1.55;
-      max-height: 260px;
-      overflow: auto;
-    }
-
     .footer {
       margin-top: 18px;
       padding: 18px 4px 0;
@@ -432,13 +419,13 @@
 
     <section class="wide">
       <article class="card chart-card">
-        <h2 class="section-title">Andamento umidità substrato</h2>
-        <canvas id="chart" width="900" height="320"></canvas>
+        <h2 class="section-title">Andamento temperatura aria</h2>
+        <canvas id="tempChart" width="900" height="320"></canvas>
       </article>
 
       <article class="card chart-card">
-        <h2 class="section-title">Log sistema</h2>
-        <div class="log" id="log"></div>
+        <h2 class="section-title">Andamento umidità aria</h2>
+        <canvas id="humChart" width="900" height="320"></canvas>
       </article>
     </section>
 
@@ -526,18 +513,25 @@
       drawChart();
     }
 
+    // Console di sistema in background invece che a video
     function log(message) {
-      const line = `[${new Date().toLocaleTimeString('it-IT')}] ${message}`;
-      el('log').innerHTML = line + '<br>' + el('log').innerHTML;
+      console.log(`[${new Date().toLocaleTimeString('it-IT')}] ${message}`);
     }
 
     function pushHistory() {
-      state.history.push({ t: Date.now(), soil: state.data.soil });
+      state.history.push({ 
+        t: Date.now(), 
+        temp: state.data.temperature, 
+        hum: state.data.humidity 
+      });
+      // Manteniamo 48 rilevazioni a schermo
       if (state.history.length > 48) state.history.shift();
     }
 
-    function drawChart() {
-      const canvas = el('chart');
+    // Funzione generica per disegnare sia il grafico Temperatura che Umidità
+    function drawGenericChart(canvasId, dataKey, minY, maxY, strokeColor, fillStart, fillEnd, unit) {
+      const canvas = el(canvasId);
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
@@ -548,30 +542,46 @@
 
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
+      // Adattato per lasciare spazio per l'asse X
       for (let i = 0; i <= 4; i++) {
-        const y = 24 + i * ((h - 48) / 4);
-        ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(w - 20, y); ctx.stroke();
+        const y = 24 + i * ((h - 52) / 4);
+        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
       }
 
       ctx.fillStyle = 'rgba(234,255,244,0.55)';
-      ctx.font = '22px system-ui';
-      ctx.fillText('100%', 8, 32);
-      ctx.fillText('0%', 20, h - 24);
+      ctx.font = '16px system-ui';
+      ctx.fillText(maxY + unit, 8, 32);
+      ctx.fillText(minY + unit, 14, h - 34);
 
       const data = state.history;
       if (data.length < 2) return;
 
-      const left = 46, right = w - 22, top = 22, bottom = h - 28;
+      const left = 46, right = w - 22, top = 22, bottom = h - 38;
       const step = (right - left) / (data.length - 1);
 
+      // Disegna Asse X (Ore)
+      ctx.fillStyle = 'rgba(234,255,244,0.4)';
+      ctx.font = '12px system-ui';
+      ctx.textAlign = 'center';
+      for (let i = 0; i < data.length; i++) {
+        // Disegniamo le ore in modo bilanciato (circa 8 etichette)
+        if (i % Math.ceil(data.length / 8) === 0 || i === data.length - 1) {
+          const d = new Date(data[i].t);
+          const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+          ctx.fillText(timeStr, left + i * step, h - 10);
+        }
+      }
+      ctx.textAlign = 'left';
+
       const grad = ctx.createLinearGradient(0, top, 0, bottom);
-      grad.addColorStop(0, 'rgba(56,255,156,0.65)');
-      grad.addColorStop(1, 'rgba(56,255,156,0.02)');
+      grad.addColorStop(0, fillStart);
+      grad.addColorStop(1, fillEnd);
 
       ctx.beginPath();
       data.forEach((p, i) => {
         const x = left + i * step;
-        const y = bottom - (clamp(p.soil, 0, 100) / 100) * (bottom - top);
+        const val = clamp(p[dataKey], minY, maxY);
+        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       });
       ctx.lineTo(right, bottom);
@@ -583,14 +593,22 @@
       ctx.beginPath();
       data.forEach((p, i) => {
         const x = left + i * step;
-        const y = bottom - (clamp(p.soil, 0, 100) / 100) * (bottom - top);
+        const val = clamp(p[dataKey], minY, maxY);
+        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = '#38ff9c';
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 4;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
       ctx.stroke();
+    }
+
+    function drawChart() {
+      // Scala da 0 a 50 per la Temperatura
+      drawGenericChart('tempChart', 'temp', 0, 50, '#ffd166', 'rgba(255,209,102,0.65)', 'rgba(255,209,102,0.02)', '°C');
+      // Scala da 0 a 100 per l'Umidità
+      drawGenericChart('humChart', 'hum', 0, 100, '#45d3ff', 'rgba(69,211,255,0.65)', 'rgba(69,211,255,0.02)', '%');
     }
 
     function demoTick() {
@@ -615,8 +633,14 @@
 
     function resetHistory() {
       state.history = [];
-      for (let i = 0; i < 16; i++) {
-        state.history.push({ t: Date.now() - (16 - i) * 5000, soil: clamp(state.data.soil + (Math.random() - 0.5) * 8, 0, 100) });
+      const now = Date.now();
+      // Creiamo uno storico fake che simula dati raccolti ogni 30 minuti nelle ultime 24 ore
+      for (let i = 0; i < 48; i++) {
+        state.history.push({ 
+          t: now - (48 - i) * 1800000, 
+          temp: clamp(state.data.temperature + (Math.random() - 0.5) * 8, 15, 35),
+          hum: clamp(state.data.humidity + (Math.random() - 0.5) * 15, 30, 80)
+        });
       }
       render();
       log('Grafico reinizializzato.');
