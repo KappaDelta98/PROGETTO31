@@ -347,7 +347,7 @@
       </div>
       <div id="statusPill" class="status-pill">
         <span class="dot"></span>
-        <span id="connectionText">Modalità demo</span>
+        <span id="connectionText">In attesa...</span>
       </div>
     </div>
   </header>
@@ -360,8 +360,6 @@
           <h2 class="title">Controllo vaso in tempo reale</h2>
           <p class="subtitle">Dati reali, live, controllare limiti di storage su FB.</p>
           <div class="actions">
-            <button onclick="toggleDemo()" id="demoBtn">Ferma demo</button>
-            <button class="secondary" onclick="resetHistory()">Reset grafico</button>
             <button class="secondary" onclick="location.href='grafici.html'">Grafici</button>
             <button class="secondary" onclick="location.href='consigli.html'">Consigli</button>
           </div>
@@ -433,23 +431,13 @@
 
     <div class="footer">
       <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
-      <span>Versione pagina: online-demo v1.0</span>
+      <span>Versione pagina: v1.0</span>
     </div>
   </main>
 
   <script>
-    // =============================================================
-    // CONFIGURAZIONE DATI
-    // =============================================================
     const state = {
-      demo: true,
-      data: {
-        temperature: 21.0,
-        humidity: 47,
-        soil: 62,
-        tank: 82,
-        timestamp: Date.now()
-      },
+      data: null,
       history: []
     };
 
@@ -495,6 +483,8 @@
 
     function render() {
       const d = state.data;
+      if (!d) return;
+
       const health = computeHealth(d);
 
       el('temp').textContent = fmt(d.temperature, 1);
@@ -515,22 +505,20 @@
       drawChart();
     }
 
-    // Console di sistema in background invece che a video
     function log(message) {
       console.log(`[${new Date().toLocaleTimeString('it-IT')}] ${message}`);
     }
 
     function pushHistory() {
-      state.history.push({ 
-        t: Date.now(), 
-        temp: state.data.temperature, 
-        hum: state.data.humidity 
+      if (!state.data) return;
+      state.history.push({
+        t: state.data.timestamp,
+        temp: state.data.temperature,
+        hum: state.data.humidity
       });
-      // Manteniamo 48 rilevazioni a schermo
       if (state.history.length > 48) state.history.shift();
     }
 
-    // Funzione generica per disegnare sia il grafico Temperatura che Umidità
     function drawGenericChart(canvasId, dataKey, minY, maxY, strokeColor, fillStart, fillEnd, unit) {
       const canvas = el(canvasId);
       if (!canvas) return;
@@ -544,7 +532,6 @@
 
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
-      // Adattato per lasciare spazio per l'asse X
       for (let i = 0; i <= 4; i++) {
         const y = 24 + i * ((h - 52) / 4);
         ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
@@ -561,12 +548,10 @@
       const left = 46, right = w - 22, top = 22, bottom = h - 38;
       const step = (right - left) / (data.length - 1);
 
-      // Disegna Asse X (Ore)
       ctx.fillStyle = 'rgba(234,255,244,0.4)';
       ctx.font = '12px system-ui';
       ctx.textAlign = 'center';
       for (let i = 0; i < data.length; i++) {
-        // Disegniamo le ore in modo bilanciato (circa 8 etichette)
         if (i % Math.ceil(data.length / 8) === 0 || i === data.length - 1) {
           const d = new Date(data[i].t);
           const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
@@ -607,58 +592,18 @@
     }
 
     function drawChart() {
-      // Scala da 0 a 50 per la Temperatura
       drawGenericChart('tempChart', 'temp', 0, 50, '#ffd166', 'rgba(255,209,102,0.65)', 'rgba(255,209,102,0.02)', '°C');
-      // Scala da 0 a 100 per l'Umidità
       drawGenericChart('humChart', 'hum', 0, 100, '#45d3ff', 'rgba(69,211,255,0.65)', 'rgba(69,211,255,0.02)', '%');
     }
 
-    function demoTick() {
-      if (!state.demo) return;
-      const d = state.data;
-      d.temperature = clamp(d.temperature + (Math.random() - 0.48) * 0.35, 16, 31);
-      d.humidity = clamp(d.humidity + (Math.random() - 0.5) * 1.2, 35, 78);
-      d.soil = clamp(d.soil + (Math.random() - 0.52) * 1.8, 22, 88);
-      d.tank = clamp(d.tank - Math.random() * 0.22, 0, 100);
-      d.timestamp = Date.now();
-      pushHistory();
-      render();
-    }
-
-    function toggleDemo() {
-      state.demo = !state.demo;
-      el('demoBtn').textContent = state.demo ? 'Ferma demo' : 'Avvia demo';
-      el('connectionText').textContent = state.demo ? 'Modalità demo' : 'Demo ferma';
-      el('statusPill').classList.toggle('offline', !state.demo);
-      log(state.demo ? 'Demo riavviata.' : 'Demo fermata. Pronta per dati reali.');
-    }
-
-    function resetHistory() {
-      state.history = [];
-      const now = Date.now();
-      // Creiamo uno storico fake che simula dati raccolti ogni 30 minuti nelle ultime 24 ore
-      for (let i = 0; i < 48; i++) {
-        state.history.push({ 
-          t: now - (48 - i) * 1800000, 
-          temp: clamp(state.data.temperature + (Math.random() - 0.5) * 8, 15, 35),
-          hum: clamp(state.data.humidity + (Math.random() - 0.5) * 15, 30, 80)
-        });
-      }
-      render();
-      log('Grafico reinizializzato.');
-    }
-
     function updateFromRemote(payload) {
-      state.demo = false;
-      el('demoBtn').textContent = 'Avvia demo';
       el('connectionText').textContent = 'Dati live';
-      el('statusPill').classList.remove('offline');
 
       state.data = {
-        temperature: Number(payload.temperature ?? payload.temp ?? state.data.temperature),
-        humidity: Number(payload.humidity ?? payload.hum ?? state.data.humidity),
-        soil: Number(payload.soil ?? payload.soilHumidity ?? state.data.soil),
-        tank: Number(payload.tank ?? payload.waterLevel ?? state.data.tank),
+        temperature: Number(payload.temperature ?? payload.temp ?? 0),
+        humidity: Number(payload.humidity ?? payload.hum ?? 0),
+        soil: Number(payload.soil ?? payload.soilHumidity ?? 0),
+        tank: Number(payload.tank ?? payload.waterLevel ?? 0),
         timestamp: Number(payload.timestamp ?? Date.now())
       };
 
@@ -668,10 +613,6 @@
     }
 
     window.updateFromRemote = updateFromRemote;
-
-    resetHistory();
-    log('Dashboard caricata in modalità demo.');
-    setInterval(demoTick, 3000);
     window.addEventListener('resize', drawChart);
   </script>
 
@@ -694,8 +635,7 @@
     const db = getDatabase(app);
     const latestRef = ref(db, "vaso/latest");
 
-    // Frequenza di aggiornamento in millisecondi (es. 10000 = 10 secondi)
-    const intervalloAggiornamento = 10000; 
+    const intervalloAggiornamento = 10000;
 
     async function recuperaDati() {
       try {
@@ -717,10 +657,7 @@
       }
     }
 
-    // Esegue la prima lettura all'apertura della pagina
     recuperaDati();
-
-    // Continua a leggere ogni 10 secondi
     setInterval(recuperaDati, intervalloAggiornamento);
   </script>
 </body>
