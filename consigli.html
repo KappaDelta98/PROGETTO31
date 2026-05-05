@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>VASO IDRO - Consigli Pianta</title>
+  <style>
+    :root {
+      --bg: #07130f;
+      --panel: rgba(14, 31, 24, 0.86);
+      --panel-2: rgba(19, 44, 34, 0.88);
+      --text: #eafff4;
+      --muted: #8ebca6;
+      --line: rgba(130, 255, 190, 0.18);
+      --green: #38ff9c;
+      --green-2: #00c875;
+      --yellow: #ffd166;
+      --orange: #ff9f1c;
+      --red: #ff4d6d;
+      --cyan: #45d3ff;
+      --blue: #6587ff;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
+        radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
+        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    body::-webkit-scrollbar { display: none; }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(4, 15, 10, 0.76);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .back-btn {
+      border: 0;
+      cursor: pointer;
+      color: #03100b;
+      background: linear-gradient(135deg, var(--green), #9dffca);
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      box-shadow: 0 8px 16px rgba(56,255,156,.12);
+      text-decoration: none;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 2.8vw, 1.4rem);
+      letter-spacing: 0.03em;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(10, 27, 20, 0.72);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 18px 36px;
+    }
+
+    .health-card {
+      background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .health-card h2 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .big-number {
+      font-size: clamp(3.2rem, 9vw, 5.5rem);
+      line-height: 1;
+      margin: 16px 0 6px;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+    }
+
+    .health-status {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .status-ottima { color: var(--green); }
+    .status-buona { color: #9dffca; }
+    .status-media { color: var(--yellow); }
+    .status-critica { color: var(--red); }
+
+    .bar {
+      width: 70%;
+      max-width: 320px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      transition: width .5s ease, background .4s ease;
+    }
+
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .param-card {
+      background: linear-gradient(180deg, var(--panel-2), rgba(8, 24, 17, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .param-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .param-info { flex: 1; }
+    .param-name { font-size: 0.82rem; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
+    .param-value { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; }
+    .param-unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .tip-card {
+      background: linear-gradient(180deg, var(--panel-2), rgba(8, 24, 17, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 12px;
+      border-left: 4px solid;
+    }
+
+    .tip-card.ok { border-left-color: var(--green); }
+    .tip-card.warning { border-left-color: var(--yellow); }
+    .tip-card.danger { border-left-color: var(--red); }
+
+    .tip-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tip-icon { font-size: 1.5rem; }
+    .tip-title { font-size: 1rem; font-weight: 800; }
+    .tip-message { font-size: 0.9rem; color: var(--muted); line-height: 1.55; }
+
+    .footer {
+      margin-top: 18px;
+      padding: 14px 4px 0;
+      color: var(--muted);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      .params-grid { grid-template-columns: 1fr; }
+      .big-number { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header>
+    <div class="topbar">
+      <a href="index.html" class="back-btn">&#8592; Home</a>
+      <h1>Consigli Pianta</h1>
+      <div class="status-pill">
+        <span class="dot"></span>
+        <span id="connectionText">Demo</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="health-card">
+      <h2>Salute complessiva</h2>
+      <div class="big-number"><span id="health">--</span>%</div>
+      <div class="health-status" id="healthStatus">In attesa dati...</div>
+      <div class="bar"><div id="healthBar" class="fill"></div></div>
+    </section>
+
+    <section class="params-grid">
+      <div class="param-card">
+        <div class="param-icon">&#127777;</div>
+        <div class="param-info">
+          <div class="param-name">Temperatura</div>
+          <div class="param-value"><span id="pTemp">--</span><span class="param-unit"> °C</span></div>
+        </div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon">&#128167;</div>
+        <div class="param-info">
+          <div class="param-name">Umidità aria</div>
+          <div class="param-value"><span id="pHum">--</span><span class="param-unit"> %</span></div>
+        </div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon">&#127795;</div>
+        <div class="param-info">
+          <div class="param-name">Umidità substrato</div>
+          <div class="param-value"><span id="pSoil">--</span><span class="param-unit"> %</span></div>
+        </div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon">&#128672;</div>
+        <div class="param-info">
+          <div class="param-name">Serbatoio</div>
+          <div class="param-value"><span id="pTank">--</span><span class="param-unit"> %</span></div>
+        </div>
+      </div>
+    </section>
+
+    <h3 class="section-title">Consigli attivi</h3>
+    <div id="tipsContainer"></div>
+
+    <div class="footer">Ultimo aggiornamento: <strong id="lastUpdate">--</strong></div>
+  </main>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
+
+    function colorForPercent(v) {
+      if (v < 25) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
+      if (v < 45) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
+      return 'linear-gradient(90deg, #00c875, #38ff9c)';
+    }
+
+    function computeHealth(d) {
+      const soilScore = 100 - Math.abs(68 - d.soil) * 2.0;
+      const tankScore = d.tank;
+      const tempScore = 100 - Math.abs(23 - d.temperature) * 5.0;
+      const humScore = 100 - Math.abs(55 - d.humidity) * 1.1;
+      return Math.round(clamp((soilScore * 0.42) + (tankScore * 0.22) + (tempScore * 0.2) + (humScore * 0.16), 0, 100));
+    }
+
+    function getAdvice(d) {
+      const tips = [];
+      if (!d) return [{ type: 'warning', icon: '&#9888;', title: 'In attesa dati', message: 'I sensori stanno ancora raccogliendo informazioni. Attendi qualche istante.' }];
+
+      if (d.tank < 20) {
+        tips.push({ type: 'danger', icon: '&#128672;', title: 'Serbatoio quasi vuoto', message: `Livello al ${fmt(d.tank)}%. Riempi il serbatoio al più presto per garantire l'irrigazione automatica alla pianta.` });
+      } else if (d.tank < 50) {
+        tips.push({ type: 'warning', icon: '&#128672;', title: 'Serbatoio in riserva', message: `Livello al ${fmt(d.tank)}%. Considera di riempirlo nelle prossime ore per evitare interruzioni.` });
+      } else {
+        tips.push({ type: 'ok', icon: '&#128672;', title: 'Serbatoio OK', message: `Livello al ${fmt(d.tank)}%. Riserva acqua sufficiente.` });
+      }
+
+      if (d.soil < 35) {
+        tips.push({ type: 'danger', icon: '&#127795;', title: 'Substrato secco', message: `Umidità substrato al ${fmt(d.soil)}%. La pianta ha bisogno di acqua! Verifica il funzionamento della pompa o annaffia manualmente.` });
+      } else if (d.soil > 85) {
+        tips.push({ type: 'warning', icon: '&#127795;', title: 'Substrato troppo umido', message: `Umidità substrato al ${fmt(d.soil)}%. Riduci le annaffiature e controlla il drenaggio per evitare marciume radicale.` });
+      } else {
+        tips.push({ type: 'ok', icon: '&#127795;', title: 'Substrato ottimale', message: `Umidità substrato al ${fmt(d.soil)}%. Terreno nella zona ideale.` });
+      }
+
+      if (d.temperature > 30) {
+        tips.push({ type: 'danger', icon: '&#127777;', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. Sposta la pianta in zona più fresca o aumenta la ventilazione. Evita il sole diretto nelle ore calde.` });
+      } else if (d.temperature < 15) {
+        tips.push({ type: 'warning', icon: '&#127777;', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. Proteggi la pianta dal freddo. La maggior parte delle piante soffre sotto i 15°C.` });
+      } else {
+        tips.push({ type: 'ok', icon: '&#127777;', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Condizione perfetta per la pianta.` });
+      }
+
+      if (d.humidity < 40) {
+        tips.push({ type: 'warning', icon: '&#128167;', title: 'Umidità aria bassa', message: `Umidità al ${fmt(d.humidity)}%. Nebulizza le foglie o posiziona un sottovaso con argilla espansa umida vicino alla pianta.` });
+      } else if (d.humidity > 75) {
+        tips.push({ type: 'warning', icon: '&#128167;', title: 'Umidità aria elevata', message: `Umidità al ${fmt(d.humidity)}%. Troppa umidità può favorire muffe. Aumenta la ventilazione nell'ambiente.` });
+      } else {
+        tips.push({ type: 'ok', icon: '&#128167;', title: 'Umidità aria ideale', message: `Umidità al ${fmt(d.humidity)}%. Livello perfetto.` });
+      }
+
+      return tips;
+    }
+
+    function render(d) {
+      if (!d) return;
+
+      const health = computeHealth(d);
+      el('health').textContent = fmt(health);
+      el('pTemp').textContent = fmt(d.temperature, 1);
+      el('pHum').textContent = fmt(d.humidity);
+      el('pSoil').textContent = fmt(d.soil);
+      el('pTank').textContent = fmt(d.tank);
+      el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
+
+      const statusEl = el('healthStatus');
+      if (health >= 80) { statusEl.textContent = 'Ottima'; statusEl.className = 'health-status status-ottima'; }
+      else if (health >= 60) { statusEl.textContent = 'Buona'; statusEl.className = 'health-status status-buona'; }
+      else if (health >= 40) { statusEl.textContent = 'Media'; statusEl.className = 'health-status status-media'; }
+      else { statusEl.textContent = 'Critica'; statusEl.className = 'health-status status-critica'; }
+
+      el('healthBar').style.width = health + '%';
+      el('healthBar').style.background = colorForPercent(health);
+
+      const tips = getAdvice(d);
+      el('tipsContainer').innerHTML = tips.map(t => `
+        <div class="tip-card ${t.type}">
+          <div class="tip-header">
+            <span class="tip-icon">${t.icon}</span>
+            <span class="tip-title">${t.title}</span>
+          </div>
+          <div class="tip-message">${t.message}</div>
+        </div>
+      `).join('');
+    }
+
+    const demoState = {
+      demo: true,
+      data: { temperature: 22.5, humidity: 52, soil: 58, tank: 72, timestamp: Date.now() }
+    };
+
+    function demoTick() {
+      if (!demoState.demo) return;
+      const d = demoState.data;
+      d.temperature = clamp(d.temperature + (Math.random() - 0.48) * 0.35, 16, 31);
+      d.humidity = clamp(d.humidity + (Math.random() - 0.5) * 1.2, 35, 78);
+      d.soil = clamp(d.soil + (Math.random() - 0.52) * 1.8, 22, 88);
+      d.tank = clamp(d.tank - Math.random() * 0.18, 0, 100);
+      d.timestamp = Date.now();
+      render(d);
+    }
+
+    function updateFromRemote(payload) {
+      demoState.demo = false;
+      el('connectionText').textContent = 'Live';
+
+      const d = {
+        temperature: Number(payload.temperature ?? payload.temp ?? demoState.data.temperature),
+        humidity: Number(payload.humidity ?? payload.hum ?? demoState.data.humidity),
+        soil: Number(payload.soil ?? payload.soilHumidity ?? demoState.data.soil),
+        tank: Number(payload.tank ?? payload.waterLevel ?? demoState.data.tank),
+        timestamp: Number(payload.timestamp ?? Date.now())
+      };
+
+      render(d);
+    }
+
+    window.updateFromRemote = updateFromRemote;
+    render(demoState.data);
+    setInterval(demoTick, 3000);
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
+      authDomain: "vasotest-7133a.firebaseapp.com",
+      databaseURL: "https://vasotest-7133a-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "vasotest-7133a",
+      storageBucket: "vasotest-7133a.firebasestorage.app",
+      messagingSenderId: "291811803411",
+      appId: "1:291811803411:web:c01e2b199a7f812b911ae6",
+      measurementId: "G-WRRE3DV7DR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const latestRef = ref(db, "vaso/latest");
+    const intervalloAggiornamento = 10000;
+
+    async function recuperaDati() {
+      try {
+        const snapshot = await get(latestRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          if (typeof window.updateFromRemote === "function") window.updateFromRemote(data);
+        }
+      } catch (error) { console.error("Errore Firebase:", error); }
+    }
+
+    recuperaDati();
+    setInterval(recuperaDati, intervalloAggiornamento);
+  </script>
+</body>
+</html>
