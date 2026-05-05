@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VASO IDRO - Dashboard Online</title>
-  <style>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>VASO IDRO - Dashboard Online</title>
+        <style>
     :root {
       --bg: #07130f;
       --panel: rgba(14, 31, 24, 0.86);
@@ -332,110 +332,136 @@
       .actions button { flex: 1; }
     }
   </style>
-</head>
-<body>
-  <div class="noise"></div>
-
-  <header>
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo">🌱</div>
-        <div>
-          <h1>VASO IDRO</h1>
-          <p>Dashboard online controllo vaso</p>
-        </div>
-      </div>
-      <div id="statusPill" class="status-pill">
-        <span class="dot"></span>
-        <span id="connectionText">In attesa...</span>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="card overview">
-        <div>
-          <div class="kicker">Sistema attivo</div>
-          <h2 class="title">Controllo vaso in tempo reale</h2>
-          <p class="subtitle">Dati reali, live, controllare limiti di storage su FB.</p>
-          <div class="actions">
-            <button class="secondary" onclick="location.href='grafici.html'">Grafici</button>
-            <button class="secondary" onclick="location.href='consigli.html'">Consigli</button>
-          </div>
-        </div>
-        <div class="plant-visual" aria-hidden="true">
-          <div class="stem"></div>
-          <div class="leaf l1"></div>
-          <div class="leaf l2"></div>
-          <div class="leaf l3"></div>
-          <div class="pot"></div>
-          <div class="water" id="waterVisual"></div>
-        </div>
-      </div>
-
-      <div class="card side-panel">
-        <h2>Salute pianta</h2>
-        <p class="muted">Indice calcolato da umidità substrato, livello acqua e temperatura.</p>
-        <div class="big-number"><span id="health">--</span><span class="unit">%</span></div>
-        <div class="bar"><div id="healthBar" class="fill"></div></div>
-        <p class="muted" id="advice">In attesa dati...</p>
-      </div>
-    </section>
-
-    <section class="grid">
-      <article class="card metric">
-        <div>
-          <div class="metric-top"><h3>Temperatura aria</h3><div class="icon">🌡️</div></div>
-          <div class="value"><span id="temp">--</span><span class="unit"> °C</span></div>
-        </div>
-        <div class="bar"><div id="tempBar" class="fill"></div></div>
-      </article>
-
-      <article class="card metric">
-        <div>
-          <div class="metric-top"><h3>Umidità aria</h3><div class="icon">💧</div></div>
-          <div class="value"><span id="hum">--</span><span class="unit"> %</span></div>
-        </div>
-        <div class="bar"><div id="humBar" class="fill"></div></div>
-      </article>
-
-      <article class="card metric">
-        <div>
-          <div class="metric-top"><h3>Umidità substrato</h3><div class="icon">🪴</div></div>
-          <div class="value"><span id="soil">--</span><span class="unit"> %</span></div>
-        </div>
-        <div class="bar"><div id="soilBar" class="fill"></div></div>
-      </article>
-
-      <article class="card metric">
-        <div>
-          <div class="metric-top"><h3>Livello serbatoio</h3><div class="icon">🚰</div></div>
-          <div class="value"><span id="tank">--</span><span class="unit"> %</span></div>
-        </div>
-        <div class="bar"><div id="tankBar" class="fill"></div></div>
-      </article>
-    </section>
-
-    <section class="wide">
-      <article class="card chart-card">
-        <h2 class="section-title">Andamento temperatura aria</h2>
-        <canvas id="tempChart" width="900" height="320"></canvas>
-      </article>
-
-      <article class="card chart-card">
-        <h2 class="section-title">Andamento umidità aria</h2>
-        <canvas id="humChart" width="900" height="320"></canvas>
-      </article>
-    </section>
-
-    <div class="footer">
-      <span>Ultimo aggiornamento: <strong id="05/05/2026 22:33">--</strong></span>
-      <span>Versione pagina: v1.2</span>
-    </div>
-  </main>
-
-  <script>
+    </head>
+    <body>
+        <div class="noise"></div>
+        <header>
+            <div class="topbar">
+                <div class="brand">
+                    <div class="logo">🌱</div>
+                    <div>
+                        <h1>VASO IDRO</h1>
+                        <p>Dashboard online controllo vaso</p>
+                    </div>
+                </div>
+                <div id="statusPill" class="status-pill">
+                    <span class="dot"></span>
+                    <span id="connectionText">In attesa...</span>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="hero">
+                <div class="card overview">
+                    <div>
+                        <div class="kicker">Sistema attivo</div>
+                        <h2 class="title">Controllo vaso in tempo reale</h2>
+                        <p class="subtitle">Dati reali, live, controllare limiti di storage su FB.</p>
+                        <div class="actions">
+                            <button class="secondary" onclick="location.href='grafici.html'">Grafici</button>
+                            <button class="secondary" onclick="location.href='consigli.html'">Consigli</button>
+                        </div>
+                    </div>
+                    <div class="plant-visual" aria-hidden="true">
+                        <div class="stem"></div>
+                        <div class="leaf l1"></div>
+                        <div class="leaf l2"></div>
+                        <div class="leaf l3"></div>
+                        <div class="pot"></div>
+                        <div class="water" id="waterVisual"></div>
+                    </div>
+                </div>
+                <div class="card side-panel">
+                    <h2>Salute pianta</h2>
+                    <p class="muted">Indice calcolato da umidità substrato, livello acqua e temperatura.</p>
+                    <div class="big-number">
+                        <span id="health">--</span>
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="bar">
+                        <div id="healthBar" class="fill"></div>
+                    </div>
+                    <p class="muted" id="advice">In attesa dati...</p>
+                </div>
+            </section>
+            <section class="grid">
+                <article class="card metric">
+                    <div>
+                        <div class="metric-top">
+                            <h3>Temperatura aria</h3>
+                            <div class="icon">🌡️</div>
+                        </div>
+                        <div class="value">
+                            <span id="temp">--</span>
+                            <span class="unit"> °C</span>
+                        </div>
+                    </div>
+                    <div class="bar">
+                        <div id="tempBar" class="fill"></div>
+                    </div>
+                </article>
+                <article class="card metric">
+                    <div>
+                        <div class="metric-top">
+                            <h3>Umidità aria</h3>
+                            <div class="icon">💧</div>
+                        </div>
+                        <div class="value">
+                            <span id="hum">--</span>
+                            <span class="unit"> %</span>
+                        </div>
+                    </div>
+                    <div class="bar">
+                        <div id="humBar" class="fill"></div>
+                    </div>
+                </article>
+                <article class="card metric">
+                    <div>
+                        <div class="metric-top">
+                            <h3>Umidità substrato</h3>
+                            <div class="icon">🪴</div>
+                        </div>
+                        <div class="value">
+                            <span id="soil">--</span>
+                            <span class="unit"> %</span>
+                        </div>
+                    </div>
+                    <div class="bar">
+                        <div id="soilBar" class="fill"></div>
+                    </div>
+                </article>
+                <article class="card metric">
+                    <div>
+                        <div class="metric-top">
+                            <h3>Livello serbatoio</h3>
+                            <div class="icon">🚰</div>
+                        </div>
+                        <div class="value">
+                            <span id="tank">--</span>
+                            <span class="unit"> %</span>
+                        </div>
+                    </div>
+                    <div class="bar">
+                        <div id="tankBar" class="fill"></div>
+                    </div>
+                </article>
+            </section>
+            <section class="wide">
+                <article class="card chart-card">
+                    <h2 class="section-title">Andamento temperatura aria</h2>
+                    <canvas id="tempChart" width="900" height="320"></canvas>
+                </article>
+                <article class="card chart-card">
+                    <h2 class="section-title">Andamento umidità aria</h2>
+                    <canvas id="humChart" width="900" height="320"></canvas>
+                </article>
+            </section>
+            <div class="footer">
+                <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
+                <span>Versione pagina: v1.0</span>
+            </div>
+        </main>
+        <script>
     const state = {
       data: null,
       history: []
@@ -615,8 +641,7 @@
     window.updateFromRemote = updateFromRemote;
     window.addEventListener('resize', drawChart);
   </script>
-
-  <script type="module">
+        <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
@@ -660,5 +685,5 @@
     recuperaDati();
     setInterval(recuperaDati, intervalloAggiornamento);
   </script>
-</body>
+    </body>
 </html>
