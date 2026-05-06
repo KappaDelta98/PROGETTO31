@@ -353,7 +353,7 @@
     }
 
     function render(d) {
-      if (!d) return;
+      if (!d || d.temperature === 0 && d.humidity === 0 && d.soil === 0 && d.tank === 0) return;
       const health = computeHealth(d);
 
       el('health').textContent = fmt(health);
@@ -400,8 +400,6 @@
 
       render(d);
     };
-
-    render({ temperature: 0, humidity: 0, soil: 0, tank: 0, timestamp: Date.now() });
   </script>
 
   <script type="module">
