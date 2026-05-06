@@ -1,340 +1,311 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>VASO IDRO - Consigli Pianta</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaso — Consigli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg: #07130f;
-      --panel: rgba(14, 31, 24, 0.86);
-      --panel-2: rgba(19, 44, 34, 0.88);
-      --text: #eafff4;
-      --muted: #8ebca6;
-      --line: rgba(130, 255, 190, 0.18);
-      --green: #38ff9c;
-      --green-2: #00c875;
-      --yellow: #ffd166;
-      --orange: #ff9f1c;
-      --red: #ff4d6d;
-      --cyan: #45d3ff;
-      --blue: #6587ff;
-      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      --bg: #080808;
+      --surface: #101010;
+      --surface-2: #161616;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #f0f0f0;
+      --text-secondary: #6e6e6e;
+      --accent: #4ade80;
+      --accent-dim: rgba(74,222,128,0.08);
+      --warm: #f59e0b;
+      --warm-dim: rgba(245,158,11,0.08);
+      --danger: #ef4444;
+      --danger-dim: rgba(239,68,68,0.08);
+      --info: #38bdf8;
+      --info-dim: rgba(56,189,248,0.08);
+      --radius: 16px;
     }
 
-    * { box-sizing: border-box; }
+    html { font-size: 16px; }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
-        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%);
-      overflow-x: hidden;
-      overflow-y: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    body::-webkit-scrollbar { display: none; }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.08;
-      background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: radial-gradient(circle at center, black, transparent 80%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(4, 15, 10, 0.76);
-      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(8,8,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
     .topbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 18px;
+      max-width: 1120px; margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: 0.02em; }
+
+    .nav { display: flex; align-items: center; gap: 4px; }
+    .nav a {
+      padding: 8px 16px; border-radius: 999px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.8125rem; font-weight: 500;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav a:hover { color: var(--text); background: var(--surface); }
+    .nav a.active { color: var(--text); background: var(--surface-2); }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px 6px 6px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 0.8125rem; color: var(--text-secondary);
+    }
+    .user-avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      display: grid; place-items: center;
+      font-size: 0.6875rem; font-weight: 600;
+    }
+    .btn-logout {
+      padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-secondary);
+      font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
+    .status-text { font-size: 0.75rem; color: var(--text-secondary); }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+
+    .page-header { margin-bottom: 36px; }
+    .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 6px; }
+    .page-header p { color: var(--text-secondary); font-size: 0.875rem; }
+
+    .health-overview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 36px;
+      margin-bottom: 24px;
     }
 
-    .back-btn {
-      border: 0;
-      cursor: pointer;
-      color: #03100b;
-      background: linear-gradient(135deg, var(--green), #9dffca);
-      padding: 9px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.88rem;
-      box-shadow: 0 8px 16px rgba(56,255,156,.12);
-      text-decoration: none;
+    .health-ring {
+      position: relative;
+      width: 120px; height: 120px;
+      flex-shrink: 0;
     }
-
-    .nav-links { display: flex; gap: 8px; }
-    .nav-link { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(10,27,20,0.5); color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: background 0.2s, color 0.2s; white-space: nowrap; }
-    .nav-link:hover { background: rgba(56,255,156,0.12); color: var(--green); }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-email { font-size: 0.78rem; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .logout-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,77,109,0.3); background: rgba(255,77,109,0.1); color: var(--red); font-size: 0.78rem; font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-    .logout-btn:hover { background: rgba(255,77,109,0.2); }
-
-    .topbar h1 {
-      margin: 0;
-      font-size: clamp(1.05rem, 2.8vw, 1.4rem);
-      letter-spacing: 0.03em;
+    .health-ring svg { transform: rotate(-90deg); }
+    .health-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 5; }
+    .health-ring .ring-fill {
+      fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
+      transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(10, 27, 20, 0.72);
-      color: var(--muted);
-      font-size: 0.78rem;
+    .health-ring .ring-number {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      font-size: 2rem; font-weight: 300; letter-spacing: -0.04em;
     }
+    .health-ring .ring-number small { font-size: 0.875rem; color: var(--text-secondary); }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 18px 36px;
-    }
-
-    .health-card {
-      background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9));
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 28px;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .health-card h2 {
-      margin: 0 0 4px;
-      font-size: 1.05rem;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .big-number {
-      font-size: clamp(3.2rem, 9vw, 5.5rem);
-      line-height: 1;
-      margin: 16px 0 6px;
-      letter-spacing: -0.07em;
-      font-weight: 900;
-    }
-
-    .health-status {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .status-ottima { color: var(--green); }
-    .status-buona { color: #9dffca; }
-    .status-media { color: var(--yellow); }
-    .status-critica { color: var(--red); }
-
-    .bar {
-      width: 70%;
-      max-width: 320px;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      overflow: hidden;
-      margin: 0 auto;
-    }
-
-    .fill {
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      transition: width .5s ease, background .4s ease;
-    }
+    .health-details { flex: 1; }
+    .health-details h3 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+    .health-status { font-size: 0.875rem; font-weight: 500; margin-bottom: 10px; }
+    .health-status.ok { color: var(--accent); }
+    .health-status.warn { color: var(--warm); }
+    .health-status.bad { color: var(--danger); }
+    .health-advice { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; max-width: 480px; }
 
     .params-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 36px;
     }
 
     .param-card {
-      background: linear-gradient(180deg, var(--panel-2), rgba(8, 24, 17, 0.85));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .param-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--line);
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
-
-    .param-info { flex: 1; }
-    .param-name { font-size: 0.82rem; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
-    .param-value { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; }
-    .param-unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; }
-
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .tip-card {
-      background: linear-gradient(180deg, var(--panel-2), rgba(8, 24, 17, 0.85));
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 12px;
-      border-left: 4px solid;
-    }
-
-    .tip-card.ok { border-left-color: var(--green); }
-    .tip-card.warning { border-left-color: var(--yellow); }
-    .tip-card.danger { border-left-color: var(--red); }
-
-    .tip-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .tip-icon { font-size: 1.5rem; }
-    .tip-title { font-size: 1rem; font-weight: 800; }
-    .tip-message { font-size: 0.9rem; color: var(--muted); line-height: 1.55; }
-
-    .footer {
-      margin-top: 18px;
-      padding: 14px 4px 0;
-      color: var(--muted);
-      font-size: .82rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
     }
+    .param-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      margin: 0 auto 12px;
+      font-size: 1rem;
+    }
+    .param-name { font-size: 0.6875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .param-value { font-size: 1.5rem; font-weight: 300; letter-spacing: -0.03em; }
+    .param-value .unit { font-size: 0.8125rem; color: var(--text-secondary); }
 
-    @media (max-width: 560px) {
+    .tips-section h3 {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .tip-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      border-left: 3px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .tip-card.ok { border-left-color: var(--accent); }
+    .tip-card.warning { border-left-color: var(--warm); }
+    .tip-card.danger { border-left-color: var(--danger); }
+
+    .tip-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tip-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .tip-card.ok .tip-dot { background: var(--accent); }
+    .tip-card.warning .tip-dot { background: var(--warm); }
+    .tip-card.danger .tip-dot { background: var(--danger); }
+    .tip-title { font-size: 0.875rem; font-weight: 600; }
+    .tip-message { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; }
+
+    .footer {
+      margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+      font-size: 0.75rem; color: var(--text-secondary); text-align: center;
+    }
+
+    @media (max-width: 780px) {
+      .params-grid { grid-template-columns: repeat(2, 1fr); }
+      .tips-grid { grid-template-columns: 1fr; }
+      .health-overview { flex-direction: column; text-align: center; padding: 28px 24px; }
+      .health-advice { margin: 0 auto; }
+      .topbar { flex-wrap: wrap; padding: 12px 16px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      main { padding: 20px 16px 36px; }
+      .user-badge span { display: none; }
+    }
+
+    @media (max-width: 420px) {
       .params-grid { grid-template-columns: 1fr; }
-      .big-number { font-size: 3.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
 
   <header>
     <div class="topbar">
-      <a href="index.html" class="back-btn">&#8592; Home</a>
-      <h1>Consigli Pianta</h1>
-      <nav class="nav-links">
-        <a href="index.html" class="nav-link">Dashboard</a>
-        <a href="grafici.html" class="nav-link">Grafici</a>
-      </nav>
-      <div id="userInfo" class="user-info" style="display:none;">
-        <span id="userEmail" class="user-email"></span>
-        <button class="logout-btn" onclick="doLogout()">Esci</button>
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/>
+          <path d="M9 22h6"/>
+        </svg>
+        <span class="logo-text">Vaso</span>
       </div>
-      <div class="status-pill">
-        <span class="dot"></span>
-        <span id="connectionText">In attesa...</span>
+      <nav class="nav">
+        <a href="index.html">Dashboard</a>
+        <a href="grafici.html">Grafici</a>
+        <a href="consigli.html" class="active">Consigli</a>
+      </nav>
+      <div class="topbar-right">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="status-text" id="connectionText">In attesa</span>
+        <div id="userInfo" class="user-badge" style="display:none;">
+          <div class="user-avatar" id="userInitial">U</div>
+          <span id="userEmail">utente</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="doLogout()">Esci</button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="health-card">
-      <h2>Salute complessiva</h2>
-      <div class="big-number"><span id="health">--</span>%</div>
-      <div class="health-status" id="healthStatus">In attesa dati...</div>
-      <div class="bar"><div id="healthBar" class="fill"></div></div>
-    </section>
+    <div class="page-header">
+      <h2>Consigli</h2>
+      <p>Analisi intelligente e suggerimenti per la tua pianta.</p>
+    </div>
 
-    <section class="params-grid">
-      <div class="param-card">
-        <div class="param-icon">&#127777;</div>
-        <div class="param-info">
-          <div class="param-name">Temperatura</div>
-          <div class="param-value"><span id="pTemp">--</span><span class="param-unit"> °C</span></div>
-        </div>
+    <div class="health-overview">
+      <div class="health-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="healthRing" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+        </svg>
+        <div class="ring-number"><span id="health">--</span><small>%</small></div>
       </div>
-      <div class="param-card">
-        <div class="param-icon">&#128167;</div>
-        <div class="param-info">
-          <div class="param-name">Umidità aria</div>
-          <div class="param-value"><span id="pHum">--</span><span class="param-unit"> %</span></div>
-        </div>
+      <div class="health-details">
+        <h3>Salute pianta</h3>
+        <div class="health-status" id="healthStatus">In attesa dati</div>
+        <div class="health-advice" id="healthAdvice">I consigli appariranno non appena il vaso invierà le prime rilevazioni.</div>
       </div>
-      <div class="param-card">
-        <div class="param-icon">&#127795;</div>
-        <div class="param-info">
-          <div class="param-name">Umidità substrato</div>
-          <div class="param-value"><span id="pSoil">--</span><span class="param-unit"> %</span></div>
-        </div>
-      </div>
-      <div class="param-card">
-        <div class="param-icon">&#128672;</div>
-        <div class="param-info">
-          <div class="param-name">Serbatoio</div>
-          <div class="param-value"><span id="pTank">--</span><span class="param-unit"> %</span></div>
-        </div>
-      </div>
-    </section>
+    </div>
 
-    <h3 class="section-title">Consigli attivi</h3>
-    <div id="tipsContainer"></div>
+    <div class="params-grid">
+      <div class="param-card">
+        <div class="param-icon" style="background:var(--warm-dim);color:var(--warm);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.762a3.5 3.5 0 1 1-5.32-.634L14 8.634a3.5 3.5 0 0 1 .634 5.32L14 14.762Z"/><circle cx="12" cy="12" r="1"/></svg>
+        </div>
+        <div class="param-name">Temperatura</div>
+        <div class="param-value"><span id="pTemp">--</span><span class="unit"> °C</span></div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon" style="background:var(--info-dim);color:var(--info);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0Z"/></svg>
+        </div>
+        <div class="param-name">Umidità aria</div>
+        <div class="param-value"><span id="pHum">--</span><span class="unit"> %</span></div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon" style="background:var(--accent-dim);color:var(--accent);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="12" width="10" height="9" rx="1"/><path d="M9 12V8a3 3 0 0 1 6 0v4"/><path d="M10 16h4"/></svg>
+        </div>
+        <div class="param-name">Substrato</div>
+        <div class="param-value"><span id="pSoil">--</span><span class="unit"> %</span></div>
+      </div>
+      <div class="param-card">
+        <div class="param-icon" style="background:var(--info-dim);color:var(--info);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 18V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12"/><path d="M6 14h12"/></svg>
+        </div>
+        <div class="param-name">Serbatoio</div>
+        <div class="param-value"><span id="pTank">--</span><span class="unit"> %</span></div>
+      </div>
+    </div>
 
-    <div class="footer">Ultimo aggiornamento: <strong id="lastUpdate">--</strong></div>
+    <div class="tips-section">
+      <h3>Suggerimenti</h3>
+      <div class="tips-grid" id="tipsContainer"></div>
+    </div>
+
+    <div class="footer">
+      Ultimo aggiornamento: <strong id="lastUpdate">--</strong>
+    </div>
   </main>
 
   <script>
     const el = (id) => document.getElementById(id);
-
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
-
-    function colorForPercent(v) {
-      if (v < 25) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
-      if (v < 45) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
-      return 'linear-gradient(90deg, #00c875, #38ff9c)';
-    }
 
     function computeHealth(d) {
       const soilScore = 100 - Math.abs(68 - d.soil) * 2.0;
@@ -344,40 +315,38 @@
       return Math.round(clamp((soilScore * 0.42) + (tankScore * 0.22) + (tempScore * 0.2) + (humScore * 0.16), 0, 100));
     }
 
-    function getAdvice(d) {
+    function getTips(d) {
       const tips = [];
-      if (!d) return [{ type: 'warning', icon: '&#9888;', title: 'In attesa dati', message: 'I sensori stanno ancora raccogliendo informazioni. Attendi qualche istante.' }];
-
       if (d.tank < 20) {
-        tips.push({ type: 'danger', icon: '&#128672;', title: 'Serbatoio quasi vuoto', message: `Livello al ${fmt(d.tank)}%. Riempi il serbatoio al più presto per garantire l'irrigazione automatica alla pianta.` });
+        tips.push({ type: 'danger', title: 'Serbatoio quasi vuoto', message: `Livello al ${fmt(d.tank)}%. Riempi il prima possibile.` });
       } else if (d.tank < 50) {
-        tips.push({ type: 'warning', icon: '&#128672;', title: 'Serbatoio in riserva', message: `Livello al ${fmt(d.tank)}%. Considera di riempirlo nelle prossime ore per evitare interruzioni.` });
+        tips.push({ type: 'warning', title: 'Serbatoio in riserva', message: `Livello al ${fmt(d.tank)}%. Riempi nelle prossime ore.` });
       } else {
-        tips.push({ type: 'ok', icon: '&#128672;', title: 'Serbatoio OK', message: `Livello al ${fmt(d.tank)}%. Riserva acqua sufficiente.` });
+        tips.push({ type: 'ok', title: 'Serbatoio OK', message: `Livello al ${fmt(d.tank)}%. Riserva sufficiente.` });
       }
 
       if (d.soil < 35) {
-        tips.push({ type: 'danger', icon: '&#127795;', title: 'Substrato secco', message: `Umidità substrato al ${fmt(d.soil)}%. La pianta ha bisogno di acqua! Verifica il funzionamento della pompa o annaffia manualmente.` });
+        tips.push({ type: 'danger', title: 'Substrato secco', message: `Umidità al ${fmt(d.soil)}%. Verifica pompa o annaffia.` });
       } else if (d.soil > 85) {
-        tips.push({ type: 'warning', icon: '&#127795;', title: 'Substrato troppo umido', message: `Umidità substrato al ${fmt(d.soil)}%. Riduci le annaffiature e controlla il drenaggio per evitare marciume radicale.` });
+        tips.push({ type: 'warning', title: 'Substrato troppo umido', message: `Umidità al ${fmt(d.soil)}%. Riduci irrigazione.` });
       } else {
-        tips.push({ type: 'ok', icon: '&#127795;', title: 'Substrato ottimale', message: `Umidità substrato al ${fmt(d.soil)}%. Terreno nella zona ideale.` });
+        tips.push({ type: 'ok', title: 'Substrato ottimale', message: `Umidità al ${fmt(d.soil)}%. Zona ideale.` });
       }
 
       if (d.temperature > 30) {
-        tips.push({ type: 'danger', icon: '&#127777;', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. Sposta la pianta in zona più fresca o aumenta la ventilazione. Evita il sole diretto nelle ore calde.` });
+        tips.push({ type: 'danger', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. Sposta in zona più fresca.` });
       } else if (d.temperature < 15) {
-        tips.push({ type: 'warning', icon: '&#127777;', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. Proteggi la pianta dal freddo. La maggior parte delle piante soffre sotto i 15°C.` });
+        tips.push({ type: 'warning', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. Proteggi dal freddo.` });
       } else {
-        tips.push({ type: 'ok', icon: '&#127777;', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Condizione perfetta per la pianta.` });
+        tips.push({ type: 'ok', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Condizione perfetta.` });
       }
 
       if (d.humidity < 40) {
-        tips.push({ type: 'warning', icon: '&#128167;', title: 'Umidità aria bassa', message: `Umidità al ${fmt(d.humidity)}%. Nebulizza le foglie o posiziona un sottovaso con argilla espansa umida vicino alla pianta.` });
+        tips.push({ type: 'warning', title: 'Umidità aria bassa', message: `Umidità al ${fmt(d.humidity)}%. Nebulizza le foglie.` });
       } else if (d.humidity > 75) {
-        tips.push({ type: 'warning', icon: '&#128167;', title: 'Umidità aria elevata', message: `Umidità al ${fmt(d.humidity)}%. Troppa umidità può favorire muffe. Aumenta la ventilazione nell'ambiente.` });
+        tips.push({ type: 'warning', title: 'Umidità aria alta', message: `Umidità al ${fmt(d.humidity)}%. Aumenta ventilazione.` });
       } else {
-        tips.push({ type: 'ok', icon: '&#128167;', title: 'Umidità aria ideale', message: `Umidità al ${fmt(d.humidity)}%. Livello perfetto.` });
+        tips.push({ type: 'ok', title: 'Umidità aria ideale', message: `Umidità al ${fmt(d.humidity)}%. Livello perfetto.` });
       }
 
       return tips;
@@ -385,38 +354,41 @@
 
     function render(d) {
       if (!d) return;
-
       const health = computeHealth(d);
+
       el('health').textContent = fmt(health);
-      el('pTemp').textContent = fmt(d.temperature, 1);
-      el('pHum').textContent = fmt(d.humidity);
-      el('pSoil').textContent = fmt(d.soil);
-      el('pTank').textContent = fmt(d.tank);
+      const circumference = 326.73;
+      const ring = el('healthRing');
+      ring.style.strokeDashoffset = circumference - (health / 100) * circumference;
+
+      if (health >= 70) { ring.style.stroke = 'var(--accent)'; el('healthStatus').textContent = 'Ottima'; el('healthStatus').className = 'health-status ok'; }
+      else if (health >= 45) { ring.style.stroke = 'var(--warm)'; el('healthStatus').textContent = 'Discreta'; el('healthStatus').className = 'health-status warn'; }
+      else { ring.style.stroke = 'var(--danger)'; el('healthStatus').textContent = 'Critica'; el('healthStatus').className = 'health-status bad'; }
+
+      if (d.tank < 20) el('healthAdvice').textContent = 'Serbatoio basso: conviene ricaricare acqua.';
+      else if (d.soil < 35) el('healthAdvice').textContent = 'Substrato secco: serve irrigazione o controllo pompa.';
+      else if (d.soil > 85) el('healthAdvice').textContent = 'Substrato molto umido: ridurre irrigazione.';
+      else if (d.temperature > 30) el('healthAdvice').textContent = 'Temperatura alta: evitare sole diretto.';
+      else el('healthAdvice').textContent = 'Parametri nella norma. Continua il monitoraggio.';
+
+      el('pTemp').innerHTML = fmt(d.temperature, 1) + '<span class="unit"> °C</span>';
+      el('pHum').innerHTML = fmt(d.humidity) + '<span class="unit"> %</span>';
+      el('pSoil').innerHTML = fmt(d.soil) + '<span class="unit"> %</span>';
+      el('pTank').innerHTML = fmt(d.tank) + '<span class="unit"> %</span>';
       el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
 
-      const statusEl = el('healthStatus');
-      if (health >= 80) { statusEl.textContent = 'Ottima'; statusEl.className = 'health-status status-ottima'; }
-      else if (health >= 60) { statusEl.textContent = 'Buona'; statusEl.className = 'health-status status-buona'; }
-      else if (health >= 40) { statusEl.textContent = 'Media'; statusEl.className = 'health-status status-media'; }
-      else { statusEl.textContent = 'Critica'; statusEl.className = 'health-status status-critica'; }
-
-      el('healthBar').style.width = health + '%';
-      el('healthBar').style.background = colorForPercent(health);
-
-      const tips = getAdvice(d);
+      const tips = getTips(d);
       el('tipsContainer').innerHTML = tips.map(t => `
         <div class="tip-card ${t.type}">
-          <div class="tip-header">
-            <span class="tip-icon">${t.icon}</span>
-            <span class="tip-title">${t.title}</span>
-          </div>
+          <div class="tip-header"><div class="tip-dot"></div><span class="tip-title">${t.title}</span></div>
           <div class="tip-message">${t.message}</div>
         </div>
       `).join('');
     }
 
-    function updateFromRemote(payload) {
+    window.updateFromRemote = function(payload) {
       el('connectionText').textContent = 'Live';
+      document.getElementById('statusDot').classList.remove('offline');
 
       const d = {
         temperature: Number(payload.temperature ?? payload.temp ?? 0),
@@ -427,9 +399,8 @@
       };
 
       render(d);
-    }
+    };
 
-    window.updateFromRemote = updateFromRemote;
     render({ temperature: 0, humidity: 0, soil: 0, tank: 0, timestamp: Date.now() });
   </script>
 
@@ -455,37 +426,24 @@
     const latestRef = ref(db, "vaso/latest");
 
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
-      document.getElementById("userInfo").style.display = "flex";
-      document.getElementById("userEmail").textContent = user.email || user.displayName || "Utente";
+      if (!user) { window.location.href = "login.html"; return; }
+      document.getElementById('userInfo').style.display = 'flex';
+      document.getElementById('logoutBtn').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
+      document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
     });
 
-    window.doLogout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "login.html";
-      } catch (error) {
-        console.error("Errore logout:", error);
-      }
-    };
+    window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
-    const intervalloAggiornamento = 10000;
-
-    async function recuperaDati() {
+    async function fetchDati() {
       try {
         const snapshot = await get(latestRef);
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          if (typeof window.updateFromRemote === "function") window.updateFromRemote(data);
-        }
-      } catch (error) { console.error("Errore Firebase:", error); }
+        if (snapshot.exists() && typeof window.updateFromRemote === 'function') window.updateFromRemote(snapshot.val());
+      } catch (e) { console.error(e); }
     }
 
-    recuperaDati();
-    setInterval(recuperaDati, intervalloAggiornamento);
+    fetchDati();
+    setInterval(fetchDati, 10000);
   </script>
 </body>
 </html>

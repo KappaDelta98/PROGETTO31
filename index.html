@@ -1,174 +1,546 @@
-<!DOCTYPE html> 
-<html lang="it"> 
-    <head> 
-        <meta charset="UTF-8"/> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-        <title>VASO IDRO - Dashboard Online</title>         
-        <style>:root { --bg: #07130f; --panel: rgba(14, 31, 24, 0.86); --panel-2: rgba(19, 44, 34, 0.88); --text: #eafff4; --muted: #8ebca6; --line: rgba(130, 255, 190, 0.18); --green: #38ff9c; --green-2: #00c875; --yellow: #ffd166; --orange: #ff9f1c; --red: #ff4d6d; --cyan: #45d3ff; --blue: #6587ff; --shadow: 0 18px 45px rgba(0, 0, 0, 0.35); } * { box-sizing: border-box; } body { margin: 0; min-height: 100vh; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
-        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%); overflow-x: hidden; } .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.08; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 34px 34px; mask-image: radial-gradient(circle at center, black, transparent 80%); } header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(18px); background: rgba(4, 15, 10, 0.76); border-bottom: 1px solid var(--line); } .topbar { max-width: 1200px; margin: 0 auto; padding: 18px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; } .brand { display: flex; align-items: center; gap: 12px; } .logo { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(56,255,156,.24), rgba(69,211,255,.12)); border: 1px solid rgba(56,255,156,.35); box-shadow: 0 0 30px rgba(56,255,156,.14); font-size: 25px; } .brand h1 { margin: 0; font-size: clamp(1.1rem, 3vw, 1.7rem); letter-spacing: 0.04em; } .brand p { margin: 2px 0 0; color: var(--muted); font-size: 0.82rem; } .nav-links { display: flex; gap: 8px; } .nav-link { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(10, 27, 20, 0.5); color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: background 0.2s, color 0.2s; white-space: nowrap; } .nav-link:hover { background: rgba(56,255,156,0.12); color: var(--green); } .user-info { display: inline-flex; align-items: center; gap: 10px; } .user-email { font-size: 0.82rem; color: var(--muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .logout-btn { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,77,109,0.3); background: rgba(255,77,109,0.1); color: var(--red); font-size: 0.82rem; font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.2s, border-color 0.2s; } .logout-btn:hover { background: rgba(255,77,109,0.2); border-color: rgba(255,77,109,0.5); } .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(10, 27, 20, 0.72); color: var(--muted); white-space: nowrap; font-size: 0.88rem; } .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 15px var(--green); } .status-pill.offline .dot { background: var(--red); box-shadow: 0 0 15px var(--red); } main { max-width: 1200px; margin: 0 auto; padding: 22px 18px 42px; } .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; margin-bottom: 18px; } .card { background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9)); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden; } .overview { min-height: 340px; position: relative; padding: 26px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; } .kicker { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--green); margin-bottom: 6px; font-weight: 700; } .title { margin: 0 0 8px; font-size: clamp(1.5rem, 3.5vw, 2.2rem); letter-spacing: -0.03em; line-height: 1.15; } .subtitle { margin: 0; color: var(--muted); line-height: 1.55; font-size: 0.95rem; max-width: 420px; } .actions { display: flex; gap: 10px; margin-top: 18px; } .actions button { padding: 10px 18px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--green-2), var(--green)); color: #07130f; font-weight: 700; font-size: 0.88rem; cursor: pointer; font-family: inherit; transition: transform 0.15s, opacity 0.2s; } .actions button:hover { transform: translateY(-2px); opacity: 0.92; } .actions button.secondary { background: rgba(255,255,255,.08); color: var(--text); border: 1px solid var(--line); } .plant-visual { position: relative; width: 120px; height: 220px; flex-shrink: 0; } .stem { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 6px; height: 100px; background: linear-gradient(to top, #2d6a4f, #52b788); border-radius: 3px; } .leaf { position: absolute; width: 36px; height: 18px; background: radial-gradient(ellipse, #40916c, #2d6a4f); border-radius: 0 70% 0 70%; } .leaf.l1 { bottom: 110px; left: 30px; transform: rotate(-20deg); } .leaf.l2 { bottom: 130px; right: 20px; transform: rotate(20deg) scaleX(-1); } .leaf.l3 { bottom: 150px; left: 25px; transform: rotate(-10deg); } .pot { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 36px; background: linear-gradient(135deg, #d4a373, #b08968); border-radius: 4px 4px 10px 10px; } .water { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 50px; height: 20px; background: linear-gradient(to top, rgba(69,211,255,.6), rgba(69,211,255,.2)); border-radius: 0 0 8px 8px; transition: height 1s ease; } .side-panel { padding: 26px; display: flex; flex-direction: column; align-items: center; text-align: center; } .side-panel h2 { margin: 0 0 6px; font-size: 1.15rem; } .side-panel .muted { margin: 0 0 18px; font-size: 0.85rem; } .big-number { font-size: clamp(2.8rem, 8vw, 4.5rem); font-weight: 900; line-height: 1; letter-spacing: -0.06em; } .unit { font-size: 0.45em; color: var(--muted); font-weight: 600; } .bar { width: 80%; max-width: 240px; height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; margin: 14px 0; } .fill { height: 100%; width: 0%; border-radius: inherit; transition: width .5s ease, background .4s ease; } .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; } .metric { padding: 22px; } .metric-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; } .metric-top h3 { margin: 0; font-size: 0.95rem; font-weight: 700; } .metric-top .icon { font-size: 1.3rem; } .value { font-size: 2rem; font-weight: 900; letter-spacing: -0.04em; } .wide { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .chart-card { padding: 22px; } .section-title { margin: 0 0 14px; font-size: 1.05rem; } canvas { width: 100%; height: 260px; display: block; } .footer { margin-top: 18px; padding: 14px 4px 0; color: var(--muted); font-size: .82rem; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; } .footer strong { color: var(--text); } @media (max-width: 780px) { .hero { grid-template-columns: 1fr; } .overview { grid-template-columns: 1fr; } .plant-visual { margin: 0 auto; } .wide { grid-template-columns: 1fr; } .topbar { flex-direction: column; align-items: flex-start; gap: 12px; } .nav-links { order: 1; } }
-        </style>
-    </head>     
-    <body> 
-        <div class="noise"></div>         
-        <header> 
-            <div class="topbar"> 
-                <div class="brand"> 
-                    <div class="logo">🌱</div>                     
-                    <div> 
-                        <h1>VASO IDRO</h1> 
-                        <p>Dashboard online controllo vaso</p> 
-                    </div>                     
-                </div>                 
-                <nav class="nav-links">
-                    <a href="grafici.html" class="nav-link">Grafici</a>
-                    <a href="consigli.html" class="nav-link">Consigli</a>
-                </nav>
-                <div id="userInfo" class="user-info" style="display:none;">
-                    <span id="userEmail" class="user-email"></span>
-                    <button class="logout-btn" onclick="doLogout()">Esci</button>
-                </div>
-                <div id="statusPill" class="status-pill">
-                    <span class="dot"></span>
-                    <span id="connectionText">In attesa...</span>
-                </div>                 
-            </div>             
-        </header>         
-        <main> 
-            <section class="hero"> 
-                <div class="card overview"> 
-                    <div> 
-                        <div class="kicker">Sistema attivo</div>                         
-                        <h2 class="title">Controllo vaso in tempo reale</h2> 
-                        <p class="subtitle">Monitora temperatura, umidità e livello acqua direttamente dal tuo vaso intelligente.</p>                         
-                    </div>                     
-                    <div class="plant-visual" aria-hidden="true"> 
-                        <div class="stem"></div>                         
-                        <div class="leaf l1"></div>                         
-                        <div class="leaf l2"></div>                         
-                        <div class="leaf l3"></div>                         
-                        <div class="pot"></div>                         
-                        <div class="water" id="waterVisual"></div>                         
-                    </div>                     
-                </div>                 
-                <div class="card side-panel"> 
-                    <h2>Salute pianta</h2> 
-                    <p class="muted">Indice calcolato da umidità substrato, livello acqua e temperatura.</p> 
-                    <div class="big-number">
-                        <span id="health">--</span>
-                        <span class="unit">%</span>
-                    </div>                     
-                    <div class="bar">
-                        <div id="healthBar" class="fill"></div>
-                    </div>                     
-                    <p class="muted" id="advice">In attesa dati...</p> 
-                </div>                 
-            </section>             
-            <section class="grid"> 
-                <article class="card metric"> 
-                    <div> 
-                        <div class="metric-top">
-                            <h3>Temperatura aria</h3>
-                            <div class="icon">🌡️</div>
-                        </div>                         
-                        <div class="value">
-                            <span id="temp">--</span>
-                            <span class="unit"> °C</span>
-                        </div>                         
-                    </div>                     
-                    <div class="bar">
-                        <div id="tempBar" class="fill"></div>
-                    </div>                     
-                </article>                 
-                <article class="card metric"> 
-                    <div> 
-                        <div class="metric-top">
-                            <h3>Umidità aria</h3>
-                            <div class="icon">💧</div>
-                        </div>                         
-                        <div class="value">
-                            <span id="hum">--</span>
-                            <span class="unit"> %</span>
-                        </div>                         
-                    </div>                     
-                    <div class="bar">
-                        <div id="humBar" class="fill"></div>
-                    </div>                     
-                </article>                 
-                <article class="card metric"> 
-                    <div> 
-                        <div class="metric-top">
-                            <h3>Umidità substrato</h3>
-                            <div class="icon">🪴</div>
-                        </div>                         
-                        <div class="value">
-                            <span id="soil">--</span>
-                            <span class="unit"> %</span>
-                        </div>                         
-                    </div>                     
-                    <div class="bar">
-                        <div id="soilBar" class="fill"></div>
-                    </div>                     
-                </article>                 
-                <article class="card metric"> 
-                    <div> 
-                        <div class="metric-top">
-                            <h3>Livello serbatoio</h3>
-                            <div class="icon">🚰</div>
-                        </div>                         
-                        <div class="value">
-                            <span id="tank">--</span>
-                            <span class="unit"> %</span>
-                        </div>                         
-                    </div>                     
-                    <div class="bar">
-                        <div id="tankBar" class="fill"></div>
-                    </div>                     
-                </article>                 
-            </section>             
-            <section class="wide"> 
-                <article class="card chart-card"> 
-                    <h2 class="section-title">Andamento temperatura aria</h2> 
-                    <canvas id="tempChart" width="900" height="320"></canvas>                     
-                </article>                 
-                <article class="card chart-card"> 
-                    <h2 class="section-title">Andamento umidità aria</h2> 
-                    <canvas id="humChart" width="900" height="320"></canvas>                     
-                </article>                 
-            </section>             
-            <div class="footer"> 
-                <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span> 
-                <span>Versione pagina: v2.0</span> 
-            </div>             
-        </main>         
-        <script>
-    const state = {
-      data: null,
-      history: []
-    };
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaso — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg: #080808;
+      --surface: #101010;
+      --surface-2: #161616;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #f0f0f0;
+      --text-secondary: #6e6e6e;
+      --accent: #4ade80;
+      --accent-dim: rgba(74,222,128,0.1);
+      --warm: #f59e0b;
+      --warm-dim: rgba(245,158,11,0.1);
+      --danger: #ef4444;
+      --danger-dim: rgba(239,68,68,0.1);
+      --info: #38bdf8;
+      --info-dim: rgba(56,189,248,0.1);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(8,8,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      color: var(--accent);
+    }
+
+    .logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    .nav { display: flex; align-items: center; gap: 4px; }
+
+    .nav a {
+      padding: 8px 16px;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav a:hover { color: var(--text); background: var(--surface); }
+    .nav a.active { color: var(--text); background: var(--surface-2); }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .user-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px 6px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .user-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      display: grid; place-items: center;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      flex-shrink: 0;
+    }
+
+    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
+
+    .status-text {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── MAIN ── */
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+
+    .page-header {
+      margin-bottom: 36px;
+    }
+
+    .page-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* ── METRICS GRID ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color 0.3s;
+    }
+
+    .metric-card:hover { border-color: var(--border-hover); }
+
+    .metric-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .metric-label svg { width: 16px; height: 16px; opacity: 0.6; }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-unit {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .metric-bar {
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .metric-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ── HEALTH ── */
+    .health-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .health-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .health-ring {
+      position: relative;
+      width: 140px; height: 140px;
+      margin-bottom: 20px;
+    }
+
+    .health-ring svg { transform: rotate(-90deg); }
+    .health-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
+    .health-ring .ring-fill {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .health-number {
+      position: absolute;
+      inset: 0;
+      display: grid; place-items: center;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+    }
+
+    .health-number small {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .health-status {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .health-advice {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      opacity: 0.7;
+    }
+
+    .live-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .live-card h3 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .live-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .live-item {}
+
+    .live-item-label {
+      font-size: 0.6875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .live-item-value {
+      font-size: 1.375rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .live-item-value .unit {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── CHARTS ── */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .chart-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .chart-value {
+      font-size: 1.125rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    canvas {
+      width: 100%;
+      height: 180px;
+      display: block;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .health-section { grid-template-columns: 1fr; }
+      .charts { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { flex-wrap: wrap; padding: 12px 16px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      main { padding: 20px 16px 36px; }
+      .metrics { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .metric-card { padding: 18px; }
+      .metric-value { font-size: 1.5rem; }
+      .page-header h2 { font-size: 1.375rem; }
+      .user-badge span { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="topbar">
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V8"/>
+          <path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/>
+          <path d="M16 5.5c0 0 2 2.5 2 4.5"/>
+          <path d="M9 22h6"/>
+        </svg>
+        <span class="logo-text">Vaso</span>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html" class="active">Dashboard</a>
+        <a href="grafici.html">Grafici</a>
+        <a href="consigli.html">Consigli</a>
+      </nav>
+
+      <div class="topbar-right">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="status-text" id="connectionText">In attesa</span>
+        <div id="userInfo" class="user-badge" style="display:none;">
+          <div class="user-avatar" id="userInitial">U</div>
+          <span id="userEmail">utente</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="doLogout()">Esci</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h2>Monitoraggio</h2>
+      <p>Panoramica in tempo reale dei parametri del tuo vaso.</p>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.762a3.5 3.5 0 1 1-5.32-.634L14 8.634a3.5 3.5 0 0 1 .634 5.32L14 14.762Z"/><circle cx="12" cy="12" r="1"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Temperatura
+        </div>
+        <div class="metric-value"><span id="temp">--</span><span class="metric-unit"> °C</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="tempBar" style="background:var(--warm)"></div></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0Z"/></svg>
+          Umidità aria
+        </div>
+        <div class="metric-value"><span id="hum">--</span><span class="metric-unit"> %</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="humBar" style="background:var(--info)"></div></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="12" width="10" height="9" rx="1"/><path d="M9 12V8a3 3 0 0 1 6 0v4"/><path d="M10 16h4"/></svg>
+          Substrato
+        </div>
+        <div class="metric-value"><span id="soil">--</span><span class="metric-unit"> %</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="soilBar" style="background:var(--accent)"></div></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 18V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12"/><path d="M6 14h12"/><path d="M8 4v-2"/><path d="M16 4v-2"/></svg>
+          Serbatoio
+        </div>
+        <div class="metric-value"><span id="tank">--</span><span class="metric-unit"> %</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="tankBar" style="background:var(--info)"></div></div>
+      </div>
+    </div>
+
+    <div class="health-section">
+      <div class="health-card">
+        <div class="health-ring">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle class="ring-bg" cx="70" cy="70" r="62"/>
+            <circle class="ring-fill" id="healthRing" cx="70" cy="70" r="62" stroke-dasharray="389.56" stroke-dashoffset="389.56"/>
+          </svg>
+          <div class="health-number"><span id="health">--</span><small>%</small></div>
+        </div>
+        <div class="health-status" id="healthStatus">In attesa dati</div>
+        <div class="health-advice" id="advice">I dati appariranno non appena il vaso invierà le prime rilevazioni.</div>
+      </div>
+
+      <div class="live-card">
+        <h3>Riepilogo</h3>
+        <div class="live-metrics">
+          <div class="live-item">
+            <div class="live-item-label">Temp. minima</div>
+            <div class="live-item-value" id="tempMin">--<span class="unit"> °C</span></div>
+          </div>
+          <div class="live-item">
+            <div class="live-item-label">Temp. massima</div>
+            <div class="live-item-value" id="tempMax">--<span class="unit"> °C</span></div>
+          </div>
+          <div class="live-item">
+            <div class="live-item-label">Umidità media</div>
+            <div class="live-item-value" id="humAvg">--<span class="unit"> %</span></div>
+          </div>
+          <div class="live-item">
+            <div class="live-item-label">Rilevazioni</div>
+            <div class="live-item-value" id="pointCount">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Temperatura</span>
+          <span class="chart-value" id="tempChartVal">-- °C</span>
+        </div>
+        <canvas id="tempChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Umidità aria</span>
+          <span class="chart-value" id="humChartVal">-- %</span>
+        </div>
+        <canvas id="humChart"></canvas>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
+      <span>Vaso v2.0</span>
+    </div>
+  </main>
+
+  <script>
+    const state = { data: null, history: [], tempMin: null, tempMax: null };
     const el = (id) => document.getElementById(id);
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-    function fmt(v, decimals = 0) { return Number(v).toFixed(decimals).replace('.', ','); }
-
-    function colorForPercent(v) {
-      if (v < 25) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
-      if (v < 45) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
-      return 'linear-gradient(90deg, #00c875, #38ff9c)';
-    }
-
-    function colorForTemp(v) {
-      if (v < 12 || v > 34) return 'linear-gradient(90deg, #ff4d6d, #ff8fa3)';
-      if (v < 16 || v > 30) return 'linear-gradient(90deg, #ff9f1c, #ffd166)';
-      return 'linear-gradient(90deg, #00c875, #38ff9c)';
-    }
-
-    function setBar(id, value, color) {
-      const node = el(id);
-      node.style.width = clamp(value, 0, 100) + '%';
-      if (color) node.style.background = color;
-    }
+    function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
 
     function computeHealth(d) {
       const soilScore = 100 - Math.abs(68 - d.soil) * 2.0;
@@ -178,13 +550,16 @@
       return Math.round(clamp((soilScore * 0.42) + (tankScore * 0.22) + (tempScore * 0.2) + (humScore * 0.16), 0, 100));
     }
 
-    function adviceFor(d, health) {
-      if (d.tank < 20) return 'Serbatoio basso: conviene ricaricare acqua.';
-      if (d.soil < 35) return 'Substrato secco: serve irrigazione o controllo pompa.';
-      if (d.soil > 85) return 'Substrato molto umido: ridurre irrigazione e controllare drenaggio.';
-      if (d.temperature > 30) return 'Temperatura alta: evitare sole diretto nelle ore calde.';
-      if (health > 80) return 'Condizione buona: parametri nella zona ideale.';
-      return 'Parametri discreti: continua il monitoraggio.';
+    function healthColor(v) {
+      if (v >= 70) return 'var(--accent)';
+      if (v >= 45) return 'var(--warm)';
+      return 'var(--danger)';
+    }
+
+    function setBar(id, val, color) {
+      const n = el(id);
+      n.style.width = clamp(val, 0, 100) + '%';
+      if (color) n.style.background = color;
     }
 
     function render() {
@@ -197,108 +572,128 @@
       el('soil').textContent = fmt(d.soil);
       el('tank').textContent = fmt(d.tank);
       el('health').textContent = fmt(health);
-      el('advice').textContent = adviceFor(d, health);
+
+      const hc = healthColor(health);
+      el('healthRing').style.stroke = hc;
+      const circumference = 389.56;
+      el('healthRing').style.strokeDashoffset = circumference - (health / 100) * circumference;
+
+      const statusEl = el('healthStatus');
+      if (health >= 70) { statusEl.textContent = 'Ottima'; statusEl.style.color = 'var(--accent)'; }
+      else if (health >= 45) { statusEl.textContent = 'Discreta'; statusEl.style.color = 'var(--warm)'; }
+      else { statusEl.textContent = 'Da controllare'; statusEl.style.color = 'var(--danger)'; }
+
+      if (d.tank < 20) el('advice').textContent = 'Serbatoio basso: ricaricare acqua.';
+      else if (d.soil < 35) el('advice').textContent = 'Substrato secco: verificare irrigazione.';
+      else if (d.soil > 85) el('advice').textContent = 'Substrato umido: ridurre irrigazione.';
+      else if (d.temperature > 30) el('advice').textContent = 'Temperatura alta: evitare sole diretto.';
+      else el('advice').textContent = 'Tutto nella norma. Continua il monitoraggio.';
+
+      setBar('tempBar', clamp((d.temperature / 40) * 100, 0, 100), d.temperature > 30 || d.temperature < 12 ? 'var(--danger)' : 'var(--warm)');
+      setBar('humBar', d.humidity, d.humidity < 40 || d.humidity > 75 ? 'var(--warm)' : 'var(--info)');
+      setBar('soilBar', d.soil, d.soil < 35 ? 'var(--danger)' : d.soil > 85 ? 'var(--warm)' : 'var(--accent)');
+      setBar('tankBar', d.tank, d.tank < 20 ? 'var(--danger)' : 'var(--info)');
+
+      if (state.tempMin === null || d.temperature < state.tempMin) state.tempMin = d.temperature;
+      if (state.tempMax === null || d.temperature > state.tempMax) state.tempMax = d.temperature;
+      el('tempMin').innerHTML = fmt(state.tempMin, 1) + '<span class="unit"> °C</span>';
+      el('tempMax').innerHTML = fmt(state.tempMax, 1) + '<span class="unit"> °C</span>';
+
+      const hums = state.history.map(h => h.hum);
+      if (hums.length) {
+        const avg = hums.reduce((a, b) => a + b, 0) / hums.length;
+        el('humAvg').innerHTML = fmt(avg) + '<span class="unit"> %</span>';
+      }
+
+      el('pointCount').textContent = state.history.length;
       el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
+      el('tempChartVal').textContent = fmt(d.temperature, 1) + ' °C';
+      el('humChartVal').textContent = fmt(d.humidity) + ' %';
 
-      setBar('tempBar', clamp((d.temperature / 40) * 100, 0, 100), colorForTemp(d.temperature));
-      setBar('humBar', d.humidity, colorForPercent(d.humidity));
-      setBar('soilBar', d.soil, colorForPercent(d.soil));
-      setBar('tankBar', d.tank, colorForPercent(d.tank));
-      setBar('healthBar', health, colorForPercent(health));
-
-      el('waterVisual').style.height = (18 + clamp(d.tank, 0, 100) * 0.55) + 'px';
-      drawChart();
+      drawChart('tempChart', 'temp', 0, 50, '#f59e0b', 'rgba(245,158,11,0.12)', '°C');
+      drawChart('humChart', 'hum', 0, 100, '#38bdf8', 'rgba(56,189,248,0.12)', '%');
     }
 
     function pushHistory() {
       if (!state.data) return;
-      state.history.push({ 
-        t: state.data.timestamp, 
-        temp: state.data.temperature, 
-        hum: state.data.humidity 
-      });
+      state.history.push({ t: state.data.timestamp, temp: state.data.temperature, hum: state.data.humidity });
       if (state.history.length > 48) state.history.shift();
     }
 
-    function drawGenericChart(canvasId, dataKey, minY, maxY, strokeColor, fillStart, fillEnd, unit) {
+    function drawChart(canvasId, key, minY, maxY, color, fill, unit) {
       const canvas = el(canvasId);
       if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = (rect.width - 48) * 2;
+      canvas.height = 360;
       const ctx = canvas.getContext('2d');
-      const w = canvas.width;
-      const h = canvas.height;
+      const w = canvas.width, h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = 'rgba(255,255,255,0.035)';
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= 4; i++) {
-        const y = 24 + i * ((h - 52) / 4);
-        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
-      }
-
-      ctx.fillStyle = 'rgba(234,255,244,0.55)';
-      ctx.font = '16px system-ui';
-      ctx.fillText(maxY + unit, 8, 32);
-      ctx.fillText(minY + unit, 14, h - 34);
 
       const data = state.history;
       if (data.length < 2) return;
 
-      const left = 46, right = w - 22, top = 22, bottom = h - 38;
-      const step = (right - left) / (data.length - 1);
+      const pad = { l: 50, r: 24, t: 20, b: 30 };
+      const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
+      const step = cw / (data.length - 1);
 
-      ctx.fillStyle = 'rgba(234,255,244,0.4)';
-      ctx.font = '12px system-ui';
-      ctx.textAlign = 'center';
-      for (let i = 0; i < data.length; i++) {
-        if (i % Math.ceil(data.length / 8) === 0 || i === data.length - 1) {
-          const d = new Date(data[i].t);
-          const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-          ctx.fillText(timeStr, left + i * step, h - 10);
-        }
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 3; i++) {
+        const y = pad.t + (i * ch / 3);
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
       }
-      ctx.textAlign = 'left';
 
-      const grad = ctx.createLinearGradient(0, top, 0, bottom);
-      grad.addColorStop(0, fillStart);
-      grad.addColorStop(1, fillEnd);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.font = '18px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(maxY + unit, pad.l - 8, pad.t + 6);
+      ctx.fillText(minY + unit, pad.l - 8, h - pad.b + 6);
+
+      const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
+      grad.addColorStop(0, fill);
+      grad.addColorStop(1, 'transparent');
 
       ctx.beginPath();
       data.forEach((p, i) => {
-        const x = left + i * step;
-        const val = clamp(p[dataKey], minY, maxY);
-        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        const x = pad.l + i * step;
+        const val = clamp(p[key], minY, maxY);
+        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
-      ctx.lineTo(right, bottom);
-      ctx.lineTo(left, bottom);
+      ctx.lineTo(pad.l + (data.length - 1) * step, h - pad.b);
+      ctx.lineTo(pad.l, h - pad.b);
       ctx.closePath();
       ctx.fillStyle = grad;
       ctx.fill();
 
       ctx.beginPath();
       data.forEach((p, i) => {
-        const x = left + i * step;
-        const val = clamp(p[dataKey], minY, maxY);
-        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        const x = pad.l + i * step;
+        const val = clamp(p[key], minY, maxY);
+        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = strokeColor;
+      ctx.strokeStyle = color;
       ctx.lineWidth = 4;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
       ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.font = '16px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      const labelCount = Math.min(data.length, 6);
+      const stepLabel = Math.ceil(data.length / labelCount);
+      for (let i = 0; i < data.length; i += stepLabel) {
+        const dt = new Date(data[i].t);
+        ctx.fillText(dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0'), pad.l + i * step, h - 8);
+      }
     }
 
-    function drawChart() {
-      drawGenericChart('tempChart', 'temp', 0, 50, '#ffd166', 'rgba(255,209,102,0.65)', 'rgba(255,209,102,0.02)', '°C');
-      drawGenericChart('humChart', 'hum', 0, 100, '#45d3ff', 'rgba(69,211,255,0.65)', 'rgba(69,211,255,0.02)', '%');
-    }
-
-    function updateFromRemote(payload) {
-      el('connectionText').textContent = 'Dati live';
+    window.updateFromRemote = function(payload) {
+      el('connectionText').textContent = 'Live';
+      document.getElementById('statusDot').classList.remove('offline');
 
       state.data = {
         temperature: Number(payload.temperature ?? payload.temp ?? 0),
@@ -310,12 +705,12 @@
 
       pushHistory();
       render();
-    }
+    };
 
-    window.updateFromRemote = updateFromRemote;
-    window.addEventListener('resize', drawChart);
-  </script>         
-        <script type="module">
+    window.addEventListener('resize', render);
+  </script>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
@@ -337,41 +732,26 @@
     const latestRef = ref(db, "vaso/latest");
 
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
-      document.getElementById("userInfo").style.display = "flex";
-      document.getElementById("userEmail").textContent = user.email || user.displayName || "Utente";
+      if (!user) { window.location.href = "login.html"; return; }
+      document.getElementById('userInfo').style.display = 'flex';
+      document.getElementById('logoutBtn').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
+      document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
     });
 
-    window.doLogout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "login.html";
-      } catch (error) {
-        console.error("Errore logout:", error);
-      }
-    };
+    window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
-    const intervalloAggiornamento = 10000; 
-
-    async function recuperaDati() {
+    async function fetchDati() {
       try {
         const snapshot = await get(latestRef);
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          if (typeof window.updateFromRemote === "function") {
-            window.updateFromRemote(data);
-          }
+        if (snapshot.exists() && typeof window.updateFromRemote === 'function') {
+          window.updateFromRemote(snapshot.val());
         }
-      } catch (error) {
-        console.error("Errore lettura Firebase:", error);
-      }
+      } catch (e) { console.error(e); }
     }
 
-    recuperaDati();
-    setInterval(recuperaDati, intervalloAggiornamento);
-  </script>         
-    </body>     
+    fetchDati();
+    setInterval(fetchDati, 10000);
+  </script>
+</body>
 </html>

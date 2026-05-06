@@ -1,411 +1,393 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>VASO IDRO - Grafici</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaso — Grafici</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg: #07130f;
-      --panel: rgba(14, 31, 24, 0.86);
-      --panel-2: rgba(19, 44, 34, 0.88);
-      --text: #eafff4;
-      --muted: #8ebca6;
-      --line: rgba(130, 255, 190, 0.18);
-      --green: #38ff9c;
-      --green-2: #00c875;
-      --yellow: #ffd166;
-      --orange: #ff9f1c;
-      --red: #ff4d6d;
-      --cyan: #45d3ff;
-      --blue: #6587ff;
-      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      --bg: #080808;
+      --surface: #101010;
+      --surface-2: #161616;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #f0f0f0;
+      --text-secondary: #6e6e6e;
+      --accent: #4ade80;
+      --accent-dim: rgba(74,222,128,0.1);
+      --warm: #f59e0b;
+      --warm-dim: rgba(245,158,11,0.1);
+      --danger: #ef4444;
+      --danger-dim: rgba(239,68,68,0.1);
+      --info: #38bdf8;
+      --info-dim: rgba(56,189,248,0.1);
+      --violet: #a78bfa;
+      --violet-dim: rgba(167,139,250,0.1);
+      --radius: 16px;
     }
 
-    * { box-sizing: border-box; }
+    html { font-size: 16px; }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
-        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%);
-      overflow-x: hidden;
-      overflow-y: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    body::-webkit-scrollbar { display: none; }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.08;
-      background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: radial-gradient(circle at center, black, transparent 80%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(4, 15, 10, 0.76);
-      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(8,8,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
     .topbar {
-      max-width: 1200px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 14px 18px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 20px;
     }
 
-    .back-btn {
-      border: 0;
-      cursor: pointer;
-      color: #03100b;
-      background: linear-gradient(135deg, var(--green), #9dffca);
-      padding: 9px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.88rem;
-      box-shadow: 0 8px 16px rgba(56,255,156,.12);
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: 0.02em; }
+
+    .nav { display: flex; align-items: center; gap: 4px; }
+    .nav a {
+      padding: 8px 16px;
+      border-radius: 999px;
+      color: var(--text-secondary);
       text-decoration: none;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav a:hover { color: var(--text); background: var(--surface); }
+    .nav a.active { color: var(--text); background: var(--surface-2); }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .user-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px 6px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
     }
 
-    .nav-links { display: flex; gap: 8px; }
-    .nav-link { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(10,27,20,0.5); color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: background 0.2s, color 0.2s; white-space: nowrap; }
-    .nav-link:hover { background: rgba(56,255,156,0.12); color: var(--green); }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-email { font-size: 0.78rem; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .logout-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,77,109,0.3); background: rgba(255,77,109,0.1); color: var(--red); font-size: 0.78rem; font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-    .logout-btn:hover { background: rgba(255,77,109,0.2); }
-
-    .topbar h1 {
-      margin: 0;
-      font-size: clamp(1.05rem, 2.8vw, 1.4rem);
-      letter-spacing: 0.03em;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 18px 36px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
-
-    .chart-card {
-      background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9));
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 20px;
-    }
-
-    .chart-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .chart-header h2 {
-      margin: 0;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .current-value {
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .unit {
-      font-size: 0.95rem;
-      color: var(--muted);
+    .user-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      display: grid; place-items: center;
+      font-size: 0.6875rem;
       font-weight: 600;
     }
 
-    canvas { width: 100%; height: 220px; display: block; margin-top: 6px; }
-
-    .legend {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 14px;
-      font-size: 0.82rem;
-      color: var(--muted);
-      padding-top: 10px;
-      border-top: 1px solid var(--line);
-    }
-
-    .legend span strong {
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border: 1px solid var(--line);
+    .btn-logout {
+      padding: 6px 14px;
       border-radius: 999px;
-      background: rgba(10, 27, 20, 0.72);
-      color: var(--muted);
-      font-size: 0.78rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
+    .status-text { font-size: 0.75rem; color: var(--text-secondary); }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+
+    .page-header { margin-bottom: 36px; }
+    .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 6px; }
+    .page-header p { color: var(--text-secondary); font-size: 0.875rem; }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
+    .chart-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
     }
+
+    .chart-title { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+
+    .chart-current {
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+    }
+
+    .chart-current .unit { font-size: 0.8125rem; color: var(--text-secondary); }
+
+    canvas { width: 100%; height: 200px; display: block; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item {}
+    .stat-label { font-size: 0.6875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .stat-value { font-size: 1rem; font-weight: 300; letter-spacing: -0.02em; }
+    .stat-value .unit { font-size: 0.75rem; color: var(--text-secondary); }
 
     .footer {
-      margin-top: 18px;
-      padding: 14px 4px 0;
-      color: var(--muted);
-      font-size: .82rem;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
     }
 
-    @media (max-width: 560px) {
-      .chart-header { flex-direction: column; align-items: flex-start; gap: 6px; }
-      .current-value { font-size: 1.5rem; }
-      canvas { height: 180px; }
+    @media (max-width: 780px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .topbar { flex-wrap: wrap; padding: 12px 16px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      main { padding: 20px 16px 36px; }
+      .user-badge span { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
 
   <header>
     <div class="topbar">
-      <a href="index.html" class="back-btn">&#8592; Home</a>
-      <h1>Grafici dettaglio</h1>
-      <nav class="nav-links">
-        <a href="index.html" class="nav-link">Dashboard</a>
-        <a href="consigli.html" class="nav-link">Consigli</a>
-      </nav>
-      <div id="userInfo" class="user-info" style="display:none;">
-        <span id="userEmail" class="user-email"></span>
-        <button class="logout-btn" onclick="doLogout()">Esci</button>
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/>
+          <path d="M9 22h6"/>
+        </svg>
+        <span class="logo-text">Vaso</span>
       </div>
-      <div class="status-pill">
-        <span class="dot"></span>
-        <span id="connectionText">In attesa...</span>
+      <nav class="nav">
+        <a href="index.html">Dashboard</a>
+        <a href="grafici.html" class="active">Grafici</a>
+        <a href="consigli.html">Consigli</a>
+      </nav>
+      <div class="topbar-right">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="status-text" id="connectionText">In attesa</span>
+        <div id="userInfo" class="user-badge" style="display:none;">
+          <div class="user-avatar" id="userInitial">U</div>
+          <span id="userEmail">utente</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="doLogout()">Esci</button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="grid">
-      <article class="chart-card">
-        <div class="chart-header">
-          <h2>&#127777; Temperatura aria</h2>
-          <div><span id="temp-val" class="current-value">--</span><span class="unit"> °C</span></div>
+    <div class="page-header">
+      <h2>Grafici</h2>
+      <p>Andamento storico dei parametri raccolti.</p>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-top">
+          <span class="chart-title">Temperatura aria</span>
+          <span class="chart-current"><span id="temp-val">--</span><span class="unit"> °C</span></span>
         </div>
         <canvas id="tempChart"></canvas>
-        <div class="legend">
-          <span>Min: <strong id="temp-min">--</strong></span>
-          <span>Max: <strong id="temp-max">--</strong></span>
-          <span>Media: <strong id="temp-avg">--</strong></span>
+        <div class="stats">
+          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="temp-min">--</span><span class="unit"> °C</span></div></div>
+          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="temp-max">--</span><span class="unit"> °C</span></div></div>
+          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="temp-avg">--</span><span class="unit"> °C</span></div></div>
         </div>
-      </article>
+      </div>
 
-      <article class="chart-card">
-        <div class="chart-header">
-          <h2>&#128167; Umidità aria</h2>
-          <div><span id="hum-val" class="current-value">--</span><span class="unit"> %</span></div>
+      <div class="chart-card">
+        <div class="chart-top">
+          <span class="chart-title">Umidità aria</span>
+          <span class="chart-current"><span id="hum-val">--</span><span class="unit"> %</span></span>
         </div>
         <canvas id="humChart"></canvas>
-        <div class="legend">
-          <span>Min: <strong id="hum-min">--</strong></span>
-          <span>Max: <strong id="hum-max">--</strong></span>
-          <span>Media: <strong id="hum-avg">--</strong></span>
+        <div class="stats">
+          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="hum-min">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="hum-max">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="hum-avg">--</span><span class="unit"> %</span></div></div>
         </div>
-      </article>
+      </div>
 
-      <article class="chart-card">
-        <div class="chart-header">
-          <h2>&#127795; Umidità substrato</h2>
-          <div><span id="soil-val" class="current-value">--</span><span class="unit"> %</span></div>
+      <div class="chart-card">
+        <div class="chart-top">
+          <span class="chart-title">Umidità substrato</span>
+          <span class="chart-current"><span id="soil-val">--</span><span class="unit"> %</span></span>
         </div>
         <canvas id="soilChart"></canvas>
-        <div class="legend">
-          <span>Min: <strong id="soil-min">--</strong></span>
-          <span>Max: <strong id="soil-max">--</strong></span>
-          <span>Media: <strong id="soil-avg">--</strong></span>
+        <div class="stats">
+          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="soil-min">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="soil-max">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="soil-avg">--</span><span class="unit"> %</span></div></div>
         </div>
-      </article>
+      </div>
 
-      <article class="chart-card">
-        <div class="chart-header">
-          <h2>&#128672; Livello serbatoio</h2>
-          <div><span id="tank-val" class="current-value">--</span><span class="unit"> %</span></div>
+      <div class="chart-card">
+        <div class="chart-top">
+          <span class="chart-title">Livello serbatoio</span>
+          <span class="chart-current"><span id="tank-val">--</span><span class="unit"> %</span></span>
         </div>
         <canvas id="tankChart"></canvas>
-        <div class="legend">
-          <span>Min: <strong id="tank-min">--</strong></span>
-          <span>Max: <strong id="tank-max">--</strong></span>
-          <span>Media: <strong id="tank-avg">--</strong></span>
+        <div class="stats">
+          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="tank-min">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="tank-max">--</span><span class="unit"> %</span></div></div>
+          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="tank-avg">--</span><span class="unit"> %</span></div></div>
         </div>
-      </article>
-    </section>
+      </div>
+    </div>
 
     <div class="footer">
       <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
-      <span>Storico: <span id="pointCount">0</span> rilevazioni</span>
+      <span><span id="pointCount">0</span> rilevazioni</span>
     </div>
   </main>
 
   <script>
+    const state = { data: null, history: [] };
     const el = (id) => document.getElementById(id);
-
-    const state = {
-      data: null,
-      history: []
-    };
-
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
 
-    function pushHistory() {
-      state.history.push({
-        t: state.data.timestamp,
-        temp: state.data.temperature,
-        hum: state.data.humidity,
-        soil: state.data.soil,
-        tank: state.data.tank
-      });
-      if (state.history.length > 48) state.history.shift();
-    }
-
-    function drawChart(canvasId, dataKey, minY, maxY, strokeColor, fillStart, fillEnd, unit) {
+    function drawChart(canvasId, key, minY, maxY, color, fill, unit) {
       const canvas = el(canvasId);
       if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = (rect.width - 48) * 2;
+      canvas.height = 400;
       const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth * 2;
-      canvas.height = 440;
-      const w = canvas.width;
-      const h = canvas.height;
+      const w = canvas.width, h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-      ctx.scale(1, 1);
-
-      ctx.fillStyle = 'rgba(255,255,255,0.035)';
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= 4; i++) {
-        const y = 28 + i * ((h - 56) / 4);
-        ctx.beginPath(); ctx.moveTo(48, y); ctx.lineTo(w - 24, y); ctx.stroke();
-      }
-
-      ctx.fillStyle = 'rgba(234,255,244,0.5)';
-      ctx.font = '24px system-ui';
-      ctx.fillText(maxY + unit, 12, 36);
-      ctx.fillText(minY + unit, 18, h - 38);
 
       const data = state.history;
       if (data.length < 2) return;
 
-      const left = 56, right = w - 28, top = 26, bottom = h - 46;
-      const step = (right - left) / (data.length - 1);
+      const pad = { l: 50, r: 24, t: 20, b: 30 };
+      const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
+      const step = cw / (data.length - 1);
 
-      ctx.fillStyle = 'rgba(234,255,244,0.35)';
-      ctx.font = '20px system-ui';
-      ctx.textAlign = 'center';
-      for (let i = 0; i < data.length; i++) {
-        if (i % Math.ceil(data.length / 8) === 0 || i === data.length - 1) {
-          const d = new Date(data[i].t);
-          ctx.fillText(d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'), left + i * step, h - 12);
-        }
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 3; i++) {
+        const y = pad.t + (i * ch / 3);
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
       }
-      ctx.textAlign = 'left';
 
-      const grad = ctx.createLinearGradient(0, top, 0, bottom);
-      grad.addColorStop(0, fillStart);
-      grad.addColorStop(1, fillEnd);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.font = '18px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(maxY + unit, pad.l - 8, pad.t + 6);
+      ctx.fillText(minY + unit, pad.l - 8, h - pad.b + 6);
 
-      ctx.beginPath();
-      data.forEach((p, i) => {
-        const x = left + i * step;
-        const val = clamp(p[dataKey], minY, maxY);
-        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      });
-      ctx.lineTo(right, bottom); ctx.lineTo(left, bottom); ctx.closePath();
-      ctx.fillStyle = grad; ctx.fill();
+      const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
+      grad.addColorStop(0, fill);
+      grad.addColorStop(1, 'transparent');
 
       ctx.beginPath();
       data.forEach((p, i) => {
-        const x = left + i * step;
-        const val = clamp(p[dataKey], minY, maxY);
-        const y = bottom - ((val - minY) / (maxY - minY)) * (bottom - top);
+        const x = pad.l + i * step;
+        const val = clamp(p[key], minY, maxY);
+        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = strokeColor; ctx.lineWidth = 5; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+      ctx.lineTo(pad.l + (data.length - 1) * step, h - pad.b);
+      ctx.lineTo(pad.l, h - pad.b);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.beginPath();
+      data.forEach((p, i) => {
+        const x = pad.l + i * step;
+        const val = clamp(p[key], minY, maxY);
+        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.font = '16px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      const stepLabel = Math.ceil(data.length / 6);
+      for (let i = 0; i < data.length; i += stepLabel) {
+        const dt = new Date(data[i].t);
+        ctx.fillText(dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0'), pad.l + i * step, h - 8);
+      }
     }
 
     function updateStats() {
       const data = state.history;
       if (data.length === 0) return;
-
-      const keys = { temp: 'temp', hum: 'hum', soil: 'soil', tank: 'tank' };
-      const units = { temp: '°C', hum: '%', soil: '%', tank: '%' };
-      const vals = { temp: data[data.length-1].temp, hum: data[data.length-1].hum, soil: data[data.length-1].soil, tank: data[data.length-1].tank };
-
-      for (const [key, prefix] of Object.entries(keys)) {
-        const arr = data.map(d => d[key]);
-        const min = Math.min(...arr);
-        const max = Math.max(...arr);
-        const avg = arr.reduce((a,b) => a+b,0) / arr.length;
-        el(`${prefix}-val`).textContent = fmt(vals[key], key === 'temp' ? 1 : 0);
-        el(`${prefix}-min`).textContent = fmt(min, key === 'temp' ? 1 : 0) + units[key];
-        el(`${prefix}-max`).textContent = fmt(max, key === 'temp' ? 1 : 0) + units[key];
-        el(`${prefix}-avg`).textContent = fmt(avg, key === 'temp' ? 1 : 0) + units[key];
+      const configs = [
+        { prefix: 'temp', key: 'temp', unit: '°C', d: 1 },
+        { prefix: 'hum', key: 'hum', unit: '%', d: 0 },
+        { prefix: 'soil', key: 'soil', unit: '%', d: 0 },
+        { prefix: 'tank', key: 'tank', unit: '%', d: 0 }
+      ];
+      for (const c of configs) {
+        const arr = data.map(d => d[c.key]);
+        const min = Math.min(...arr), max = Math.max(...arr);
+        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+        el(`${c.prefix}-val`).textContent = fmt(data[data.length - 1][c.key], c.d);
+        el(`${c.prefix}-min`).textContent = fmt(min, c.d);
+        el(`${c.prefix}-max`).textContent = fmt(max, c.d);
+        el(`${c.prefix}-avg`).textContent = fmt(avg, c.d);
       }
-
       el('pointCount').textContent = data.length;
-      el('lastUpdate').textContent = new Date(data[data.length-1].t).toLocaleString('it-IT');
+      el('lastUpdate').textContent = new Date(data[data.length - 1].t).toLocaleString('it-IT');
     }
 
     function render() {
-      drawChart('tempChart', 'temp', 0, 50, '#ffd166', 'rgba(255,209,102,0.65)', 'rgba(255,209,102,0.02)', '°C');
-      drawChart('humChart', 'hum', 0, 100, '#45d3ff', 'rgba(69,211,255,0.65)', 'rgba(69,211,255,0.02)', '%');
-      drawChart('soilChart', 'soil', 0, 100, '#38ff9c', 'rgba(56,255,156,0.65)', 'rgba(56,255,156,0.02)', '%');
-      drawChart('tankChart', 'tank', 0, 100, '#6587ff', 'rgba(101,135,255,0.65)', 'rgba(101,135,255,0.02)', '%');
+      drawChart('tempChart', 'temp', 0, 50, '#f59e0b', 'rgba(245,158,11,0.12)', '°C');
+      drawChart('humChart', 'hum', 0, 100, '#38bdf8', 'rgba(56,189,248,0.12)', '%');
+      drawChart('soilChart', 'soil', 0, 100, '#4ade80', 'rgba(74,222,128,0.12)', '%');
+      drawChart('tankChart', 'tank', 0, 100, '#a78bfa', 'rgba(167,139,250,0.12)', '%');
       updateStats();
     }
 
-    function updateFromRemote(payload) {
+    window.updateFromRemote = function(payload) {
       el('connectionText').textContent = 'Live';
+      document.getElementById('statusDot').classList.remove('offline');
 
       state.data = {
         temperature: Number(payload.temperature ?? payload.temp ?? 0),
@@ -415,11 +397,18 @@
         timestamp: Number(payload.timestamp ?? Date.now())
       };
 
-      pushHistory();
+      state.history.push({
+        t: state.data.timestamp,
+        temp: state.data.temperature,
+        hum: state.data.humidity,
+        soil: state.data.soil,
+        tank: state.data.tank
+      });
+      if (state.history.length > 48) state.history.shift();
       render();
-    }
+    };
 
-    window.updateFromRemote = updateFromRemote;
+    window.addEventListener('resize', render);
   </script>
 
   <script type="module">
@@ -444,38 +433,24 @@
     const latestRef = ref(db, "vaso/latest");
 
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
-      document.getElementById("userInfo").style.display = "flex";
-      document.getElementById("userEmail").textContent = user.email || user.displayName || "Utente";
+      if (!user) { window.location.href = "login.html"; return; }
+      document.getElementById('userInfo').style.display = 'flex';
+      document.getElementById('logoutBtn').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
+      document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
     });
 
-    window.doLogout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "login.html";
-      } catch (error) {
-        console.error("Errore logout:", error);
-      }
-    };
+    window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
-    const intervalloAggiornamento = 10000;
-
-    async function recuperaDati() {
+    async function fetchDati() {
       try {
         const snapshot = await get(latestRef);
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          if (typeof window.updateFromRemote === "function") window.updateFromRemote(data);
-        }
-      } catch (error) { console.error("Errore Firebase:", error); }
+        if (snapshot.exists() && typeof window.updateFromRemote === 'function') window.updateFromRemote(snapshot.val());
+      } catch (e) { console.error(e); }
     }
 
-    recuperaDati();
-    setInterval(recuperaDati, intervalloAggiornamento);
-    window.addEventListener('resize', render);
+    fetchDati();
+    setInterval(fetchDati, 10000);
   </script>
 </body>
 </html>
