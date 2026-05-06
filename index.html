@@ -6,7 +6,8 @@
         <title>VASO IDRO - Dashboard Online</title>         
         <style>:root { --bg: #07130f; --panel: rgba(14, 31, 24, 0.86); --panel-2: rgba(19, 44, 34, 0.88); --text: #eafff4; --muted: #8ebca6; --line: rgba(130, 255, 190, 0.18); --green: #38ff9c; --green-2: #00c875; --yellow: #ffd166; --orange: #ff9f1c; --red: #ff4d6d; --cyan: #45d3ff; --blue: #6587ff; --shadow: 0 18px 45px rgba(0, 0, 0, 0.35); } * { box-sizing: border-box; } body { margin: 0; min-height: 100vh; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: radial-gradient(circle at top left, rgba(56, 255, 156, 0.16), transparent 32rem),
         radial-gradient(circle at 80% 0%, rgba(69, 211, 255, 0.12), transparent 28rem),
-        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%); overflow-x: hidden; } .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.08; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 34px 34px; mask-image: radial-gradient(circle at center, black, transparent 80%); } header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(18px); background: rgba(4, 15, 10, 0.76); border-bottom: 1px solid var(--line); } .topbar { max-width: 1200px; margin: 0 auto; padding: 18px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; } .brand { display: flex; align-items: center; gap: 12px; } .logo { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(56,255,156,.24), rgba(69,211,255,.12)); border: 1px solid rgba(56,255,156,.35); box-shadow: 0 0 30px rgba(56,255,156,.14); font-size: 25px; } .brand h1 { margin: 0; font-size: clamp(1.1rem, 3vw, 1.7rem); letter-spacing: 0.04em; } .brand p { margin: 2px 0 0; color: var(--muted); font-size: 0.82rem; } .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(10, 27, 20, 0.72); color: var(--muted); white-space: nowrap; font-size: 0.88rem; } .user-info { display: inline-flex; align-items: center; gap: 10px; } .user-email { font-size: 0.82rem; color: var(--muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .logout-btn { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,77,109,0.3); background: rgba(255,77,109,0.1); color: var(--red); font-size: 0.82rem; font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.2s, border-color 0.2s; } .logout-btn:hover { background: rgba(255,77,109,0.2); border-color: rgba(255,77,109,0.5); } .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 15px var(--green); } main { max-width: 1200px; margin: 0 auto; padding: 22px 18px 42px; } .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; margin-bottom: 18px; } .card { background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9)); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden; } .overview { min-height: 340px; position: relative; padding: 26px; display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: center; } .overview::after { content: ""; position: absolute; width: 340px; height: 340px; border-radius: 50%; right: -110px; bottom: -150px; background: radial-gradient(circle, rgba(56,255,156,.13), transparent 68%); pointer-events: none; } .kicker { color: var(--green); text-transform: uppercase; letter-spacing: 0.16em; font-weight: 800; font-size: 0.74rem; margin-bottom: 10px; } .title { font-size: clamp(2.1rem, 7vw, 4.6rem); line-height: 0.92; margin: 0 0 16px; letter-spacing: -0.06em; } .subtitle { color: var(--muted); line-height: 1.6; max-width: 560px; margin: 0 0 22px; } .actions { display: flex; flex-wrap: wrap; gap: 10px; } button, .button { border: 0; cursor: pointer; color: #03100b; background: linear-gradient(135deg, var(--green), #9dffca); padding: 12px 16px; border-radius: 16px; font-weight: 800; box-shadow: 0 12px 22px rgba(56,255,156,.16); } button.secondary { color: var(--text); background: rgba(255,255,255,.06); border: 1px solid var(--line); box-shadow: none; } .plant-visual { position: relative; width: min(220px, 100%); aspect-ratio: 1/1.22; margin: auto; } .leaf { position: absolute; border-radius: 100% 0 100% 0; background: linear-gradient(135deg, #38ff9c, #0c8f56); transform-origin: bottom right; box-shadow: inset 8px 8px 18px rgba(255,255,255,.16), 0 18px 35px rgba(0,0,0,.22); } .leaf.l1 { width: 95px; height: 56px; left: 44px; top: 40px; transform: rotate(-38deg); } .leaf.l2 { width: 105px; height: 60px; right: 28px; top: 80px; transform: rotate(28deg) scaleX(-1); } .leaf.l3 { width: 82px; height: 48px; left: 62px; top: 108px; transform: rotate(-18deg); opacity: .9; } .stem { position: absolute; left: 50%; top: 80px; width: 10px; height: 140px; border-radius: 999px; background: linear-gradient(#52ffad, #0b7f4d); transform: translateX(-50%); } .pot { position: absolute; bottom: 0; left: 28px; right: 28px; height: 116px; background: linear-gradient(180deg, #173a2b, #0d241a); border: 1px solid rgba(56,255,156,.2); border-radius: 18px 18px 45px 45px; box-shadow: inset 0 14px 28px rgba(255,255,255,.04); } .water { position: absolute; left: 42px; right: 42px; bottom: 22px; height: 34px; border-radius: 0 0 32px 32px; background: linear-gradient(180deg, rgba(69,211,255,.35), rgba(69,211,255,.08)); } .side-panel { padding: 22px; } .side-panel h2, .section-title { margin: 0 0 14px; font-size: 1.1rem; } .big-number { font-size: clamp(3rem, 8vw, 5rem); line-height: 1; margin: 18px 0 6px; letter-spacing: -0.07em; } .muted { color: var(--muted); } .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; } .metric { padding: 20px; min-height: 178px; display: flex; flex-direction: column; justify-content: space-between; } .metric-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; } .icon { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,255,255,.06); border: 1px solid var(--line); font-size: 1.35rem; } .metric h3 { margin: 0; font-size: .94rem; color: var(--muted); font-weight: 700; } .value { font-size: 2.15rem; font-weight: 900; letter-spacing: -0.05em; margin-top: 12px; } .unit { font-size: 1rem; color: var(--muted); letter-spacing: 0; } .bar { width: 100%; height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; margin-top: 13px; } .fill { height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, var(--green-2), var(--green)); transition: width .45s ease, background .45s ease; } .wide { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; } .chart-card { padding: 22px; } canvas { width: 100%; height: 260px; display: block; } .footer { margin-top: 18px; padding: 18px 4px 0; color: var(--muted); font-size: .85rem; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; } .offline .dot { background: var(--red); box-shadow: 0 0 15px var(--red); } .offline #connectionText { color: var(--red); } @media (max-width: 940px) { .hero, .overview, .wide {  grid-template-columns: 1fr; }  .plant-visual {  max-width: 190px; }  .grid {  grid-template-columns: repeat(2, 1fr); } } @media (max-width: 560px) { .topbar {  align-items: flex-start; }  .status-pill {  font-size: .76rem;  padding: 8px 10px; }  .grid {  grid-template-columns: 1fr; }  .overview {  padding: 21px; }  .metric {  min-height: 155px; }  .actions button {  flex: 1; } }</style>         
+        linear-gradient(135deg, #06110d 0%, #081911 52%, #03100b 100%); overflow-x: hidden; } .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.08; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 34px 34px; mask-image: radial-gradient(circle at center, black, transparent 80%); } header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(18px); background: rgba(4, 15, 10, 0.76); border-bottom: 1px solid var(--line); } .topbar { max-width: 1200px; margin: 0 auto; padding: 18px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; } .brand { display: flex; align-items: center; gap: 12px; } .logo { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(56,255,156,.24), rgba(69,211,255,.12)); border: 1px solid rgba(56,255,156,.35); box-shadow: 0 0 30px rgba(56,255,156,.14); font-size: 25px; } .brand h1 { margin: 0; font-size: clamp(1.1rem, 3vw, 1.7rem); letter-spacing: 0.04em; } .brand p { margin: 2px 0 0; color: var(--muted); font-size: 0.82rem; } .nav-links { display: flex; gap: 8px; } .nav-link { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(10, 27, 20, 0.5); color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: background 0.2s, color 0.2s; white-space: nowrap; } .nav-link:hover { background: rgba(56,255,156,0.12); color: var(--green); } .user-info { display: inline-flex; align-items: center; gap: 10px; } .user-email { font-size: 0.82rem; color: var(--muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .logout-btn { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,77,109,0.3); background: rgba(255,77,109,0.1); color: var(--red); font-size: 0.82rem; font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.2s, border-color 0.2s; } .logout-btn:hover { background: rgba(255,77,109,0.2); border-color: rgba(255,77,109,0.5); } .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(10, 27, 20, 0.72); color: var(--muted); white-space: nowrap; font-size: 0.88rem; } .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 15px var(--green); } .status-pill.offline .dot { background: var(--red); box-shadow: 0 0 15px var(--red); } main { max-width: 1200px; margin: 0 auto; padding: 22px 18px 42px; } .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; margin-bottom: 18px; } .card { background: linear-gradient(180deg, var(--panel), rgba(8, 24, 17, 0.9)); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden; } .overview { min-height: 340px; position: relative; padding: 26px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; } .kicker { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--green); margin-bottom: 6px; font-weight: 700; } .title { margin: 0 0 8px; font-size: clamp(1.5rem, 3.5vw, 2.2rem); letter-spacing: -0.03em; line-height: 1.15; } .subtitle { margin: 0; color: var(--muted); line-height: 1.55; font-size: 0.95rem; max-width: 420px; } .actions { display: flex; gap: 10px; margin-top: 18px; } .actions button { padding: 10px 18px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--green-2), var(--green)); color: #07130f; font-weight: 700; font-size: 0.88rem; cursor: pointer; font-family: inherit; transition: transform 0.15s, opacity 0.2s; } .actions button:hover { transform: translateY(-2px); opacity: 0.92; } .actions button.secondary { background: rgba(255,255,255,.08); color: var(--text); border: 1px solid var(--line); } .plant-visual { position: relative; width: 120px; height: 220px; flex-shrink: 0; } .stem { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 6px; height: 100px; background: linear-gradient(to top, #2d6a4f, #52b788); border-radius: 3px; } .leaf { position: absolute; width: 36px; height: 18px; background: radial-gradient(ellipse, #40916c, #2d6a4f); border-radius: 0 70% 0 70%; } .leaf.l1 { bottom: 110px; left: 30px; transform: rotate(-20deg); } .leaf.l2 { bottom: 130px; right: 20px; transform: rotate(20deg) scaleX(-1); } .leaf.l3 { bottom: 150px; left: 25px; transform: rotate(-10deg); } .pot { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 36px; background: linear-gradient(135deg, #d4a373, #b08968); border-radius: 4px 4px 10px 10px; } .water { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 50px; height: 20px; background: linear-gradient(to top, rgba(69,211,255,.6), rgba(69,211,255,.2)); border-radius: 0 0 8px 8px; transition: height 1s ease; } .side-panel { padding: 26px; display: flex; flex-direction: column; align-items: center; text-align: center; } .side-panel h2 { margin: 0 0 6px; font-size: 1.15rem; } .side-panel .muted { margin: 0 0 18px; font-size: 0.85rem; } .big-number { font-size: clamp(2.8rem, 8vw, 4.5rem); font-weight: 900; line-height: 1; letter-spacing: -0.06em; } .unit { font-size: 0.45em; color: var(--muted); font-weight: 600; } .bar { width: 80%; max-width: 240px; height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; margin: 14px 0; } .fill { height: 100%; width: 0%; border-radius: inherit; transition: width .5s ease, background .4s ease; } .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; } .metric { padding: 22px; } .metric-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; } .metric-top h3 { margin: 0; font-size: 0.95rem; font-weight: 700; } .metric-top .icon { font-size: 1.3rem; } .value { font-size: 2rem; font-weight: 900; letter-spacing: -0.04em; } .wide { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .chart-card { padding: 22px; } .section-title { margin: 0 0 14px; font-size: 1.05rem; } canvas { width: 100%; height: 260px; display: block; } .footer { margin-top: 18px; padding: 14px 4px 0; color: var(--muted); font-size: .82rem; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; } .footer strong { color: var(--text); } @media (max-width: 780px) { .hero { grid-template-columns: 1fr; } .overview { grid-template-columns: 1fr; } .plant-visual { margin: 0 auto; } .wide { grid-template-columns: 1fr; } .topbar { flex-direction: column; align-items: flex-start; gap: 12px; } .nav-links { order: 1; } }
+        </style>
     </head>     
     <body> 
         <div class="noise"></div>         
@@ -19,13 +20,17 @@
                         <p>Dashboard online controllo vaso</p> 
                     </div>                     
                 </div>                 
-                <div id="userInfo" class="user-info" style="display:none;align-items:center;gap:10px;">
+                <nav class="nav-links">
+                    <a href="grafici.html" class="nav-link">Grafici</a>
+                    <a href="consigli.html" class="nav-link">Consigli</a>
+                </nav>
+                <div id="userInfo" class="user-info" style="display:none;">
                     <span id="userEmail" class="user-email"></span>
                     <button class="logout-btn" onclick="doLogout()">Esci</button>
                 </div>
-                <div id="statusPill" class="status-pill"> 
-                    <span class="dot"></span> 
-                    <span id="connectionText">Modalità demo</span> 
+                <div id="statusPill" class="status-pill">
+                    <span class="dot"></span>
+                    <span id="connectionText">In attesa...</span>
                 </div>                 
             </div>             
         </header>         
@@ -35,11 +40,7 @@
                     <div> 
                         <div class="kicker">Sistema attivo</div>                         
                         <h2 class="title">Controllo vaso in tempo reale</h2> 
-                        <p class="subtitle">Dati reali, live, controllare limiti di storage su FB.</p> 
-                        <div class="actions"> 
-                            <button onclick="toggleDemo()" id="demoBtn">Ferma demo</button>                             
-                            <button class="secondary" onclick="resetHistory()">Reset grafico</button>                             
-                        </div>                         
+                        <p class="subtitle">Monitora temperatura, umidità e livello acqua direttamente dal tuo vaso intelligente.</p>                         
                     </div>                     
                     <div class="plant-visual" aria-hidden="true"> 
                         <div class="stem"></div>                         
@@ -137,22 +138,12 @@
             </section>             
             <div class="footer"> 
                 <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span> 
-                <span>Versione pagina: online-demo v1.0</span> 
+                <span>Versione pagina: v2.0</span> 
             </div>             
         </main>         
         <script>
-    // =============================================================
-    // CONFIGURAZIONE DATI
-    // =============================================================
     const state = {
-      demo: true,
-      data: {
-        temperature: 21.0,
-        humidity: 47,
-        soil: 62,
-        tank: 82,
-        timestamp: Date.now()
-      },
+      data: null,
       history: []
     };
 
@@ -197,6 +188,7 @@
     }
 
     function render() {
+      if (!state.data) return;
       const d = state.data;
       const health = computeHealth(d);
 
@@ -218,22 +210,16 @@
       drawChart();
     }
 
-    // Console di sistema in background invece che a video
-    function log(message) {
-      console.log(`[${new Date().toLocaleTimeString('it-IT')}] ${message}`);
-    }
-
     function pushHistory() {
+      if (!state.data) return;
       state.history.push({ 
-        t: Date.now(), 
+        t: state.data.timestamp, 
         temp: state.data.temperature, 
         hum: state.data.humidity 
       });
-      // Manteniamo 48 rilevazioni a schermo
       if (state.history.length > 48) state.history.shift();
     }
 
-    // Funzione generica per disegnare sia il grafico Temperatura che Umidità
     function drawGenericChart(canvasId, dataKey, minY, maxY, strokeColor, fillStart, fillEnd, unit) {
       const canvas = el(canvasId);
       if (!canvas) return;
@@ -247,7 +233,6 @@
 
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
-      // Adattato per lasciare spazio per l'asse X
       for (let i = 0; i <= 4; i++) {
         const y = 24 + i * ((h - 52) / 4);
         ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
@@ -264,12 +249,10 @@
       const left = 46, right = w - 22, top = 22, bottom = h - 38;
       const step = (right - left) / (data.length - 1);
 
-      // Disegna Asse X (Ore)
       ctx.fillStyle = 'rgba(234,255,244,0.4)';
       ctx.font = '12px system-ui';
       ctx.textAlign = 'center';
       for (let i = 0; i < data.length; i++) {
-        // Disegniamo le ore in modo bilanciato (circa 8 etichette)
         if (i % Math.ceil(data.length / 8) === 0 || i === data.length - 1) {
           const d = new Date(data[i].t);
           const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
@@ -310,71 +293,26 @@
     }
 
     function drawChart() {
-      // Scala da 0 a 50 per la Temperatura
       drawGenericChart('tempChart', 'temp', 0, 50, '#ffd166', 'rgba(255,209,102,0.65)', 'rgba(255,209,102,0.02)', '°C');
-      // Scala da 0 a 100 per l'Umidità
       drawGenericChart('humChart', 'hum', 0, 100, '#45d3ff', 'rgba(69,211,255,0.65)', 'rgba(69,211,255,0.02)', '%');
     }
 
-    function demoTick() {
-      if (!state.demo) return;
-      const d = state.data;
-      d.temperature = clamp(d.temperature + (Math.random() - 0.48) * 0.35, 16, 31);
-      d.humidity = clamp(d.humidity + (Math.random() - 0.5) * 1.2, 35, 78);
-      d.soil = clamp(d.soil + (Math.random() - 0.52) * 1.8, 22, 88);
-      d.tank = clamp(d.tank - Math.random() * 0.22, 0, 100);
-      d.timestamp = Date.now();
-      pushHistory();
-      render();
-    }
-
-    function toggleDemo() {
-      state.demo = !state.demo;
-      el('demoBtn').textContent = state.demo ? 'Ferma demo' : 'Avvia demo';
-      el('connectionText').textContent = state.demo ? 'Modalità demo' : 'Demo ferma';
-      el('statusPill').classList.toggle('offline', !state.demo);
-      log(state.demo ? 'Demo riavviata.' : 'Demo fermata. Pronta per dati reali.');
-    }
-
-    function resetHistory() {
-      state.history = [];
-      const now = Date.now();
-      // Creiamo uno storico fake che simula dati raccolti ogni 30 minuti nelle ultime 24 ore
-      for (let i = 0; i < 48; i++) {
-        state.history.push({ 
-          t: now - (48 - i) * 1800000, 
-          temp: clamp(state.data.temperature + (Math.random() - 0.5) * 8, 15, 35),
-          hum: clamp(state.data.humidity + (Math.random() - 0.5) * 15, 30, 80)
-        });
-      }
-      render();
-      log('Grafico reinizializzato.');
-    }
-
     function updateFromRemote(payload) {
-      state.demo = false;
-      el('demoBtn').textContent = 'Avvia demo';
       el('connectionText').textContent = 'Dati live';
-      el('statusPill').classList.remove('offline');
 
       state.data = {
-        temperature: Number(payload.temperature ?? payload.temp ?? state.data.temperature),
-        humidity: Number(payload.humidity ?? payload.hum ?? state.data.humidity),
-        soil: Number(payload.soil ?? payload.soilHumidity ?? state.data.soil),
-        tank: Number(payload.tank ?? payload.waterLevel ?? state.data.tank),
+        temperature: Number(payload.temperature ?? payload.temp ?? 0),
+        humidity: Number(payload.humidity ?? payload.hum ?? 0),
+        soil: Number(payload.soil ?? payload.soilHumidity ?? 0),
+        tank: Number(payload.tank ?? payload.waterLevel ?? 0),
         timestamp: Number(payload.timestamp ?? Date.now())
       };
 
       pushHistory();
       render();
-      log('Ricevuti dati live dal database.');
     }
 
     window.updateFromRemote = updateFromRemote;
-
-    resetHistory();
-    log('Dashboard caricata in modalità demo.');
-    setInterval(demoTick, 3000);
     window.addEventListener('resize', drawChart);
   </script>         
         <script type="module">
@@ -416,7 +354,6 @@
       }
     };
 
-    // Frequenza di aggiornamento in millisecondi (es. 10000 = 10 secondi)
     const intervalloAggiornamento = 10000; 
 
     async function recuperaDati() {
@@ -424,25 +361,16 @@
         const snapshot = await get(latestRef);
         if (snapshot.exists()) {
           const data = snapshot.val();
-          console.log("Dati Firebase ricevuti (Polling):", data);
-
           if (typeof window.updateFromRemote === "function") {
             window.updateFromRemote(data);
-          } else {
-            console.error("La funzione updateFromRemote non è disponibile globalmente.");
           }
-        } else {
-          console.warn("Nessun dato trovato in /vaso/latest");
         }
       } catch (error) {
         console.error("Errore lettura Firebase:", error);
       }
     }
 
-    // Esegue la prima lettura all'apertura della pagina
     recuperaDati();
-
-    // Continua a leggere ogni 10 secondi
     setInterval(recuperaDati, intervalloAggiornamento);
   </script>         
     </body>     
