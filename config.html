@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaso — Configurazione</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #080808; --surface: #101010; --surface-2: #161616; --border: rgba(255,255,255,0.06);
+      --text: #f0f0f0; --text-secondary: #6e6e6e; --accent: #4ade80; --accent-dim: rgba(74,222,128,0.1);
+      --danger: #ef4444; --radius: 16px; --radius-sm: 10px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { position: sticky; top: 0; z-index: 50; background: rgba(8,8,8,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .topbar { max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .config-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 40px; max-width: 520px; width: 100%; text-align: center;
+    }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; margin-bottom: 8px; }
+    p { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 32px; line-height: 1.6; }
+    .input-group { margin-bottom: 24px; text-align: left; }
+    label { display: block; font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+    input {
+      width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      font-size: 1rem; font-family: 'Inter', sans-serif; text-align: center;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    input:focus { outline: none; border-color: var(--accent); }
+    .btn {
+      width: 100%; padding: 14px; border-radius: var(--radius-sm); border: none;
+      background: var(--accent); color: #080808; font-weight: 600; font-size: 0.875rem;
+      cursor: pointer; transition: opacity 0.2s; font-family: 'Inter', sans-serif;
+    }
+    .btn:hover { opacity: 0.9; }
+    .info-box {
+      background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2);
+      border-radius: var(--radius-sm); padding: 16px; margin-top: 24px; font-size: 0.8125rem;
+      color: var(--text-secondary); line-height: 1.5; text-align: left;
+    }
+    .info-box strong { color: var(--accent); }
+    #statusMsg { margin-top: 16px; font-size: 0.8125rem; }
+    .success { color: var(--accent); }
+    .error { color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="topbar">
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/><path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/></svg>
+        <span class="logo-text">Vaso</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="config-card">
+      <h2>Configurazione Dispositivo</h2>
+      <p>Inserisci l'indirizzo MAC del tuo vaso (senza i due punti). Lo trovi nel monitor seriale dell'ESP32 dopo la connessione WiFi.</p>
+      
+      <div class="input-group">
+        <label for="macInput">Indirizzo MAC (es. A1B2C3D4E5F6)</label>
+        <input type="text" id="macInput" placeholder="A1B2C3D4E5F6" maxlength="17">
+      </div>
+
+      <button class="btn" onclick="saveMac()">Salva e Continua</button>
+      <div id="statusMsg"></div>
+
+      <div class="info-box">
+        <strong>Come trovare il MAC Address:</strong><br>
+        1. Apri l'IDE Arduino e il Monitor Seriale<br>
+        2. Resetta l'ESP32<br>
+        3. Cerca la riga: "IP ESP32: ..." (il MAC è solitamente stampato vicino o nel log di connessione)<br>
+        4. Formato originale: AA:BB:CC:DD:EE:FF -> Inserisci: <strong>AABBCC_DDEEFF</strong> (sostituisci : con _)
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
+      authDomain: "vasotest-7133a.firebaseapp.com",
+      databaseURL: "https://vasotest-7133a-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "vasotest-7133a",
+      storageBucket: "vasotest-7133a.firebasestorage.app",
+      messagingSenderId: "291811803411",
+      appId: "1:291811803411:web:c01e2b199a7f812b911ae6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "login.html"; return; }
+      currentUser = user;
+      
+      // Check if MAC is already saved
+      const snap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
+      if (snap.exists()) {
+        document.getElementById('macInput').value = snap.val().replace(/_/g, '');
+      }
+    });
+
+    window.saveMac = async () => {
+      const macRaw = document.getElementById('macInput').value.trim();
+      const statusEl = document.getElementById('statusMsg');
+      
+      if (!macRaw || macRaw.length < 12) {
+        statusEl.className = 'error';
+        statusEl.textContent = 'Inserisci un MAC Address valido.';
+        return;
+      }
+
+      // Format MAC: replace : with _ and remove any other chars
+      let macFormatted = macRaw.replace(/:/g, '_').replace(/[^A-Fa-f0-9_]/g, '');
+      
+      try {
+        await set(ref(db, "vaso/" + currentUser.uid + "/device_mac"), macFormatted);
+        statusEl.className = 'success';
+        statusEl.textContent = 'Salvato! Reindirizzamento alla dashboard...';
+        setTimeout(() => { window.location.href = "index.html"; }, 1500);
+      } catch (e) {
+        statusEl.className = 'error';
+        statusEl.textContent = 'Errore nel salvataggio: ' + e.message;
+      }
+    };
+  </script>
+</body>
+</html>
