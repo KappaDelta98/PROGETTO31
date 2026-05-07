@@ -307,16 +307,33 @@
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
 
-    function computeHealth(d) {
-      const soilScore = 100 - Math.abs(68 - d.soil) * 2.0;
-      const tankScore = d.tank;
-      const tempScore = 100 - Math.abs(23 - d.temperature) * 5.0;
-      const humScore = 100 - Math.abs(55 - d.humidity) * 1.1;
-      return Math.round(clamp((soilScore * 0.42) + (tankScore * 0.22) + (tempScore * 0.2) + (humScore * 0.16), 0, 100));
+    const PLANT_REQS = {
+      "Sansevieria": { soil: 40, temp: 20 },
+      "Zamioculcas": { soil: 50, temp: 22 },
+      "Pothos": { soil: 60, temp: 20 },
+      "Spatifillo": { soil: 70, temp: 22 },
+      "Rosmarino": { soil: 30, temp: 18 },
+      "Basilico": { soil: 60, temp: 22 },
+      "Peperoncino": { soil: 50, temp: 24 },
+      "Aloe Vera": { soil: 30, temp: 20 },
+      "Monstera": { soil: 60, temp: 22 },
+      "Alocasia": { soil: 65, temp: 22 },
+      "Ficus Lyrata": { soil: 55, temp: 20 },
+      "Strelitzia": { soil: 60, temp: 20 }
+    };
+
+    function computeHealth(d, selectedPlant) {
+      const reqs = PLANT_REQS[selectedPlant] || { soil: 50, temp: 20 };
+      const soilScore = 100 - Math.abs(reqs.soil - d.soil) * 1.5;
+      const tempScore = 100 - Math.abs(reqs.temp - d.temperature) * 2;
+      return Math.round(clamp((soilScore * 0.6) + (tempScore * 0.4), 0, 100));
     }
 
-    function getTips(d) {
+    function getTips(d, selectedPlant, yesterdayData) {
+      const reqs = PLANT_REQS[selectedPlant] || { soil: 50, temp: 20 };
       const tips = [];
+
+      // Serbatoio (generico)
       if (d.tank < 20) {
         tips.push({ type: 'danger', title: 'Serbatoio quasi vuoto', message: `Livello al ${fmt(d.tank)}%. Riempi il prima possibile.` });
       } else if (d.tank < 50) {
@@ -325,36 +342,55 @@
         tips.push({ type: 'ok', title: 'Serbatoio OK', message: `Livello al ${fmt(d.tank)}%. Riserva sufficiente.` });
       }
 
-      if (d.soil < 35) {
-        tips.push({ type: 'danger', title: 'Substrato secco', message: `Umidità al ${fmt(d.soil)}%. Verifica pompa o annaffia.` });
-      } else if (d.soil > 85) {
-        tips.push({ type: 'warning', title: 'Substrato troppo umido', message: `Umidità al ${fmt(d.soil)}%. Riduci irrigazione.` });
+      // Substrato (basato su pianta)
+      const soilDiff = d.soil - reqs.soil;
+      if (soilDiff < -15) {
+        tips.push({ type: 'danger', title: 'Substrato troppo secco', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant} preferisce ~${reqs.soil}%. Irrigare.` });
+      } else if (soilDiff > 15) {
+        tips.push({ type: 'warning', title: 'Substrato troppo umido', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant} preferisce ~${reqs.soil}%. Ridurre irrigazione.` });
       } else {
-        tips.push({ type: 'ok', title: 'Substrato ottimale', message: `Umidità al ${fmt(d.soil)}%. Zona ideale.` });
+        tips.push({ type: 'ok', title: 'Substrato ottimale', message: `Umidità al ${fmt(d.soil)}%. Perfetto per ${selectedPlant}.` });
       }
 
-      if (d.temperature > 30) {
-        tips.push({ type: 'danger', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. Sposta in zona più fresca.` });
-      } else if (d.temperature < 15) {
-        tips.push({ type: 'warning', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. Proteggi dal freddo.` });
+      // Temperatura (basato su pianta)
+      const tempDiff = d.temperature - reqs.temp;
+      if (tempDiff > 5) {
+        tips.push({ type: 'danger', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant} preferisce ~${reqs.temp}°C. Spostare in zona fresca.` });
+      } else if (tempDiff < -5) {
+        tips.push({ type: 'warning', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant} preferisce ~${reqs.temp}°C. Proteggere dal freddo.` });
       } else {
-        tips.push({ type: 'ok', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Condizione perfetta.` });
+        tips.push({ type: 'ok', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Perfetto per ${selectedPlant}.` });
       }
 
-      if (d.humidity < 40) {
-        tips.push({ type: 'warning', title: 'Umidità aria bassa', message: `Umidità al ${fmt(d.humidity)}%. Nebulizza le foglie.` });
-      } else if (d.humidity > 75) {
-        tips.push({ type: 'warning', title: 'Umidità aria alta', message: `Umidità al ${fmt(d.humidity)}%. Aumenta ventilazione.` });
-      } else {
-        tips.push({ type: 'ok', title: 'Umidità aria ideale', message: `Umidità al ${fmt(d.humidity)}%. Livello perfetto.` });
+      // Confronto con ieri
+      if (yesterdayData) {
+        const soilChange = d.soil - (yesterdayData.soil || 0);
+        if (Math.abs(soilChange) > 10) {
+          const dir = soilChange > 0 ? 'aumentata' : 'diminuita';
+          tips.push({ type: 'warning', title: 'Cambiamento umidità', message: `Umidità substrato ${dir} di ${fmt(Math.abs(soilChange))}% rispetto a ieri.` });
+        }
       }
 
       return tips;
     }
 
-    function render(d) {
+    function render(d, selectedPlant, storicoData) {
       if (!d || d.temperature === 0 && d.humidity === 0 && d.soil === 0 && d.tank === 0) return;
-      const health = computeHealth(d);
+      const health = computeHealth(d, selectedPlant);
+
+      // Trova dati di 1 giorno fa
+      let yesterdayData = null;
+      if (storicoData && storicoData.length > 0) {
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        let minDiff = Infinity;
+        for (const item of storicoData) {
+          const diff = Math.abs((item.timestamp || 0) - oneDayAgo);
+          if (diff < minDiff) {
+            minDiff = diff;
+            yesterdayData = item;
+          }
+        }
+      }
 
       el('health').textContent = fmt(health);
       const circumference = 326.73;
@@ -365,19 +401,13 @@
       else if (health >= 45) { ring.style.stroke = 'var(--warm)'; el('healthStatus').textContent = 'Discreta'; el('healthStatus').className = 'health-status warn'; }
       else { ring.style.stroke = 'var(--danger)'; el('healthStatus').textContent = 'Critica'; el('healthStatus').className = 'health-status bad'; }
 
-      if (d.tank < 20) el('healthAdvice').textContent = 'Serbatoio basso: conviene ricaricare acqua.';
-      else if (d.soil < 35) el('healthAdvice').textContent = 'Substrato secco: serve irrigazione o controllo pompa.';
-      else if (d.soil > 85) el('healthAdvice').textContent = 'Substrato molto umido: ridurre irrigazione.';
-      else if (d.temperature > 30) el('healthAdvice').textContent = 'Temperatura alta: evitare sole diretto.';
-      else el('healthAdvice').textContent = 'Parametri nella norma. Continua il monitoraggio.';
-
       el('pTemp').innerHTML = fmt(d.temperature, 1) + '<span class="unit"> °C</span>';
       el('pHum').innerHTML = fmt(d.humidity) + '<span class="unit"> %</span>';
       el('pSoil').innerHTML = fmt(d.soil) + '<span class="unit"> %</span>';
       el('pTank').innerHTML = fmt(d.tank) + '<span class="unit"> %</span>';
       el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
 
-      const tips = getTips(d);
+      const tips = getTips(d, selectedPlant, yesterdayData);
       el('tipsContainer').innerHTML = tips.map(t => `
         <div class="tip-card ${t.type}">
           <div class="tip-header"><div class="tip-dot"></div><span class="tip-title">${t.title}</span></div>
@@ -386,26 +416,26 @@
       `).join('');
     }
 
-    window.updateFromRemote = function(payload) {
+    window.updateFromRemote = function(liveData, storicoData, selectedPlant) {
       el('connectionText').textContent = 'Live';
       document.getElementById('statusDot').classList.remove('offline');
 
       const d = {
-        temperature: Number(payload.temperature ?? payload.temp ?? 0),
-        humidity: Number(payload.humidity ?? payload.hum ?? 0),
-        soil: Number(payload.soil ?? payload.soilHumidity ?? 0),
-        tank: Number(payload.tank ?? payload.waterLevel ?? 0),
-        timestamp: Number(payload.timestamp ?? Date.now())
+        temperature: Number(liveData.temperature ?? liveData.temp ?? 0),
+        humidity: Number(liveData.humidity ?? liveData.hum ?? 0),
+        soil: Number(liveData.soil ?? liveData.soilHumidity ?? 0),
+        tank: Number(liveData.tank ?? liveData.waterLevel ?? 0),
+        timestamp: Number(liveData.timestamp ?? Date.now())
       };
 
-      render(d);
+      render(d, selectedPlant, storicoData);
     };
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import { getDatabase, ref, get, query, orderByKey, limitToLast, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
@@ -421,27 +451,48 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
-    const latestRef = ref(db, "vaso/latest");
+    let deviceMac = null;
+    let selectedPlant = "";
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
       document.getElementById('userInfo').style.display = 'flex';
       document.getElementById('logoutBtn').style.display = 'block';
       document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
       document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
+      
+      // Check device MAC
+      const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
+      if (!macSnap.exists()) {
+        window.location.href = "config.html";
+        return;
+      }
+       deviceMac = macSnap.val();
+      
+      // Carica pianta selezionata
+      const plantSnap = await get(ref(db, "vaso/" + user.uid + "/pianta_selezionata"));
+      if (plantSnap.exists()) {
+        selectedPlant = plantSnap.val();
+      }
+     
+      fetchDati();
+      setInterval(fetchDati, 60000);
     });
 
     window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
     async function fetchDati() {
+      if (!deviceMac) return;
       try {
-        const snapshot = await get(latestRef);
-        if (snapshot.exists() && typeof window.updateFromRemote === 'function') window.updateFromRemote(snapshot.val());
+        const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
+        const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), limitToLast(48)));
+        if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
+          const liveData = liveSnap.val();
+          const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
+          window.updateFromRemote(liveData, storicoData, selectedPlant);
+        }
       } catch (e) { console.error(e); }
     }
-
-    fetchDati();
-    setInterval(fetchDati, 10000);
   </script>
 </body>
 </html>

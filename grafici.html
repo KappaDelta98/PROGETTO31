@@ -385,26 +385,37 @@
       updateStats();
     }
 
-    window.updateFromRemote = function(payload) {
+    window.updateFromRemote = function(liveData, storicoData) {
       el('connectionText').textContent = 'Live';
       document.getElementById('statusDot').classList.remove('offline');
 
       state.data = {
-        temperature: Number(payload.temperature ?? payload.temp ?? 0),
-        humidity: Number(payload.humidity ?? payload.hum ?? 0),
-        soil: Number(payload.soil ?? payload.soilHumidity ?? 0),
-        tank: Number(payload.tank ?? payload.waterLevel ?? 0),
-        timestamp: Number(payload.timestamp ?? Date.now())
+        temperature: Number(liveData.temperature ?? liveData.temp ?? 0),
+        humidity: Number(liveData.humidity ?? liveData.hum ?? 0),
+        soil: Number(liveData.soil ?? liveData.soilHumidity ?? 0),
+        tank: Number(liveData.tank ?? liveData.waterLevel ?? 0),
+        timestamp: Number(liveData.timestamp ?? Date.now())
       };
 
-      state.history.push({
-        t: state.data.timestamp,
-        temp: state.data.temperature,
-        hum: state.data.humidity,
-        soil: state.data.soil,
-        tank: state.data.tank
-      });
-      if (state.history.length > 48) state.history.shift();
+      // Usa storicoData se fornito, altrimenti usa il metodo legacy
+      if (storicoData && storicoData.length > 0) {
+        state.history = storicoData.map(h => ({
+          t: h.timestamp,
+          temp: h.temperature,
+          hum: h.humidity,
+          soil: h.soil,
+          tank: h.tank
+        }));
+      } else {
+        state.history.push({
+          t: state.data.timestamp,
+          temp: state.data.temperature,
+          hum: state.data.humidity,
+          soil: state.data.soil,
+          tank: state.data.tank
+        });
+        if (state.history.length > 48) state.history.shift();
+      }
       render();
     };
 
@@ -414,7 +425,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import { getDatabase, ref, get, query, orderByKey, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
@@ -430,27 +441,40 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
-    const latestRef = ref(db, "vaso/latest");
+    let deviceMac = null;
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
       document.getElementById('userInfo').style.display = 'flex';
       document.getElementById('logoutBtn').style.display = 'block';
       document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
       document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
+      
+      // Check if device MAC is configured
+      const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
+      if (!macSnap.exists()) {
+        window.location.href = "config.html";
+        return;
+      }
+      deviceMac = macSnap.val();
+      fetchDati();
+      setInterval(fetchDati, 60000); // 1 minuto
     });
 
     window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
     async function fetchDati() {
+      if (!deviceMac) return;
       try {
-        const snapshot = await get(latestRef);
-        if (snapshot.exists() && typeof window.updateFromRemote === 'function') window.updateFromRemote(snapshot.val());
+        const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
+        const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), limitToLast(48)));
+        if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
+          const liveData = liveSnap.val();
+          const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
+          window.updateFromRemote(liveData, storicoData);
+        }
       } catch (e) { console.error(e); }
     }
-
-    fetchDati();
-    setInterval(fetchDati, 10000);
   </script>
 </body>
 </html>

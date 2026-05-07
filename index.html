@@ -763,7 +763,7 @@
 
     let currentUser = null;
     let selectedPlant = "";
-    const DEVICE_MAC = "2C_BC_BB_0E_1A_D0"; // SOSTITUIRE CON L'INDIRIZZO MAC DEL PROPRIO ESP32 (es. AA:BB:CC:DD:EE:FF -> AA_BB_CC_DD_EE_FF)
+    let deviceMac = null; // MAC caricato dinamicamente
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
@@ -772,6 +772,14 @@
       document.getElementById('logoutBtn').style.display = 'block';
       document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
       document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
+      
+      // Check if device MAC is configured
+      const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
+      if (!macSnap.exists()) {
+        window.location.href = "config.html";
+        return;
+      }
+      deviceMac = macSnap.val();
       
       // Carica pianta selezionata
       const plantSnap = await get(ref(db, "vaso/" + user.uid + "/pianta_selezionata"));
@@ -793,10 +801,10 @@
     window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
     async function fetchDati() {
-      if (!currentUser) return;
+      if (!currentUser || !deviceMac) return;
       try {
-        const liveSnap = await get(ref(db, "vaso/devices/" + DEVICE_MAC + "/live"));
-        const storicoSnap = await get(query(ref(db, "vaso/devices/" + DEVICE_MAC + "/storico"), limitToLast(48)));
+        const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
+        const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), limitToLast(48)));
         
         if (liveSnap.exists()) {
           const liveData = liveSnap.val();
