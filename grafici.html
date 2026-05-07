@@ -119,9 +119,17 @@
 
     main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
 
-    .page-header { margin-bottom: 36px; }
+    .page-header { margin-bottom: 24px; }
     .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 6px; }
     .page-header p { color: var(--text-secondary); font-size: 0.875rem; }
+    .time-selector { display: flex; gap: 8px; margin-bottom: 24px; }
+    .time-btn {
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem;
+      font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .time-btn:hover { border-color: var(--text-secondary); }
+    .time-btn.active { background: var(--accent); color: #080808; border-color: var(--accent); }
 
     .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
@@ -219,6 +227,13 @@
       <p>Andamento storico dei parametri raccolti.</p>
     </div>
 
+    <div class="time-selector">
+      <button class="time-btn active" data-tf="24h" onclick="selectTimeframe(this)">24h</button>
+      <button class="time-btn" data-tf="7d" onclick="selectTimeframe(this)">7 giorni</button>
+      <button class="time-btn" data-tf="30d" onclick="selectTimeframe(this)">30 giorni</button>
+      <button class="time-btn" data-tf="all" onclick="selectTimeframe(this)">Tutto</button>
+    </div>
+
     <div class="charts-grid">
       <div class="chart-card">
         <div class="chart-top">
@@ -281,6 +296,7 @@
 
   <script>
     const state = { data: null, history: [] };
+    window.currentTimeframe = '24h'; // Global variable for timeframe selection
     const el = (id) => document.getElementById(id);
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
@@ -419,6 +435,15 @@
       render();
     };
 
+    window.selectTimeframe = function(btn) {
+      const tf = btn.dataset.tf;
+      window.currentTimeframe = tf;
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (typeof window.fetchDati === 'function') {
+        window.fetchDati();
+      }
+    };
     window.addEventListener('resize', render);
   </script>
 
@@ -463,11 +488,27 @@
 
     window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
 
-    async function fetchDati() {
+    window.fetchDati = async function() {
       if (!deviceMac) return;
       try {
         const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
-        const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), limitToLast(48)));
+        let storicoQuery = query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey());
+        
+        if (window.currentTimeframe !== 'all') {
+          const now = Date.now();
+          let msAgo;
+          switch(window.currentTimeframe) {
+            case '24h': msAgo = 24 * 60 * 60 * 1000; break;
+            case '7d': msAgo = 7 * 24 * 60 * 60 * 1000; break;
+            case '30d': msAgo = 30 * 24 * 60 * 60 * 1000; break;
+            default: msAgo = 24 * 60 * 60 * 1000;
+          }
+          const startKey = (now - msAgo).toString();
+          storicoQuery = query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), startAt(startKey));
+        }
+        
+        const storicoSnap = await get(storicoQuery);
+        
         if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
           const liveData = liveSnap.val();
           const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
@@ -475,6 +516,9 @@
         }
       } catch (e) { console.error(e); }
     }
+
+    fetchDati();
+    setInterval(fetchDati, 60000);
   </script>
 </body>
 </html>
