@@ -11,23 +11,25 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #080808;
-      --surface: #101010;
-      --surface-2: #161616;
-      --border: rgba(255,255,255,0.06);
-      --border-hover: rgba(255,255,255,0.12);
-      --text: #f0f0f0;
-      --text-secondary: #6e6e6e;
-      --accent: #4ade80;
-      --accent-dim: rgba(74,222,128,0.1);
-      --warm: #f59e0b;
-      --warm-dim: rgba(245,158,11,0.1);
-      --danger: #ef4444;
-      --danger-dim: rgba(239,68,68,0.1);
-      --info: #38bdf8;
-      --info-dim: rgba(56,189,248,0.1);
+      --bg: #f0f4f1;
+      --surface: #ffffff;
+      --surface-2: #f5f7f5;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --accent: #16a34a;
+      --accent-dim: rgba(22,163,74,0.09);
+      --warm: #d97706;
+      --warm-dim: rgba(217,119,6,0.09);
+      --danger: #dc2626;
+      --danger-dim: rgba(220,38,38,0.09);
+      --info: #0284c7;
+      --info-dim: rgba(2,132,199,0.09);
       --radius: 16px;
       --radius-sm: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
     }
 
     html { font-size: 16px; }
@@ -44,336 +46,230 @@
     /* ── HEADER ── */
     header {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(8,8,8,0.8);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
     .topbar {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+      max-width: 1120px; margin: 0 auto;
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
     }
 
-    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-group { display: flex; align-items: center; gap: 10px; }
 
-    .logo-icon {
-      width: 32px; height: 32px;
-      color: var(--accent);
-    }
+    .logo-icon { width: 28px; height: 28px; color: var(--accent); }
 
     .logo-text {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.25rem;
-      letter-spacing: 0.02em;
+      font-size: 1.2rem; letter-spacing: 0.02em;
     }
 
     .nav { display: flex; align-items: center; gap: 4px; }
-
     .nav a {
-      padding: 8px 16px;
-      border-radius: 999px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      transition: color 0.2s, background 0.2s;
+      padding: 7px 14px; border-radius: 999px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.8125rem; font-weight: 500;
+      transition: color 0.15s, background 0.15s;
     }
+    .nav a:hover { color: var(--text); background: var(--surface-2); }
+    .nav a.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
 
-    .nav a:hover { color: var(--text); background: var(--surface); }
-    .nav a.active { color: var(--text); background: var(--surface-2); }
-
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
 
     .user-badge {
       display: flex; align-items: center; gap: 8px;
-      padding: 6px 14px 6px 6px;
+      padding: 5px 12px 5px 5px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
+      font-size: 0.8125rem; color: var(--text-secondary);
+      box-shadow: var(--shadow);
     }
 
     .user-avatar {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: var(--accent-dim);
-      color: var(--accent);
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
       display: grid; place-items: center;
-      font-size: 0.6875rem;
-      font-weight: 600;
+      font-size: 0.625rem; font-weight: 700;
     }
 
     .btn-logout {
-      padding: 6px 14px;
-      border-radius: 999px;
+      padding: 6px 14px; border-radius: 999px;
       border: 1px solid var(--border);
-      background: transparent;
+      background: var(--surface);
       color: var(--text-secondary);
-      font-size: 0.75rem;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 0.75rem; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: all 0.15s;
+      box-shadow: var(--shadow);
     }
-
-    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
 
     .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px var(--accent);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 8px rgba(22,163,74,0.5);
       flex-shrink: 0;
     }
+    .status-dot.offline { background: #d1d5db; box-shadow: none; }
 
-    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
-
-    .status-text {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
+    .status-text { font-size: 0.75rem; color: var(--text-secondary); }
 
     /* ── MAIN ── */
-    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 28px 24px 48px; }
 
-    .page-header {
-      margin-bottom: 36px;
-    }
-
+    .page-header { margin-bottom: 32px; }
     .page-header h2 {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.75rem;
-      font-weight: 400;
-      margin-bottom: 6px;
+      font-size: 1.625rem; font-weight: 400; margin-bottom: 4px;
     }
+    .page-header p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
 
-    .page-header p {
-      color: var(--text-secondary);
+    .plant-select-wrap { margin-top: 14px; }
+
+    .plant-select-wrap select {
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
       font-size: 0.875rem;
-      line-height: 1.5;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 32px;
     }
+    .plant-select-wrap select:focus { outline: none; border-color: var(--accent); }
 
-    /* ── METRICS GRID ── */
+    /* ── METRICS ── */
     .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 14px; margin-bottom: 20px;
     }
 
     .metric-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
-      transition: border-color 0.3s;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
-
-    .metric-card:hover { border-color: var(--border-hover); }
+    .metric-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-hover); }
 
     .metric-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-      font-weight: 500;
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.75rem; color: var(--text-secondary);
+      margin-bottom: 14px; font-weight: 500;
     }
-
-    .metric-label svg { width: 16px; height: 16px; opacity: 0.6; }
+    .metric-label svg { width: 15px; height: 15px; opacity: 0.7; }
 
     .metric-value {
-      font-size: 2rem;
-      font-weight: 300;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 4px;
+      font-size: 1.875rem; font-weight: 300;
+      letter-spacing: -0.04em; line-height: 1; margin-bottom: 3px;
     }
-
-    .metric-unit {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      font-weight: 400;
-    }
+    .metric-unit { font-size: 0.875rem; color: var(--text-secondary); font-weight: 400; }
 
     .metric-bar {
-      height: 3px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      margin-top: 16px;
-      overflow: hidden;
+      height: 3px; border-radius: 999px;
+      background: rgba(0,0,0,0.07);
+      margin-top: 14px; overflow: hidden;
     }
-
     .metric-bar-fill {
-      height: 100%;
-      border-radius: 999px;
+      height: 100%; border-radius: 999px;
       transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* ── HEALTH ── */
+    /* ── HEALTH / LIVE SECTION ── */
     .health-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-bottom: 20px;
     }
 
     .health-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      border-radius: var(--radius); padding: 28px;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      box-shadow: var(--shadow);
     }
 
-    .health-ring {
-      position: relative;
-      width: 140px; height: 140px;
-      margin-bottom: 20px;
-    }
-
+    .health-ring { position: relative; width: 140px; height: 140px; margin-bottom: 18px; }
     .health-ring svg { transform: rotate(-90deg); }
-    .health-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
+    .health-ring .ring-bg { fill: none; stroke: rgba(0,0,0,0.07); stroke-width: 6; }
     .health-ring .ring-fill {
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: 6;
-      stroke-linecap: round;
+      fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round;
       transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .health-number {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       display: grid; place-items: center;
-      font-size: 2.5rem;
-      font-weight: 300;
-      letter-spacing: -0.04em;
+      font-size: 2.375rem; font-weight: 300; letter-spacing: -0.04em;
     }
-
-    .health-number small {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      font-weight: 400;
-    }
+    .health-number small { font-size: 1rem; color: var(--text-secondary); font-weight: 400; }
 
     .health-status {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-      font-weight: 500;
+      font-size: 0.875rem; color: var(--text-secondary);
+      margin-bottom: 6px; font-weight: 600;
     }
-
     .health-advice {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      opacity: 0.7;
+      font-size: 0.8125rem; color: var(--text-secondary);
+      line-height: 1.6; opacity: 0.8;
     }
 
     .live-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      border-radius: var(--radius); padding: 28px;
+      display: flex; flex-direction: column; justify-content: center;
+      box-shadow: var(--shadow);
     }
+    .live-card h3 { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 20px; }
 
-    .live-card h3 {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-    }
-
-    .live-metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .live-item {}
+    .live-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
     .live-item-label {
-      font-size: 0.6875rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 4px;
+      font-size: 0.6875rem; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;
     }
-
-    .live-item-value {
-      font-size: 1.375rem;
-      font-weight: 300;
-      letter-spacing: -0.02em;
-    }
-
-    .live-item-value .unit {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-    }
+    .live-item-value { font-size: 1.3rem; font-weight: 300; letter-spacing: -0.02em; }
+    .live-item-value .unit { font-size: 0.8125rem; color: var(--text-secondary); }
 
     /* ── CHARTS ── */
-    .charts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
     .chart-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
+      border-radius: var(--radius); padding: 22px;
+      box-shadow: var(--shadow);
     }
 
     .chart-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
     }
+    .chart-title { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+    .chart-value { font-size: 1.125rem; font-weight: 300; letter-spacing: -0.02em; }
 
-    .chart-title {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    .chart-value {
-      font-size: 1.125rem;
-      font-weight: 300;
-      letter-spacing: -0.02em;
-    }
-
-    canvas {
-      width: 100%;
-      height: 180px;
-      display: block;
-    }
+    canvas { width: 100%; height: 180px; display: block; }
 
     /* ── FOOTER ── */
     .footer {
-      margin-top: 40px;
-      padding-top: 20px;
+      margin-top: 36px; padding-top: 18px;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
+      display: flex; justify-content: space-between;
+      font-size: 0.75rem; color: var(--text-secondary);
     }
 
     /* ── RESPONSIVE ── */
@@ -382,18 +278,16 @@
       .health-section { grid-template-columns: 1fr; }
       .charts { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 640px) {
       .topbar { flex-wrap: wrap; padding: 12px 16px; }
       .nav { order: 3; width: 100%; justify-content: center; }
       main { padding: 20px 16px 36px; }
       .metrics { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .metric-card { padding: 18px; }
+      .metric-card { padding: 16px; }
       .metric-value { font-size: 1.5rem; }
       .page-header h2 { font-size: 1.375rem; }
       .user-badge span { display: none; }
     }
-
     @media (max-width: 420px) {
       .metrics { grid-template-columns: 1fr; }
     }
@@ -405,11 +299,8 @@
     <div class="topbar">
       <div class="logo-group">
         <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22V8"/>
-          <path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
-          <path d="M8 5.5C8 5.5 6 8 6 10"/>
-          <path d="M16 5.5c0 0 2 2.5 2 4.5"/>
-          <path d="M9 22h6"/>
+          <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/>
         </svg>
         <span class="logo-text">Vaso</span>
       </div>
@@ -421,7 +312,7 @@
       </nav>
 
       <div class="topbar-right">
-        <div class="status-dot" id="statusDot"></div>
+        <div class="status-dot offline" id="statusDot"></div>
         <span class="status-text" id="connectionText">In attesa</span>
         <div id="userInfo" class="user-badge" style="display:none;">
           <div class="user-avatar" id="userInitial">U</div>
@@ -433,32 +324,32 @@
   </header>
 
   <main>
-      <div class="page-header">
-        <h2>Monitoraggio</h2>
-        <p>Panoramica in tempo reale dei parametri del tuo vaso.</p>
-        <div style="margin-top: 16px;">
-          <select id="plantSelect" style="background:var(--surface); color:var(--text); padding: 8px 16px; border-radius:var(--radius-sm); border:1px solid var(--border);">
-            <option value="">Seleziona una pianta</option>
-            <option value="Sansevieria">Sansevieria</option>
-            <option value="Zamioculcas">Zamioculcas</option>
-            <option value="Pothos">Pothos</option>
-            <option value="Spatifillo">Spatifillo</option>
-            <option value="Rosmarino">Rosmarino</option>
-            <option value="Basilico">Basilico</option>
-            <option value="Peperoncino">Peperoncino</option>
-            <option value="Aloe Vera">Aloe Vera</option>
-            <option value="Monstera">Monstera</option>
-            <option value="Alocasia">Alocasia</option>
-            <option value="Ficus Lyrata">Ficus Lyrata</option>
-            <option value="Strelitzia">Strelitzia</option>
-          </select>
-        </div>
+    <div class="page-header">
+      <h2>Monitoraggio</h2>
+      <p>Panoramica in tempo reale dei parametri del tuo vaso.</p>
+      <div class="plant-select-wrap">
+        <select id="plantSelect">
+          <option value="">Seleziona una pianta</option>
+          <option value="Sansevieria">Sansevieria</option>
+          <option value="Zamioculcas">Zamioculcas</option>
+          <option value="Pothos">Pothos</option>
+          <option value="Spatifillo">Spatifillo</option>
+          <option value="Rosmarino">Rosmarino</option>
+          <option value="Basilico">Basilico</option>
+          <option value="Peperoncino">Peperoncino</option>
+          <option value="Aloe Vera">Aloe Vera</option>
+          <option value="Monstera">Monstera</option>
+          <option value="Alocasia">Alocasia</option>
+          <option value="Ficus Lyrata">Ficus Lyrata</option>
+          <option value="Strelitzia">Strelitzia</option>
+        </select>
       </div>
+    </div>
 
     <div class="metrics">
       <div class="metric-card">
         <div class="metric-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.762a3.5 3.5 0 1 1-5.32-.634L14 8.634a3.5 3.5 0 0 1 .634 5.32L14 14.762Z"/><circle cx="12" cy="12" r="1"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.762a3.5 3.5 0 1 1-5.32-.634L14 8.634a3.5 3.5 0 0 1 .634 5.32L14 14.762Z"/><circle cx="12" cy="12" r="1"/></svg>
           Temperatura
         </div>
         <div class="metric-value"><span id="temp">--</span><span class="metric-unit"> °C</span></div>
@@ -507,7 +398,7 @@
       </div>
 
       <div class="live-card">
-        <h3>Riepilogo</h3>
+        <h3>Riepilogo ultime 24 ore</h3>
         <div class="live-metrics">
           <div class="live-item">
             <div class="live-item-label">Temp. minima</div>
@@ -627,8 +518,8 @@
       el('tempChartVal').textContent = fmt(d.temperature, 1) + ' °C';
       el('humChartVal').textContent = fmt(d.humidity) + ' %';
 
-      drawChart('tempChart', 'temp', 0, 50, '#f59e0b', 'rgba(245,158,11,0.12)', '°C');
-      drawChart('humChart', 'hum', 0, 100, '#38bdf8', 'rgba(56,189,248,0.12)', '%');
+      drawChart('tempChart', 'temp', 0, 50, '#d97706', 'rgba(217,119,6,0.1)', '°C');
+      drawChart('humChart', 'hum', 0, 100, '#0284c7', 'rgba(2,132,199,0.1)', '%');
     }
 
     function pushHistory() {
@@ -641,7 +532,7 @@
       const canvas = el(canvasId);
       if (!canvas) return;
       const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = (rect.width - 48) * 2;
+      canvas.width = (rect.width - 44) * 2;
       canvas.height = 360;
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
@@ -650,26 +541,29 @@
       const data = state.history;
       if (data.length < 2) return;
 
-      const pad = { l: 50, r: 24, t: 20, b: 30 };
+      const pad = { l: 48, r: 20, t: 18, b: 28 };
       const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
       const step = cw / (data.length - 1);
 
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      // Grid lines
+      ctx.strokeStyle = 'rgba(0,0,0,0.06)';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 3; i++) {
         const y = pad.t + (i * ch / 3);
         ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
       }
 
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      // Y labels
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.font = '18px Inter, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(maxY + unit, pad.l - 8, pad.t + 6);
       ctx.fillText(minY + unit, pad.l - 8, h - pad.b + 6);
 
+      // Fill gradient
       const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
       grad.addColorStop(0, fill);
-      grad.addColorStop(1, 'transparent');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.beginPath();
       data.forEach((p, i) => {
@@ -684,6 +578,7 @@
       ctx.fillStyle = grad;
       ctx.fill();
 
+      // Line
       ctx.beginPath();
       data.forEach((p, i) => {
         const x = pad.l + i * step;
@@ -692,25 +587,29 @@
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
       ctx.strokeStyle = color;
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
       ctx.stroke();
 
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      // X labels
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.font = '16px Inter, sans-serif';
       ctx.textAlign = 'center';
       const labelCount = Math.min(data.length, 6);
       const stepLabel = Math.ceil(data.length / labelCount);
       for (let i = 0; i < data.length; i += stepLabel) {
         const dt = new Date(data[i].t);
-        ctx.fillText(dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0'), pad.l + i * step, h - 8);
+        ctx.fillText(
+          dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0'),
+          pad.l + i * step, h - 6
+        );
       }
     }
 
     window.updateFromRemote = function(payload) {
       el('connectionText').textContent = 'Live';
-      document.getElementById('statusDot').classList.remove('offline');
+      el('statusDot').classList.remove('offline');
 
       state.data = {
         temperature: Number(payload.temperature ?? payload.temp ?? 0),
@@ -746,24 +645,19 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+
     const PLANT_REQS = {
-      "Sansevieria": { soil: 40, temp: 20 },
-      "Zamioculcas": { soil: 50, temp: 22 },
-      "Pothos": { soil: 60, temp: 20 },
-      "Spatifillo": { soil: 70, temp: 22 },
-      "Rosmarino": { soil: 30, temp: 18 },
-      "Basilico": { soil: 60, temp: 22 },
-      "Peperoncino": { soil: 50, temp: 24 },
-      "Aloe Vera": { soil: 30, temp: 20 },
-      "Monstera": { soil: 60, temp: 22 },
-      "Alocasia": { soil: 65, temp: 22 },
-      "Ficus Lyrata": { soil: 55, temp: 20 },
-      "Strelitzia": { soil: 60, temp: 20 }
+      "Sansevieria": { soil: 40, temp: 20 }, "Zamioculcas": { soil: 50, temp: 22 },
+      "Pothos": { soil: 60, temp: 20 }, "Spatifillo": { soil: 70, temp: 22 },
+      "Rosmarino": { soil: 30, temp: 18 }, "Basilico": { soil: 60, temp: 22 },
+      "Peperoncino": { soil: 50, temp: 24 }, "Aloe Vera": { soil: 30, temp: 20 },
+      "Monstera": { soil: 60, temp: 22 }, "Alocasia": { soil: 65, temp: 22 },
+      "Ficus Lyrata": { soil: 55, temp: 20 }, "Strelitzia": { soil: 60, temp: 20 }
     };
 
     let currentUser = null;
     let selectedPlant = "";
-    let deviceMac = null; // MAC caricato dinamicamente
+    let deviceMac = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
@@ -772,30 +666,23 @@
       document.getElementById('logoutBtn').style.display = 'block';
       document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
       document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
-      
-      // Check if device MAC is configured
+
       const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
-      if (!macSnap.exists()) {
-        window.location.href = "config.html";
-        return;
-      }
+      if (!macSnap.exists()) { window.location.href = "config.html"; return; }
       deviceMac = macSnap.val();
-      
-      // Carica pianta selezionata
+
       const plantSnap = await get(ref(db, "vaso/" + user.uid + "/pianta_selezionata"));
       if (plantSnap.exists()) {
         selectedPlant = plantSnap.val();
         document.getElementById('plantSelect').value = selectedPlant;
       }
-      
+
       fetchDati();
     });
 
     document.getElementById('plantSelect').addEventListener('change', async (e) => {
       selectedPlant = e.target.value;
-      if (currentUser) {
-        await set(ref(db, "vaso/" + currentUser.uid + "/pianta_selezionata"), selectedPlant);
-      }
+      if (currentUser) await set(ref(db, "vaso/" + currentUser.uid + "/pianta_selezionata"), selectedPlant);
     });
 
     window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
@@ -805,19 +692,15 @@
       try {
         const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
         const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), limitToLast(48)));
-        
         if (liveSnap.exists()) {
           const liveData = liveSnap.val();
-          const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
           if (typeof window.updateFromRemote === 'function') {
-            window.updateFromRemote(liveData, storicoData, selectedPlant);
+            window.updateFromRemote(liveData);
           }
         }
       } catch (e) { console.error(e); }
+      setTimeout(fetchDati, 60000);
     }
-
-    fetchDati();
-    setInterval(fetchDati, 60000); // 1 minuto
   </script>
 </body>
 </html>

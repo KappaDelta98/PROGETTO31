@@ -11,22 +11,25 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #080808;
-      --surface: #101010;
-      --surface-2: #161616;
-      --border: rgba(255,255,255,0.06);
-      --border-hover: rgba(255,255,255,0.12);
-      --text: #f0f0f0;
-      --text-secondary: #6e6e6e;
-      --accent: #4ade80;
-      --accent-dim: rgba(74,222,128,0.08);
-      --warm: #f59e0b;
-      --warm-dim: rgba(245,158,11,0.08);
-      --danger: #ef4444;
-      --danger-dim: rgba(239,68,68,0.08);
-      --info: #38bdf8;
-      --info-dim: rgba(56,189,248,0.08);
+      --bg: #f0f4f1;
+      --surface: #ffffff;
+      --surface-2: #f5f7f5;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --accent: #16a34a;
+      --accent-dim: rgba(22,163,74,0.09);
+      --warm: #d97706;
+      --warm-dim: rgba(217,119,6,0.09);
+      --danger: #dc2626;
+      --danger-dim: rgba(220,38,38,0.09);
+      --info: #0284c7;
+      --info-dim: rgba(2,132,199,0.09);
       --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
     }
 
     html { font-size: 16px; }
@@ -42,129 +45,130 @@
 
     header {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(8,8,8,0.8);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
     .topbar {
       max-width: 1120px; margin: 0 auto;
-      padding: 16px 24px;
+      padding: 14px 24px;
       display: flex; align-items: center; justify-content: space-between; gap: 20px;
     }
 
-    .logo-group { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
-    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: 0.02em; }
+    .logo-group { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 28px; height: 28px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.2rem; letter-spacing: 0.02em; }
 
     .nav { display: flex; align-items: center; gap: 4px; }
     .nav a {
-      padding: 8px 16px; border-radius: 999px;
+      padding: 7px 14px; border-radius: 999px;
       color: var(--text-secondary); text-decoration: none;
       font-size: 0.8125rem; font-weight: 500;
-      transition: color 0.2s, background 0.2s;
+      transition: color 0.15s, background 0.15s;
     }
-    .nav a:hover { color: var(--text); background: var(--surface); }
-    .nav a.active { color: var(--text); background: var(--surface-2); }
+    .nav a:hover { color: var(--text); background: var(--surface-2); }
+    .nav a.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
 
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
     .user-badge {
       display: flex; align-items: center; gap: 8px;
-      padding: 6px 14px 6px 6px; border-radius: 999px;
+      padding: 5px 12px 5px 5px; border-radius: 999px;
       border: 1px solid var(--border); background: var(--surface);
       font-size: 0.8125rem; color: var(--text-secondary);
+      box-shadow: var(--shadow);
     }
     .user-avatar {
-      width: 26px; height: 26px; border-radius: 50%;
+      width: 24px; height: 24px; border-radius: 50%;
       background: var(--accent-dim); color: var(--accent);
       display: grid; place-items: center;
-      font-size: 0.6875rem; font-weight: 600;
+      font-size: 0.625rem; font-weight: 700;
     }
     .btn-logout {
       padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
-      background: transparent; color: var(--text-secondary);
+      background: var(--surface); color: var(--text-secondary);
       font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s; box-shadow: var(--shadow);
     }
-    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 8px rgba(22,163,74,0.5);
+    }
+    .status-dot.offline { background: #d1d5db; box-shadow: none; }
     .status-text { font-size: 0.75rem; color: var(--text-secondary); }
 
-    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 28px 24px 48px; }
 
-    .page-header { margin-bottom: 36px; }
-    .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 6px; }
+    .page-header { margin-bottom: 28px; }
+    .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.625rem; font-weight: 400; margin-bottom: 4px; }
     .page-header p { color: var(--text-secondary); font-size: 0.875rem; }
 
     .health-overview {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 36px;
-      display: flex;
-      align-items: center;
-      gap: 36px;
-      margin-bottom: 24px;
+      border-radius: var(--radius); padding: 28px 32px;
+      display: flex; align-items: center; gap: 32px;
+      margin-bottom: 20px; box-shadow: var(--shadow);
     }
 
-    .health-ring {
-      position: relative;
-      width: 120px; height: 120px;
-      flex-shrink: 0;
-    }
+    .health-ring { position: relative; width: 116px; height: 116px; flex-shrink: 0; }
     .health-ring svg { transform: rotate(-90deg); }
-    .health-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 5; }
+    .health-ring .ring-bg { fill: none; stroke: rgba(0,0,0,0.07); stroke-width: 5; }
     .health-ring .ring-fill {
       fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
       transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .health-ring .ring-number {
       position: absolute; inset: 0; display: grid; place-items: center;
-      font-size: 2rem; font-weight: 300; letter-spacing: -0.04em;
+      font-size: 1.875rem; font-weight: 300; letter-spacing: -0.04em;
     }
     .health-ring .ring-number small { font-size: 0.875rem; color: var(--text-secondary); }
 
     .health-details { flex: 1; }
-    .health-details h3 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
-    .health-status { font-size: 0.875rem; font-weight: 500; margin-bottom: 10px; }
+    .health-details h3 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 4px; }
+    .health-status { font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; }
     .health-status.ok { color: var(--accent); }
     .health-status.warn { color: var(--warm); }
     .health-status.bad { color: var(--danger); }
     .health-advice { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; max-width: 480px; }
 
     .params-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 36px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px; margin-bottom: 28px;
     }
 
     .param-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      text-align: center;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; text-align: center; box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
+    .param-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-hover); }
+
     .param-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
+      width: 36px; height: 36px; border-radius: 10px;
       display: grid; place-items: center;
-      margin: 0 auto 12px;
-      font-size: 1rem;
+      margin: 0 auto 10px;
     }
-    .param-name { font-size: 0.6875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .param-name {
+      font-size: 0.6875rem; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px;
+      font-weight: 500;
+    }
     .param-value { font-size: 1.5rem; font-weight: 300; letter-spacing: -0.03em; }
     .param-value .unit { font-size: 0.8125rem; color: var(--text-secondary); }
 
-    .tips-section h3 {
-      font-size: 0.8125rem;
+    .tips-section-label {
+      font-size: 0.6875rem;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       font-weight: 600;
     }
 
@@ -172,18 +176,19 @@
 
     .tip-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 22px;
       border-left: 3px solid var(--border);
-      transition: border-color 0.3s;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
     }
+    .tip-card:hover { box-shadow: var(--shadow-md); }
     .tip-card.ok { border-left-color: var(--accent); }
     .tip-card.warning { border-left-color: var(--warm); }
     .tip-card.danger { border-left-color: var(--danger); }
 
-    .tip-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .tip-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .tip-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .tip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .tip-card.ok .tip-dot { background: var(--accent); }
     .tip-card.warning .tip-dot { background: var(--warm); }
     .tip-card.danger .tip-dot { background: var(--danger); }
@@ -191,21 +196,20 @@
     .tip-message { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; }
 
     .footer {
-      margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+      margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--border);
       font-size: 0.75rem; color: var(--text-secondary); text-align: center;
     }
 
     @media (max-width: 780px) {
       .params-grid { grid-template-columns: repeat(2, 1fr); }
       .tips-grid { grid-template-columns: 1fr; }
-      .health-overview { flex-direction: column; text-align: center; padding: 28px 24px; }
+      .health-overview { flex-direction: column; text-align: center; padding: 24px; gap: 20px; }
       .health-advice { margin: 0 auto; }
       .topbar { flex-wrap: wrap; padding: 12px 16px; }
       .nav { order: 3; width: 100%; justify-content: center; }
       main { padding: 20px 16px 36px; }
       .user-badge span { display: none; }
     }
-
     @media (max-width: 420px) {
       .params-grid { grid-template-columns: 1fr; }
     }
@@ -218,8 +222,7 @@
       <div class="logo-group">
         <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
-          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/>
-          <path d="M9 22h6"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/>
         </svg>
         <span class="logo-text">Vaso</span>
       </div>
@@ -229,7 +232,7 @@
         <a href="consigli.html" class="active">Consigli</a>
       </nav>
       <div class="topbar-right">
-        <div class="status-dot" id="statusDot"></div>
+        <div class="status-dot offline" id="statusDot"></div>
         <span class="status-text" id="connectionText">In attesa</span>
         <div id="userInfo" class="user-badge" style="display:none;">
           <div class="user-avatar" id="userInitial">U</div>
@@ -248,9 +251,9 @@
 
     <div class="health-overview">
       <div class="health-ring">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle class="ring-bg" cx="60" cy="60" r="52"/>
-          <circle class="ring-fill" id="healthRing" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+        <svg width="116" height="116" viewBox="0 0 116 116">
+          <circle class="ring-bg" cx="58" cy="58" r="50"/>
+          <circle class="ring-fill" id="healthRing" cx="58" cy="58" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
         </svg>
         <div class="ring-number"><span id="health">--</span><small>%</small></div>
       </div>
@@ -292,10 +295,8 @@
       </div>
     </div>
 
-    <div class="tips-section">
-      <h3>Suggerimenti</h3>
-      <div class="tips-grid" id="tipsContainer"></div>
-    </div>
+    <div class="tips-section-label">Suggerimenti</div>
+    <div class="tips-grid" id="tipsContainer"></div>
 
     <div class="footer">
       Ultimo aggiornamento: <strong id="lastUpdate">--</strong>
@@ -308,18 +309,12 @@
     function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
 
     const PLANT_REQS = {
-      "Sansevieria": { soil: 40, temp: 20 },
-      "Zamioculcas": { soil: 50, temp: 22 },
-      "Pothos": { soil: 60, temp: 20 },
-      "Spatifillo": { soil: 70, temp: 22 },
-      "Rosmarino": { soil: 30, temp: 18 },
-      "Basilico": { soil: 60, temp: 22 },
-      "Peperoncino": { soil: 50, temp: 24 },
-      "Aloe Vera": { soil: 30, temp: 20 },
-      "Monstera": { soil: 60, temp: 22 },
-      "Alocasia": { soil: 65, temp: 22 },
-      "Ficus Lyrata": { soil: 55, temp: 20 },
-      "Strelitzia": { soil: 60, temp: 20 }
+      "Sansevieria": { soil: 40, temp: 20 }, "Zamioculcas": { soil: 50, temp: 22 },
+      "Pothos": { soil: 60, temp: 20 }, "Spatifillo": { soil: 70, temp: 22 },
+      "Rosmarino": { soil: 30, temp: 18 }, "Basilico": { soil: 60, temp: 22 },
+      "Peperoncino": { soil: 50, temp: 24 }, "Aloe Vera": { soil: 30, temp: 20 },
+      "Monstera": { soil: 60, temp: 22 }, "Alocasia": { soil: 65, temp: 22 },
+      "Ficus Lyrata": { soil: 55, temp: 20 }, "Strelitzia": { soil: 60, temp: 20 }
     };
 
     function computeHealth(d, selectedPlant) {
@@ -333,7 +328,6 @@
       const reqs = PLANT_REQS[selectedPlant] || { soil: 50, temp: 20 };
       const tips = [];
 
-      // Serbatoio (generico)
       if (d.tank < 20) {
         tips.push({ type: 'danger', title: 'Serbatoio quasi vuoto', message: `Livello al ${fmt(d.tank)}%. Riempi il prima possibile.` });
       } else if (d.tank < 50) {
@@ -342,27 +336,24 @@
         tips.push({ type: 'ok', title: 'Serbatoio OK', message: `Livello al ${fmt(d.tank)}%. Riserva sufficiente.` });
       }
 
-      // Substrato (basato su pianta)
       const soilDiff = d.soil - reqs.soil;
       if (soilDiff < -15) {
-        tips.push({ type: 'danger', title: 'Substrato troppo secco', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant} preferisce ~${reqs.soil}%. Irrigare.` });
+        tips.push({ type: 'danger', title: 'Substrato troppo secco', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant || 'La pianta'} preferisce ~${reqs.soil}%. Irrigare.` });
       } else if (soilDiff > 15) {
-        tips.push({ type: 'warning', title: 'Substrato troppo umido', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant} preferisce ~${reqs.soil}%. Ridurre irrigazione.` });
+        tips.push({ type: 'warning', title: 'Substrato troppo umido', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant || 'La pianta'} preferisce ~${reqs.soil}%. Ridurre irrigazione.` });
       } else {
-        tips.push({ type: 'ok', title: 'Substrato ottimale', message: `Umidità al ${fmt(d.soil)}%. Perfetto per ${selectedPlant}.` });
+        tips.push({ type: 'ok', title: 'Substrato ottimale', message: `Umidità al ${fmt(d.soil)}%. ${selectedPlant ? 'Perfetto per ' + selectedPlant + '.' : 'Nella norma.'}` });
       }
 
-      // Temperatura (basato su pianta)
       const tempDiff = d.temperature - reqs.temp;
       if (tempDiff > 5) {
-        tips.push({ type: 'danger', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant} preferisce ~${reqs.temp}°C. Spostare in zona fresca.` });
+        tips.push({ type: 'danger', title: 'Temperatura elevata', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant || 'La pianta'} preferisce ~${reqs.temp}°C. Spostare in zona fresca.` });
       } else if (tempDiff < -5) {
-        tips.push({ type: 'warning', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant} preferisce ~${reqs.temp}°C. Proteggere dal freddo.` });
+        tips.push({ type: 'warning', title: 'Temperatura bassa', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant || 'La pianta'} preferisce ~${reqs.temp}°C. Proteggere dal freddo.` });
       } else {
-        tips.push({ type: 'ok', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. Perfetto per ${selectedPlant}.` });
+        tips.push({ type: 'ok', title: 'Temperatura ideale', message: `${fmt(d.temperature, 1)}°C. ${selectedPlant ? 'Perfetto per ' + selectedPlant + '.' : 'Nella norma.'}` });
       }
 
-      // Confronto con ieri
       if (yesterdayData) {
         const soilChange = d.soil - (yesterdayData.soil || 0);
         if (Math.abs(soilChange) > 10) {
@@ -375,36 +366,42 @@
     }
 
     function render(d, selectedPlant, storicoData) {
-      if (!d || d.temperature === 0 && d.humidity === 0 && d.soil === 0 && d.tank === 0) return;
+      if (!d || (d.temperature === 0 && d.humidity === 0 && d.soil === 0 && d.tank === 0)) return;
       const health = computeHealth(d, selectedPlant);
 
-      // Trova dati di 1 giorno fa
       let yesterdayData = null;
       if (storicoData && storicoData.length > 0) {
         const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
         let minDiff = Infinity;
         for (const item of storicoData) {
           const diff = Math.abs((item.timestamp || 0) - oneDayAgo);
-          if (diff < minDiff) {
-            minDiff = diff;
-            yesterdayData = item;
-          }
+          if (diff < minDiff) { minDiff = diff; yesterdayData = item; }
         }
       }
 
       el('health').textContent = fmt(health);
-      const circumference = 326.73;
+      const circumference = 314.16;
       const ring = el('healthRing');
       ring.style.strokeDashoffset = circumference - (health / 100) * circumference;
 
-      if (health >= 70) { ring.style.stroke = 'var(--accent)'; el('healthStatus').textContent = 'Ottima'; el('healthStatus').className = 'health-status ok'; }
-      else if (health >= 45) { ring.style.stroke = 'var(--warm)'; el('healthStatus').textContent = 'Discreta'; el('healthStatus').className = 'health-status warn'; }
-      else { ring.style.stroke = 'var(--danger)'; el('healthStatus').textContent = 'Critica'; el('healthStatus').className = 'health-status bad'; }
+      if (health >= 70) {
+        ring.style.stroke = 'var(--accent)';
+        el('healthStatus').textContent = 'Ottima';
+        el('healthStatus').className = 'health-status ok';
+      } else if (health >= 45) {
+        ring.style.stroke = 'var(--warm)';
+        el('healthStatus').textContent = 'Discreta';
+        el('healthStatus').className = 'health-status warn';
+      } else {
+        ring.style.stroke = 'var(--danger)';
+        el('healthStatus').textContent = 'Critica';
+        el('healthStatus').className = 'health-status bad';
+      }
 
-      el('pTemp').innerHTML = fmt(d.temperature, 1) + '<span class="unit"> °C</span>';
-      el('pHum').innerHTML = fmt(d.humidity) + '<span class="unit"> %</span>';
-      el('pSoil').innerHTML = fmt(d.soil) + '<span class="unit"> %</span>';
-      el('pTank').innerHTML = fmt(d.tank) + '<span class="unit"> %</span>';
+      el('pTemp').textContent = fmt(d.temperature, 1);
+      el('pHum').textContent = fmt(d.humidity);
+      el('pSoil').textContent = fmt(d.soil);
+      el('pTank').textContent = fmt(d.tank);
       el('lastUpdate').textContent = new Date(d.timestamp).toLocaleString('it-IT');
 
       const tips = getTips(d, selectedPlant, yesterdayData);
@@ -418,7 +415,7 @@
 
     window.updateFromRemote = function(liveData, storicoData, selectedPlant) {
       el('connectionText').textContent = 'Live';
-      document.getElementById('statusDot').classList.remove('offline');
+      el('statusDot').classList.remove('offline');
 
       const d = {
         temperature: Number(liveData.temperature ?? liveData.temp ?? 0),
@@ -435,7 +432,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, get, query, orderByKey, limitToLast, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import { getDatabase, ref, get, query, orderByKey, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
@@ -460,21 +457,14 @@
       document.getElementById('logoutBtn').style.display = 'block';
       document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
       document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
-      
-      // Check device MAC
+
       const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
-      if (!macSnap.exists()) {
-        window.location.href = "config.html";
-        return;
-      }
-       deviceMac = macSnap.val();
-      
-      // Carica pianta selezionata
+      if (!macSnap.exists()) { window.location.href = "config.html"; return; }
+      deviceMac = macSnap.val();
+
       const plantSnap = await get(ref(db, "vaso/" + user.uid + "/pianta_selezionata"));
-      if (plantSnap.exists()) {
-        selectedPlant = plantSnap.val();
-      }
-     
+      if (plantSnap.exists()) selectedPlant = plantSnap.val();
+
       fetchDati();
       setInterval(fetchDati, 60000);
     });
@@ -487,9 +477,7 @@
         const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
         const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), limitToLast(48)));
         if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
-          const liveData = liveSnap.val();
-          const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
-          window.updateFromRemote(liveData, storicoData, selectedPlant);
+          window.updateFromRemote(liveSnap.val(), storicoSnap.exists() ? Object.values(storicoSnap.val()) : [], selectedPlant);
         }
       } catch (e) { console.error(e); }
     }

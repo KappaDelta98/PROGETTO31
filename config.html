@@ -9,48 +9,151 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg: #080808; --surface: #101010; --surface-2: #161616; --border: rgba(255,255,255,0.06);
-      --text: #f0f0f0; --text-secondary: #6e6e6e; --accent: #4ade80; --accent-dim: rgba(74,222,128,0.1);
-      --danger: #ef4444; --radius: 16px; --radius-sm: 10px;
+      --bg: #f0f4f1;
+      --surface: #ffffff;
+      --surface-2: #f5f7f5;
+      --border: rgba(0,0,0,0.09);
+      --border-hover: rgba(0,0,0,0.16);
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --accent: #16a34a;
+      --accent-dim: rgba(22,163,74,0.09);
+      --danger: #dc2626;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
     }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    header { position: sticky; top: 0; z-index: 50; background: rgba(8,8,8,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-    .topbar { max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .logo-group { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
-    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; }
-    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      max-width: 1120px; margin: 0 auto;
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 28px; height: 28px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.2rem; letter-spacing: 0.02em; }
+
+    main {
+      flex: 1; display: flex; align-items: center;
+      justify-content: center; padding: 32px 24px;
+    }
+
     .config-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 40px; max-width: 520px; width: 100%; text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 520px; width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-md);
     }
-    h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; margin-bottom: 8px; }
-    p { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 32px; line-height: 1.6; }
-    .input-group { margin-bottom: 24px; text-align: left; }
-    label { display: block; font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
-    input {
-      width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
-      border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
-      font-size: 1rem; font-family: 'Inter', sans-serif; text-align: center;
-      letter-spacing: 0.1em; text-transform: uppercase;
+
+    .config-icon {
+      width: 48px; height: 48px;
+      background: var(--accent-dim);
+      border-radius: 14px;
+      display: grid; place-items: center;
+      margin: 0 auto 20px;
+      color: var(--accent);
     }
-    input:focus { outline: none; border-color: var(--accent); }
-    .btn {
-      width: 100%; padding: 14px; border-radius: var(--radius-sm); border: none;
-      background: var(--accent); color: #080808; font-weight: 600; font-size: 0.875rem;
-      cursor: pointer; transition: opacity 0.2s; font-family: 'Inter', sans-serif;
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.625rem; font-weight: 400;
+      margin-bottom: 8px;
     }
-    .btn:hover { opacity: 0.9; }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .input-group { margin-bottom: 20px; text-align: left; }
+
+    .input-group label {
+      display: block;
+      font-size: 0.75rem; color: var(--text-secondary);
+      margin-bottom: 6px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    .input-group input {
+      width: 100%; padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 1rem; font-family: 'Inter', sans-serif;
+      text-align: center; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input-group input:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+    }
+    .input-group input::placeholder { color: var(--text-secondary); opacity: 0.5; letter-spacing: 0.08em; }
+
+    .btn-save {
+      width: 100%; padding: 13px 16px;
+      border-radius: var(--radius); border: none;
+      background: var(--accent); color: #fff;
+      font-weight: 600; font-size: 0.9375rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(22,163,74,0.25);
+    }
+    .btn-save:hover {
+      background: #15803d;
+      box-shadow: 0 4px 12px rgba(22,163,74,0.35);
+    }
+
+    #statusMsg {
+      margin-top: 14px;
+      font-size: 0.8125rem;
+      min-height: 20px;
+    }
+    .success { color: var(--accent); font-weight: 500; }
+    .error { color: var(--danger); font-weight: 500; }
+
     .info-box {
-      background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2);
-      border-radius: var(--radius-sm); padding: 16px; margin-top: 24px; font-size: 0.8125rem;
-      color: var(--text-secondary); line-height: 1.5; text-align: left;
+      background: var(--accent-dim);
+      border: 1px solid rgba(22,163,74,0.18);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin-top: 24px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      text-align: left;
     }
     .info-box strong { color: var(--accent); }
-    #statusMsg { margin-top: 16px; font-size: 0.8125rem; }
-    .success { color: var(--accent); }
-    .error { color: var(--danger); }
+    .info-box ol { padding-left: 16px; margin-top: 6px; }
+    .info-box li { margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -58,7 +161,10 @@
   <header>
     <div class="topbar">
       <div class="logo-group">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/><path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/></svg>
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/>
+        </svg>
         <span class="logo-text">Vaso</span>
       </div>
     </div>
@@ -66,23 +172,31 @@
 
   <main>
     <div class="config-card">
-      <h2>Configurazione Dispositivo</h2>
-      <p>Inserisci l'indirizzo MAC del tuo vaso (senza i due punti). Lo trovi nel monitor seriale dell'ESP32 dopo la connessione WiFi.</p>
-      
+      <div class="config-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+      <h2>Configura il dispositivo</h2>
+      <p class="subtitle">Inserisci l'indirizzo MAC del tuo vaso per collegarlo alla dashboard. Lo trovi nel monitor seriale dell'IDE Arduino dopo il boot dell'ESP32.</p>
+
       <div class="input-group">
-        <label for="macInput">Indirizzo MAC (es. A1B2C3D4E5F6)</label>
-        <input type="text" id="macInput" placeholder="A1B2C3D4E5F6" maxlength="17">
+        <label for="macInput">Indirizzo MAC</label>
+        <input type="text" id="macInput" placeholder="A1B2C3D4E5F6" maxlength="17"/>
       </div>
 
-      <button class="btn" onclick="saveMac()">Salva e Continua</button>
+      <button class="btn-save" onclick="saveMac()">Salva e continua</button>
       <div id="statusMsg"></div>
 
       <div class="info-box">
-        <strong>Come trovare il MAC Address:</strong><br>
-        1. Apri l'IDE Arduino e il Monitor Seriale<br>
-        2. Resetta l'ESP32<br>
-        3. Cerca la riga: "IP ESP32: ..." (il MAC è solitamente stampato vicino o nel log di connessione)<br>
-        4. Formato originale: AA:BB:CC:DD:EE:FF -> Inserisci: <strong>AABBCC_DDEEFF</strong> (sostituisci : con _)
+        <strong>Come trovare il MAC Address</strong>
+        <ol>
+          <li>Apri l'IDE Arduino → Monitor Seriale</li>
+          <li>Premi il tasto reset sull'ESP32</li>
+          <li>Cerca la riga con il MAC (es. <strong>A1:B2:C3:D4:E5:F6</strong>)</li>
+          <li>Rimuovi i due punti: inserisci <strong>A1B2C3D4E5F6</strong></li>
+        </ol>
       </div>
     </div>
   </main>
@@ -105,14 +219,11 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
-
     let currentUser = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
       currentUser = user;
-      
-      // Check if MAC is already saved
       const snap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
       if (snap.exists()) {
         document.getElementById('macInput').value = snap.val().replace(/_/g, '');
@@ -122,21 +233,20 @@
     window.saveMac = async () => {
       const macRaw = document.getElementById('macInput').value.trim();
       const statusEl = document.getElementById('statusMsg');
-      
-      if (!macRaw || macRaw.length < 12) {
+
+      if (!macRaw || macRaw.replace(/[^A-Fa-f0-9]/g, '').length < 12) {
         statusEl.className = 'error';
-        statusEl.textContent = 'Inserisci un MAC Address valido.';
+        statusEl.textContent = 'Inserisci un MAC Address valido (12 caratteri esadecimali).';
         return;
       }
 
-      // Format MAC: replace : with _ and remove any other chars
       let macFormatted = macRaw.replace(/:/g, '_').replace(/[^A-Fa-f0-9_]/g, '');
-      
+
       try {
         await set(ref(db, "vaso/" + currentUser.uid + "/device_mac"), macFormatted);
         statusEl.className = 'success';
-        statusEl.textContent = 'Salvato! Reindirizzamento alla dashboard...';
-        setTimeout(() => { window.location.href = "index.html"; }, 1500);
+        statusEl.textContent = 'Salvato! Reindirizzamento alla dashboard…';
+        setTimeout(() => { window.location.href = "index.html"; }, 1400);
       } catch (e) {
         statusEl.className = 'error';
         statusEl.textContent = 'Errore nel salvataggio: ' + e.message;
