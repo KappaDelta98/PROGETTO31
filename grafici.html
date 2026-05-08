@@ -260,6 +260,14 @@
     let currentTf = '24h';
     let allHistory = [];
 
+    // L'ESP32 usa unsigned long (32 bit) per now*1000 → overflow.
+    // Ricostruisce il timestamp ms corretto a partire dal valore 32-bit wrappato.
+    function reconstructTs(ts) {
+      if (ts > 1577836800000) return ts; // già ms valido (> 2020-01-01)
+      const N = Math.round((Date.now() - ts) / 4294967296);
+      return ts + N * 4294967296;
+    }
+
     function formatLabel(ts) {
       const d = new Date(ts);
       if (currentTf === '24h') {
@@ -378,10 +386,11 @@
         Object.keys(raw).forEach(k => {
           const node = raw[k];
           if (node.temperature !== undefined) {
-            history.push(node);
+            history.push({ ...node, timestamp: reconstructTs(node.timestamp) });
           } else {
             Object.values(node).forEach(inner => {
-              if (inner && inner.temperature !== undefined) history.push(inner);
+              if (inner && inner.temperature !== undefined)
+                history.push({ ...inner, timestamp: reconstructTs(inner.timestamp) });
             });
           }
         });

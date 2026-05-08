@@ -607,6 +607,25 @@
       }
     }
 
+    function reconstructTs(ts) {
+      if (ts > 1577836800000) return ts;
+      const N = Math.round((Date.now() - ts) / 4294967296);
+      return ts + N * 4294967296;
+    }
+
+    // Pre-popola state.history dallo storico Firebase al primo caricamento
+    window.initHistory = function(entries) {
+      if (state.history.length > 0) return;
+      const sorted = entries
+        .filter(e => e && e.temperature !== undefined)
+        .map(e => ({ t: reconstructTs(e.timestamp), temp: e.temperature, hum: e.humidity }))
+        .sort((a, b) => a.t - b.t);
+      // Prendi solo gli ultimi 60 minuti
+      const cutoff = Date.now() - 60 * 60 * 1000;
+      const recent = sorted.filter(e => e.t >= cutoff);
+      state.history = (recent.length >= 2 ? recent : sorted).slice(-48);
+    };
+
     window.updateFromRemote = function(payload) {
       el('connectionText').textContent = 'Live';
       el('statusDot').classList.remove('offline');
@@ -690,13 +709,18 @@
     async function fetchDati() {
       if (!currentUser || !deviceMac) return;
       try {
-        const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
-        const storicoSnap = await get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), limitToLast(48)));
-        if (liveSnap.exists()) {
-          const liveData = liveSnap.val();
-          if (typeof window.updateFromRemote === 'function') {
-            window.updateFromRemote(liveData);
-          }
+        const [liveSnap, storicoSnap] = await Promise.all([
+          get(ref(db, "vaso/devices/" + deviceMac + "/live")),
+          get(query(ref(db, "vaso/devices/" + deviceMac + "/storico"), limitToLast(48)))
+        ]);
+
+        // Pre-popola i mini-grafici dallo storico al primo fetch
+        if (storicoSnap.exists() && typeof window.initHistory === 'function') {
+          window.initHistory(Object.values(storicoSnap.val()));
+        }
+
+        if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
+          window.updateFromRemote(liveSnap.val());
         }
       } catch (e) { console.error(e); }
       setTimeout(fetchDati, 60000);
