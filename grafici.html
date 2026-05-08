@@ -284,7 +284,7 @@
       return allHistory;
     }
 
-    function makeChartConfig(label, data, color) {
+    function makeChartConfig(label, data, color, yMin, yMax) {
       return {
         type: 'line',
         data: {
@@ -319,6 +319,8 @@
           },
           scales: {
             y: {
+              min: yMin,
+              max: yMax,
               grid: { color: 'rgba(0,0,0,0.05)' },
               ticks: { color: '#9ca3af', font: { size: 11, family: 'Inter' } },
               border: { display: false },
@@ -333,10 +335,10 @@
       };
     }
 
-    function updateChart(id, label, data, color) {
+    function updateChart(id, label, data, color, yMin, yMax) {
       if (charts[id]) charts[id].destroy();
       const ctx = document.getElementById(id).getContext('2d');
-      charts[id] = new Chart(ctx, makeChartConfig(label, data, color));
+      charts[id] = new Chart(ctx, makeChartConfig(label, data, color, yMin, yMax));
     }
 
     function renderCharts() {
@@ -345,10 +347,10 @@
         document.getElementById('statusText').textContent = 'Nessun dato nel periodo selezionato.';
         return;
       }
-      updateChart('tempChart', 'Temperatura (°C)', history.map(h => ({ t: h.timestamp, v: h.temperature })), '#d97706');
-      updateChart('humChart', 'Umidità Aria (%)', history.map(h => ({ t: h.timestamp, v: h.humidity })), '#0284c7');
-      updateChart('soilChart', 'Umidità Terreno (%)', history.map(h => ({ t: h.timestamp, v: h.soil })), '#16a34a');
-      updateChart('tankChart', 'Serbatoio (%)', history.map(h => ({ t: h.timestamp, v: h.tank || 0 })), '#7c3aed');
+      updateChart('tempChart', 'Temperatura (°C)', history.map(h => ({ t: h.timestamp, v: h.temperature })), '#d97706', -10, 50);
+      updateChart('humChart', 'Umidità Aria (%)', history.map(h => ({ t: h.timestamp, v: h.humidity })), '#0284c7', 0, 100);
+      updateChart('soilChart', 'Umidità Terreno (%)', history.map(h => ({ t: h.timestamp, v: h.soil })), '#16a34a', 0, 100);
+      updateChart('tankChart', 'Serbatoio (%)', history.map(h => ({ t: h.timestamp, v: h.tank || 0 })), '#7c3aed', 0, 100);
       const last = new Date(history[history.length - 1].timestamp);
       document.getElementById('statusText').textContent =
         `Live — ${history.length} rilevazioni · ultimo dato: ${last.toLocaleTimeString('it-IT')}`;

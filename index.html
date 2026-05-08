@@ -518,7 +518,7 @@
       el('tempChartVal').textContent = fmt(d.temperature, 1) + ' °C';
       el('humChartVal').textContent = fmt(d.humidity) + ' %';
 
-      drawChart('tempChart', 'temp', 0, 50, '#d97706', 'rgba(217,119,6,0.1)', '°C');
+      drawChart('tempChart', 'temp', -10, 50, '#d97706', 'rgba(217,119,6,0.1)', '°C');
       drawChart('humChart', 'hum', 0, 100, '#0284c7', 'rgba(2,132,199,0.1)', '%');
     }
 
