@@ -5,25 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vaso — Grafici Storici</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&swap" rel="stylesheet"/>
   <style>
     :root { --bg: #080808; --surface: #101010; --border: rgba(255,255,255,0.06); --text: #f0f0f0; --text-secondary: #6e6e6e; --accent: #4ade80; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-    header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    
+    header { 
+      padding: 16px 24px; 
+      border-bottom: 1px solid var(--border); 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(8,8,8,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 24px; }
+    
+    /* Navigazione aggiunta */
+    nav { display: flex; gap: 20px; }
+    nav a { 
+      color: var(--text-secondary); 
+      text-decoration: none; 
+      font-size: 14px; 
+      font-weight: 500; 
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+
     main { max-width: 1100px; margin: 0 auto; padding: 20px; }
     .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-top: 20px; }
     .chart-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 16px; }
+    
     .time-selector { display: flex; gap: 10px; margin-bottom: 20px; }
     .time-btn { background: #161616; color: var(--text-secondary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; cursor: pointer; }
     .time-btn.active { background: var(--accent); color: #000; }
+    
     canvas { width: 100% !important; height: 250px !important; }
-    .status { font-size: 12px; color: var(--accent); }
+    .status { font-size: 12px; color: var(--text-secondary); }
   </style>
 </head>
 <body>
 
   <header>
-    <div style="font-family:'DM Serif Display'; font-size: 24px;">Vaso</div>
+    <div class="logo-text">Vaso</div>
+    
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="grafici.html" class="active">Grafici</a>
+      <a href="consigli.html">Consigli</a>
+    </nav>
+
     <div class="status" id="authStatus">Verifica accesso...</div>
   </header>
 
@@ -47,7 +83,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, get, query, orderByKey, startAt } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
@@ -63,7 +99,6 @@
     const db = getDatabase(app);
     let charts = {};
 
-    // Funzione per creare/aggiornare i grafici con Chart.js
     function updateChart(id, label, data, color) {
       if (charts[id]) charts[id].destroy();
       const ctx = document.getElementById(id).getContext('2d');
@@ -71,36 +106,49 @@
         type: 'line',
         data: {
           labels: data.map(d => new Date(d.t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})),
-          datasets: [{ label: label, data: data.map(d => d.v), borderColor: color, tension: 0.3, fill: false }]
+          datasets: [{ 
+            label: label, 
+            data: data.map(d => d.v), 
+            borderColor: color, 
+            backgroundColor: color + '22', // Aggiunge un po' di riempimento trasparente
+            tension: 0.3, 
+            fill: true 
+          }]
         },
-        options: { responsive: true, scales: { y: { beginAtZero: false }, x: { grid: { display: false } } } }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { 
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6e6e6e' } },
+            x: { grid: { display: false }, ticks: { color: '#6e6e6e' } }
+          } 
+        }
       });
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "login.html"; return; }
-      document.getElementById('authStatus').textContent = "Connesso: " + user.email;
+      document.getElementById('authStatus').textContent = user.email.split('@')[0];
 
-      // SOLUZIONE A: Recupero MAC dal profilo utente per superare le Rules
       const userMacSnap = await get(ref(db, `vaso/${user.uid}/device_mac`));
       if (!userMacSnap.exists()) {
-        alert("Errore: Nessun MAC associato al tuo profilo!");
+        alert("Errore: MAC non trovato!");
         return;
       }
       const deviceMac = userMacSnap.val();
 
       window.fetchDati = async function() {
         try {
-          const liveRef = ref(db, `vaso/devices/${deviceMac}/live`);
-          const storicoRef = ref(db, `vaso/devices/${deviceMac}/storico`);
-          
-          const [liveSnap, storicoSnap] = await Promise.all([get(liveRef), get(storicoRef)]);
+          const [liveSnap, storicoSnap] = await Promise.all([
+            get(ref(db, `vaso/devices/${deviceMac}/live`)),
+            get(ref(db, `vaso/devices/${deviceMac}/storico`))
+          ]);
 
           if (liveSnap.exists()) {
             const raw = storicoSnap.val() || {};
             let history = [];
 
-            // Parsing intelligente per nodi annidati o piatti
             Object.keys(raw).forEach(k => {
               const node = raw[k];
               if (node.temperature !== undefined) history.push(node);
@@ -109,13 +157,12 @@
 
             history.sort((a, b) => a.timestamp - b.timestamp);
 
-            // Aggiorna i 4 grafici
-            updateChart('tempChart', 'Temp °C', history.map(h => ({t: h.timestamp, v: h.temperature})), '#f59e0b');
-            updateChart('humChart', 'Umidità Aria %', history.map(h => ({t: h.timestamp, v: h.humidity})), '#38bdf8');
-            updateChart('soilChart', 'Umidità Terreno %', history.map(h => ({t: h.timestamp, v: h.soil})), '#4ade80');
-            updateChart('tankChart', 'Serbatoio %', history.map(h => ({t: h.timestamp, v: h.tank || 0})), '#a78bfa');
+            updateChart('tempChart', 'Temp', history.map(h => ({t: h.timestamp, v: h.temperature})), '#f59e0b');
+            updateChart('humChart', 'Umidità Aria', history.map(h => ({t: h.timestamp, v: h.humidity})), '#38bdf8');
+            updateChart('soilChart', 'Umidità Terreno', history.map(h => ({t: h.timestamp, v: h.soil})), '#4ade80');
+            updateChart('tankChart', 'Serbatoio', history.map(h => ({t: h.timestamp, v: h.tank || 0})), '#a78bfa');
           }
-        } catch (e) { console.error("Errore Database:", e); }
+        } catch (e) { console.error(e); }
       };
 
       window.fetchDati();
@@ -125,7 +172,6 @@
     window.changeTf = (tf, btn) => {
       document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      // Qui potresti aggiungere filtri temporali StartAt() se lo storico diventa enorme
       window.fetchDati();
     };
   </script>
