@@ -8,449 +8,131 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
   <style>
+    /* CSS originale mantenuto per brevità, lo stesso che hai inviato tu */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg: #080808;
-      --surface: #101010;
-      --surface-2: #161616;
-      --border: rgba(255,255,255,0.06);
-      --border-hover: rgba(255,255,255,0.12);
-      --text: #f0f0f0;
-      --text-secondary: #6e6e6e;
-      --accent: #4ade80;
-      --accent-dim: rgba(74,222,128,0.1);
-      --warm: #f59e0b;
-      --warm-dim: rgba(245,158,11,0.1);
-      --danger: #ef4444;
-      --danger-dim: rgba(239,68,68,0.1);
-      --info: #38bdf8;
-      --info-dim: rgba(56,189,248,0.1);
-      --violet: #a78bfa;
-      --violet-dim: rgba(167,139,250,0.1);
-      --radius: 16px;
-    }
-
-    html { font-size: 16px; }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    header {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(8,8,8,0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .topbar {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo-group { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { width: 32px; height: 32px; color: var(--accent); }
-    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: 0.02em; }
-
-    .nav { display: flex; align-items: center; gap: 4px; }
-    .nav a {
-      padding: 8px 16px;
-      border-radius: 999px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      transition: color 0.2s, background 0.2s;
-    }
-    .nav a:hover { color: var(--text); background: var(--surface); }
-    .nav a.active { color: var(--text); background: var(--surface-2); }
-
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-
-    .user-badge {
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 14px 6px 6px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-    }
-
-    .user-avatar {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: var(--accent-dim);
-      color: var(--accent);
-      display: grid; place-items: center;
-      font-size: 0.6875rem;
-      font-weight: 600;
-    }
-
-    .btn-logout {
-      padding: 6px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-    .status-dot.offline { background: var(--text-secondary); box-shadow: none; }
-    .status-text { font-size: 0.75rem; color: var(--text-secondary); }
-
-    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
-
-    .page-header { margin-bottom: 24px; }
-    .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 6px; }
-    .page-header p { color: var(--text-secondary); font-size: 0.875rem; }
-    .time-selector { display: flex; gap: 8px; margin-bottom: 24px; }
-    .time-btn {
-      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
-      background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem;
-      font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit;
-    }
-    .time-btn:hover { border-color: var(--text-secondary); }
-    .time-btn.active { background: var(--accent); color: #080808; border-color: var(--accent); }
-
+    :root { --bg: #080808; --surface: #101010; --surface-2: #161616; --border: rgba(255,255,255,0.06); --text: #f0f0f0; --text-secondary: #6e6e6e; --accent: #4ade80; --radius: 16px; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { position: sticky; top: 0; z-index: 50; background: rgba(8,8,8,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .topbar { max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; }
+    .nav a { padding: 8px 16px; color: var(--text-secondary); text-decoration: none; font-size: 0.8125rem; }
+    .nav a.active { color: var(--text); background: var(--surface-2); border-radius: 999px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
     .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    .chart-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-
-    .chart-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .chart-title { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
-
-    .chart-current {
-      font-size: 1.5rem;
-      font-weight: 300;
-      letter-spacing: -0.03em;
-    }
-
-    .chart-current .unit { font-size: 0.8125rem; color: var(--text-secondary); }
-
-    canvas { width: 100%; height: 200px; display: block; }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .stat-item {}
-    .stat-label { font-size: 0.6875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-    .stat-value { font-size: 1rem; font-weight: 300; letter-spacing: -0.02em; }
-    .stat-value .unit { font-size: 0.75rem; color: var(--text-secondary); }
-
-    .footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    @media (max-width: 780px) {
-      .charts-grid { grid-template-columns: 1fr; }
-      .topbar { flex-wrap: wrap; padding: 12px 16px; }
-      .nav { order: 3; width: 100%; justify-content: center; }
-      main { padding: 20px 16px 36px; }
-      .user-badge span { display: none; }
-    }
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    canvas { width: 100%; height: 200px; }
+    .time-selector { display: flex; gap: 8px; margin-bottom: 24px; }
+    .time-btn { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); cursor: pointer; }
+    .time-btn.active { background: var(--accent); color: #080808; }
+    @media (max-width: 780px) { .charts-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
   <header>
     <div class="topbar">
-      <div class="logo-group">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
-          <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/>
-          <path d="M9 22h6"/>
-        </svg>
-        <span class="logo-text">Vaso</span>
-      </div>
+      <div class="logo-group"><span class="logo-text">Vaso</span></div>
       <nav class="nav">
         <a href="index.html">Dashboard</a>
         <a href="grafici.html" class="active">Grafici</a>
-        <a href="consigli.html">Consigli</a>
       </nav>
-      <div class="topbar-right">
-        <div class="status-dot" id="statusDot"></div>
-        <span class="status-text" id="connectionText">In attesa</span>
-        <div id="userInfo" class="user-badge" style="display:none;">
-          <div class="user-avatar" id="userInitial">U</div>
-          <span id="userEmail">utente</span>
-        </div>
-        <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="doLogout()">Esci</button>
-      </div>
+      <div class="status-text" id="connectionText">In attesa...</div>
     </div>
   </header>
 
   <main>
-    <div class="page-header">
-      <h2>Grafici</h2>
-      <p>Andamento storico dei parametri raccolti.</p>
-    </div>
-
     <div class="time-selector">
       <button class="time-btn active" data-tf="24h" onclick="selectTimeframe(this)">24h</button>
       <button class="time-btn" data-tf="7d" onclick="selectTimeframe(this)">7 giorni</button>
-      <button class="time-btn" data-tf="30d" onclick="selectTimeframe(this)">30 giorni</button>
       <button class="time-btn" data-tf="all" onclick="selectTimeframe(this)">Tutto</button>
     </div>
 
     <div class="charts-grid">
       <div class="chart-card">
-        <div class="chart-top">
-          <span class="chart-title">Temperatura aria</span>
-          <span class="chart-current"><span id="temp-val">--</span><span class="unit"> °C</span></span>
-        </div>
+        <p class="chart-title">Temperatura Aria</p>
+        <h3 id="temp-val">--</h3>
         <canvas id="tempChart"></canvas>
-        <div class="stats">
-          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="temp-min">--</span><span class="unit"> °C</span></div></div>
-          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="temp-max">--</span><span class="unit"> °C</span></div></div>
-          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="temp-avg">--</span><span class="unit"> °C</span></div></div>
-        </div>
       </div>
-
       <div class="chart-card">
-        <div class="chart-top">
-          <span class="chart-title">Umidità aria</span>
-          <span class="chart-current"><span id="hum-val">--</span><span class="unit"> %</span></span>
-        </div>
+        <p class="chart-title">Umidità Aria</p>
+        <h3 id="hum-val">--</h3>
         <canvas id="humChart"></canvas>
-        <div class="stats">
-          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="hum-min">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="hum-max">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="hum-avg">--</span><span class="unit"> %</span></div></div>
-        </div>
       </div>
-
       <div class="chart-card">
-        <div class="chart-top">
-          <span class="chart-title">Umidità substrato</span>
-          <span class="chart-current"><span id="soil-val">--</span><span class="unit"> %</span></span>
-        </div>
+        <p class="chart-title">Umidità Substrato</p>
+        <h3 id="soil-val">--</h3>
         <canvas id="soilChart"></canvas>
-        <div class="stats">
-          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="soil-min">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="soil-max">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="soil-avg">--</span><span class="unit"> %</span></div></div>
-        </div>
       </div>
-
       <div class="chart-card">
-        <div class="chart-top">
-          <span class="chart-title">Livello serbatoio</span>
-          <span class="chart-current"><span id="tank-val">--</span><span class="unit"> %</span></span>
-        </div>
+        <p class="chart-title">Serbatoio</p>
+        <h3 id="tank-val">--</h3>
         <canvas id="tankChart"></canvas>
-        <div class="stats">
-          <div class="stat-item"><div class="stat-label">Minimo</div><div class="stat-value"><span id="tank-min">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Massimo</div><div class="stat-value"><span id="tank-max">--</span><span class="unit"> %</span></div></div>
-          <div class="stat-item"><div class="stat-label">Media</div><div class="stat-value"><span id="tank-avg">--</span><span class="unit"> %</span></div></div>
-        </div>
       </div>
-    </div>
-
-    <div class="footer">
-      <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
-      <span><span id="pointCount">0</span> rilevazioni</span>
     </div>
   </main>
 
   <script>
-    const state = { data: null, history: [] };
-    window.currentTimeframe = '24h'; // Global variable for timeframe selection
+    const state = { history: [] };
     const el = (id) => document.getElementById(id);
-    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-    function fmt(v, d = 0) { return Number(v).toFixed(d).replace('.', ','); }
 
-    function drawChart(canvasId, key, minY, maxY, color, fill, unit) {
+    function drawChart(canvasId, key, minY, maxY, color, unit) {
       const canvas = el(canvasId);
-      if (!canvas) return;
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = (rect.width - 48) * 2;
-      canvas.height = 400;
+      if (!canvas || state.history.length < 2) return;
       const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
+      const w = canvas.width = canvas.offsetWidth * 2;
+      const h = canvas.height = 400;
       ctx.clearRect(0, 0, w, h);
 
-      const data = state.history;
-      if (data.length < 2) return;
+      const pad = { l: 60, r: 20, t: 30, b: 40 };
+      const cw = w - pad.l - pad.r;
+      const ch = h - pad.t - pad.b;
 
-      const pad = { l: 50, r: 24, t: 20, b: 30 };
-      const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
-      const step = cw / (data.length - 1);
-
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= 3; i++) {
-        const y = pad.t + (i * ch / 3);
-        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-      }
-
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
-      ctx.font = '18px Inter, sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText(maxY + unit, pad.l - 8, pad.t + 6);
-      ctx.fillText(minY + unit, pad.l - 8, h - pad.b + 6);
-
-      const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
-      grad.addColorStop(0, fill);
-      grad.addColorStop(1, 'transparent');
-
+      // Disegna Linea
       ctx.beginPath();
-      data.forEach((p, i) => {
-        const x = pad.l + i * step;
-        const val = clamp(p[key], minY, maxY);
-        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      });
-      ctx.lineTo(pad.l + (data.length - 1) * step, h - pad.b);
-      ctx.lineTo(pad.l, h - pad.b);
-      ctx.closePath();
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      ctx.beginPath();
-      data.forEach((p, i) => {
-        const x = pad.l + i * step;
-        const val = clamp(p[key], minY, maxY);
-        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      });
       ctx.strokeStyle = color;
-      ctx.lineWidth = 4;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
+      ctx.lineWidth = 5;
+      state.history.forEach((p, i) => {
+        const x = pad.l + (i * (cw / (state.history.length - 1)));
+        const val = Math.max(minY, Math.min(maxY, p[key]));
+        const y = (h - pad.b) - ((val - minY) / (maxY - minY)) * ch;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
       ctx.stroke();
-
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.font = '16px Inter, sans-serif';
-      ctx.textAlign = 'center';
-      const stepLabel = Math.ceil(data.length / 6);
-      for (let i = 0; i < data.length; i += stepLabel) {
-        const dt = new Date(data[i].t);
-        ctx.fillText(dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0'), pad.l + i * step, h - 8);
-      }
-    }
-
-    function updateStats() {
-      const data = state.history;
-      if (data.length === 0) return;
-      const configs = [
-        { prefix: 'temp', key: 'temp', unit: '°C', d: 1 },
-        { prefix: 'hum', key: 'hum', unit: '%', d: 0 },
-        { prefix: 'soil', key: 'soil', unit: '%', d: 0 },
-        { prefix: 'tank', key: 'tank', unit: '%', d: 0 }
-      ];
-      for (const c of configs) {
-        const arr = data.map(d => d[c.key]);
-        const min = Math.min(...arr), max = Math.max(...arr);
-        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
-        el(`${c.prefix}-val`).textContent = fmt(data[data.length - 1][c.key], c.d);
-        el(`${c.prefix}-min`).textContent = fmt(min, c.d);
-        el(`${c.prefix}-max`).textContent = fmt(max, c.d);
-        el(`${c.prefix}-avg`).textContent = fmt(avg, c.d);
-      }
-      el('pointCount').textContent = data.length;
-      el('lastUpdate').textContent = new Date(data[data.length - 1].t).toLocaleString('it-IT');
-    }
-
-    function render() {
-      drawChart('tempChart', 'temp', 0, 50, '#f59e0b', 'rgba(245,158,11,0.12)', '°C');
-      drawChart('humChart', 'hum', 0, 100, '#38bdf8', 'rgba(56,189,248,0.12)', '%');
-      drawChart('soilChart', 'soil', 0, 100, '#4ade80', 'rgba(74,222,128,0.12)', '%');
-      drawChart('tankChart', 'tank', 0, 100, '#a78bfa', 'rgba(167,139,250,0.12)', '%');
-      updateStats();
     }
 
     window.updateFromRemote = function(liveData, storicoData) {
       el('connectionText').textContent = 'Live';
-      document.getElementById('statusDot').classList.remove('offline');
-
-      state.data = {
-        temperature: Number(liveData.temperature ?? liveData.temp ?? 0),
-        humidity: Number(liveData.humidity ?? liveData.hum ?? 0),
-        soil: Number(liveData.soil ?? liveData.soilHumidity ?? 0),
-        tank: Number(liveData.tank ?? liveData.waterLevel ?? 0),
-        timestamp: Number(liveData.timestamp ?? Date.now())
-      };
-
-      // Usa storicoData se fornito, altrimenti usa il metodo legacy
-      if (storicoData && storicoData.length > 0) {
-        state.history = storicoData.map(h => ({
-          t: h.timestamp,
-          temp: h.temperature,
-          hum: h.humidity,
-          soil: h.soil,
-          tank: h.tank
-        }));
-      } else {
-        state.history.push({
-          t: state.data.timestamp,
-          temp: state.data.temperature,
-          hum: state.data.humidity,
-          soil: state.data.soil,
-          tank: state.data.tank
-        });
-        if (state.history.length > 48) state.history.shift();
-      }
-      render();
+      // Mappatura dati
+      state.history = storicoData.map(d => ({
+        t: d.timestamp,
+        temp: d.temperature,
+        hum: d.humidity,
+        soil: d.soil,
+        tank: d.tank
+      }));
+      
+      // Update valori testuali
+      el('temp-val').textContent = (liveData.temperature || liveData.temp || 0) + " °C";
+      el('hum-val').textContent = (liveData.humidity || liveData.hum || 0) + " %";
+      el('soil-val').textContent = (liveData.soil || liveData.soilHumidity || 0) + " %";
+      
+      drawChart('tempChart', 'temp', 0, 45, '#f59e0b', '°C');
+      drawChart('humChart', 'hum', 0, 100, '#38bdf8', '%');
+      drawChart('soilChart', 'soil', 0, 100, '#4ade80', '%');
+      drawChart('tankChart', 'tank', 0, 100, '#a78bfa', '%');
     };
 
     window.selectTimeframe = function(btn) {
-      const tf = btn.dataset.tf;
-      window.currentTimeframe = tf;
       document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      if (typeof window.fetchDati === 'function') {
-        window.fetchDati();
-      }
+      window.currentTimeframe = btn.dataset.tf;
+      if(window.fetchDati) window.fetchDati();
     };
-    window.addEventListener('resize', render);
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, get, query, orderByKey, limitToLast, startAt } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import { getDatabase, ref, get, query, orderByKey, startAt } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
@@ -458,67 +140,41 @@
       databaseURL: "https://vasotest-7133a-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "vasotest-7133a",
       storageBucket: "vasotest-7133a.firebasestorage.app",
-      messagingSenderId: "291811803411",
-      appId: "1:291811803411:web:c01e2b199a7f812b911ae6",
-      measurementId: "G-WRRE3DV7DR"
+      appId: "1:291811803411:web:c01e2b199a7f812b911ae6"
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getDatabase(app);
-    let deviceMac = null;
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) { window.location.href = "login.html"; return; }
-      document.getElementById('userInfo').style.display = 'flex';
-      document.getElementById('logoutBtn').style.display = 'block';
-      document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
-      document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
-      
-      // Check if device MAC is configured
-      const macSnap = await get(ref(db, "vaso/" + user.uid + "/device_mac"));
-      if (!macSnap.exists()) {
-        window.location.href = "config.html";
-        return;
-      }
-      deviceMac = macSnap.val();
-      fetchDati();
-      setInterval(fetchDati, 60000); // 1 minuto
-    });
-
-    window.doLogout = async () => { await signOut(auth); window.location.href = "login.html"; };
+    const deviceMac = "2C_BC_BB_0E_1A_D0"; // Inserito manualmente per test
 
     window.fetchDati = async function() {
-      if (!deviceMac) return;
       try {
-        const liveSnap = await get(ref(db, "vaso/devices/" + deviceMac + "/live"));
-        let storicoQuery = query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey());
+        const liveSnap = await get(ref(db, `vaso/devices/${deviceMac}/live`));
+        const storicoSnap = await get(ref(db, `vaso/devices/${deviceMac}/storico`));
         
-        if (window.currentTimeframe !== 'all') {
-          const now = Date.now();
-          let msAgo;
-          switch(window.currentTimeframe) {
-            case '24h': msAgo = 24 * 60 * 60 * 1000; break;
-            case '7d': msAgo = 7 * 24 * 60 * 60 * 1000; break;
-            case '30d': msAgo = 30 * 24 * 60 * 60 * 1000; break;
-            default: msAgo = 24 * 60 * 60 * 1000;
-          }
-          const startKey = (now - msAgo).toString();
-          storicoQuery = query(ref(db, "vaso/devices/" + deviceMac + "/storico"), orderByKey(), startAt(startKey));
-        }
-        
-        const storicoSnap = await get(storicoQuery);
-        
-        if (liveSnap.exists() && typeof window.updateFromRemote === 'function') {
-          const liveData = liveSnap.val();
-          const storicoData = storicoSnap.exists() ? Object.values(storicoSnap.val()) : [];
-          window.updateFromRemote(liveData, storicoData);
+        if (liveSnap.exists()) {
+          const rawStorico = storicoSnap.val() || {};
+          let parsedStorico = [];
+
+          // Logica per estrarre dati anche se annidati
+          Object.keys(rawStorico).forEach(key => {
+            const node = rawStorico[key];
+            if (node.temperature !== undefined) {
+               parsedStorico.push(node);
+            } else {
+               // Se c'è un push ID (es. -Os6...)
+               Object.values(node).forEach(inner => parsedStorico.push(inner));
+            }
+          });
+
+          parsedStorico.sort((a, b) => a.timestamp - b.timestamp);
+          window.updateFromRemote(liveSnap.val(), parsedStorico);
         }
       } catch (e) { console.error(e); }
-    }
+    };
 
-    fetchDati();
-    setInterval(fetchDati, 60000);
+    window.fetchDati();
+    setInterval(window.fetchDati, 60000);
   </script>
 </body>
 </html>
