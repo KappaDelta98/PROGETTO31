@@ -613,14 +613,24 @@
       return ts + N * 4294967296;
     }
 
-    // Pre-popola state.history dallo storico Firebase al primo caricamento
-    window.initHistory = function(entries) {
+    // Pre-popola state.history dallo storico Firebase al primo caricamento.
+    // Lo storico è nidificato: { "ts_key": { "-pushKey": { temperature, ... } } }
+    window.initHistory = function(rawEntries) {
       if (state.history.length > 0) return;
-      const sorted = entries
-        .filter(e => e && e.temperature !== undefined)
+      const flat = [];
+      rawEntries.forEach(node => {
+        if (!node) return;
+        if (node.temperature !== undefined) {
+          flat.push(node);                            // struttura piatta
+        } else {
+          Object.values(node).forEach(inner => {
+            if (inner && inner.temperature !== undefined) flat.push(inner); // struttura nidificata
+          });
+        }
+      });
+      const sorted = flat
         .map(e => ({ t: reconstructTs(e.timestamp), temp: e.temperature, hum: e.humidity }))
         .sort((a, b) => a.t - b.t);
-      // Prendi solo gli ultimi 60 minuti
       const cutoff = Date.now() - 60 * 60 * 1000;
       const recent = sorted.filter(e => e.t >= cutoff);
       state.history = (recent.length >= 2 ? recent : sorted).slice(-48);
