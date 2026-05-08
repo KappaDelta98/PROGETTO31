@@ -635,7 +635,7 @@
         humidity: Number(payload.humidity ?? payload.hum ?? 0),
         soil: Number(payload.soil ?? payload.soilHumidity ?? 0),
         tank: Number(payload.tank ?? payload.waterLevel ?? 0),
-        timestamp: Number(payload.timestamp ?? Date.now())
+        timestamp: reconstructTs(Number(payload.timestamp ?? Date.now()))
       };
 
       pushHistory();

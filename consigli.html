@@ -413,6 +413,12 @@
       `).join('');
     }
 
+    function reconstructTs(ts) {
+      if (ts > 1577836800000) return ts;
+      const N = Math.round((Date.now() - ts) / 4294967296);
+      return ts + N * 4294967296;
+    }
+
     window.updateFromRemote = function(liveData, storicoData, selectedPlant) {
       el('connectionText').textContent = 'Live';
       el('statusDot').classList.remove('offline');
@@ -422,7 +428,7 @@
         humidity: Number(liveData.humidity ?? liveData.hum ?? 0),
         soil: Number(liveData.soil ?? liveData.soilHumidity ?? 0),
         tank: Number(liveData.tank ?? liveData.waterLevel ?? 0),
-        timestamp: Number(liveData.timestamp ?? Date.now())
+        timestamp: reconstructTs(Number(liveData.timestamp ?? Date.now()))
       };
 
       render(d, selectedPlant, storicoData);
