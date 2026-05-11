@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaso — Avanzate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f0f4f1;
+      --surface: #ffffff;
+      --surface-2: #f5f7f5;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --accent: #16a34a;
+      --accent-dim: rgba(22,163,74,0.09);
+      --warm: #d97706;
+      --warm-dim: rgba(217,119,6,0.09);
+      --danger: #dc2626;
+      --danger-dim: rgba(220,38,38,0.09);
+      --info: #0284c7;
+      --info-dim: rgba(2,132,199,0.09);
+      --purple: #7c3aed;
+      --purple-dim: rgba(124,58,237,0.09);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    html { font-size: 16px; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* ── HEADER ── */
+    header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); box-shadow: var(--shadow); }
+    .topbar { max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .logo-group { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 28px; height: 28px; color: var(--accent); }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.2rem; letter-spacing: 0.02em; }
+    .nav { display: flex; align-items: center; gap: 4px; }
+    .nav a { padding: 7px 14px; border-radius: 999px; color: var(--text-secondary); text-decoration: none; font-size: 0.8125rem; font-weight: 500; transition: color 0.15s, background 0.15s; }
+    .nav a:hover { color: var(--text); background: var(--surface-2); }
+    .nav a.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .user-badge { display: flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 0.8125rem; color: var(--text-secondary); box-shadow: var(--shadow); }
+    .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); display: grid; place-items: center; font-size: 0.625rem; font-weight: 700; }
+    .btn-logout { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow); }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(22,163,74,0.5); flex-shrink: 0; }
+    .status-dot.offline { background: #d1d5db; box-shadow: none; }
+    .status-text { font-size: 0.75rem; color: var(--text-secondary); }
+
+    /* ── MAIN ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 48px; }
+
+    /* ── PAGE HEADER / TOOLBAR ── */
+    .page-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .page-top h2 { font-family: 'DM Serif Display', serif; font-size: 1.625rem; font-weight: 400; margin-bottom: 3px; }
+    .page-top p { color: var(--text-secondary); font-size: 0.875rem; }
+    .toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn-pill { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow); }
+    .btn-pill:hover { border-color: var(--border-hover); color: var(--text); }
+    .btn-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(22,163,74,0.25); }
+    .btn-pill.only-anomalies.on { background: var(--danger); color: #fff; border-color: var(--danger); box-shadow: 0 2px 8px rgba(220,38,38,0.25); }
+    .btn-export { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow); transition: all 0.15s; }
+    .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+    .sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+    /* ── STATS ROW ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+    .stat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .stat-label { display: flex; align-items: center; gap: 7px; font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+    .stat-label svg { width: 14px; height: 14px; opacity: 0.7; }
+    .stat-trend { font-size: 0.875rem; font-weight: 600; }
+    .stat-value { font-size: 1.75rem; font-weight: 300; letter-spacing: -0.04em; line-height: 1; margin-bottom: 14px; }
+    .stat-value .unit { font-size: 0.875rem; color: var(--text-secondary); }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .stat-mini { background: var(--surface-2); border-radius: 8px; padding: 7px 10px; }
+    .stat-mini-label { font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-secondary); margin-bottom: 2px; }
+    .stat-mini-val { font-size: 0.875rem; font-weight: 600; }
+
+    /* ── MAIN GRID ── */
+    .main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; margin-bottom: 20px; }
+
+    /* ── MULTI CHART ── */
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+    .chart-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .chart-card-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); }
+    .dataset-toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ds-btn { padding: 4px 10px; border-radius: 999px; border: 1.5px solid; font-size: 0.6875rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.15s; background: transparent; }
+    .ds-btn.off { opacity: 0.35; }
+    #mainChart { width: 100% !important; height: 280px !important; }
+
+    /* ── ANOMALY FEED ── */
+    .feed-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
+    .feed-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .feed-badge { font-size: 0.6875rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--danger-dim); color: var(--danger); }
+    .feed-list { overflow-y: auto; max-height: 280px; display: flex; flex-direction: column; gap: 8px; padding-right: 2px; }
+    .feed-list::-webkit-scrollbar { width: 4px; }
+    .feed-list::-webkit-scrollbar-track { background: transparent; }
+    .feed-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    .feed-item { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; border-left: 3px solid var(--border); }
+    .feed-item.danger { border-left-color: var(--danger); background: var(--danger-dim); }
+    .feed-item.warn { border-left-color: var(--warm); background: var(--warm-dim); }
+    .feed-item-time { font-size: 0.625rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 3px; font-family: 'Fira Code', monospace; }
+    .feed-item-msg { font-size: 0.75rem; font-weight: 600; line-height: 1.4; }
+    .feed-item-delta { font-size: 0.6875rem; color: var(--text-secondary); margin-top: 2px; font-family: 'Fira Code', monospace; }
+    .feed-empty { color: var(--text-secondary); font-size: 0.8125rem; text-align: center; padding: 24px 0; }
+
+    /* ── LOG TABLE ── */
+    .log-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .log-card-header { padding: 18px 20px 14px; display: flex; flex-direction: column; gap: 0; border-bottom: 1px solid var(--border); }
+    .log-header-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .log-header-filters { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
+    .date-range-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .rows-per-page-group { display: flex; align-items: center; gap: 8px; }
+    .filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+    .log-date { padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 0.8125rem; font-family: inherit; transition: border-color 0.15s; cursor: pointer; }
+    .log-date:focus { outline: none; border-color: var(--accent); }
+    .log-date::-webkit-calendar-picker-indicator { opacity: 0.45; cursor: pointer; }
+    .log-select { padding: 6px 28px 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 0.8125rem; font-family: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color 0.15s; }
+    .log-select:focus { outline: none; border-color: var(--accent); }
+    .btn-reset-date { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+    .btn-reset-date:hover { border-color: var(--danger); color: var(--danger); }
+    .log-card-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); }
+    .log-search { padding: 7px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 0.8125rem; font-family: inherit; width: 200px; transition: border-color 0.15s; }
+    .log-search:focus { outline: none; border-color: var(--accent); }
+    .log-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .log-count { font-size: 0.75rem; color: var(--text-secondary); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    thead th { padding: 10px 14px; text-align: left; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-secondary); background: var(--surface-2); border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; user-select: none; }
+    thead th:hover { color: var(--text); }
+    thead th .sort-icon { display: inline; opacity: 0.4; margin-left: 3px; }
+    thead th.sorted .sort-icon { opacity: 1; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-2); }
+    tbody tr.row-anomaly-danger td:first-child { border-left: 3px solid var(--danger); }
+    tbody tr.row-anomaly-warn td:first-child { border-left: 3px solid var(--warm); }
+    td { padding: 9px 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    td.ts { font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--text-secondary); }
+    td.val { font-weight: 500; }
+    .delta { font-size: 0.6875rem; font-family: 'Fira Code', monospace; margin-left: 4px; }
+    .delta.pos { color: var(--accent); }
+    .delta.neg { color: var(--danger); }
+    .delta.neutral { color: var(--text-secondary); }
+    .anomaly-flag { display: inline-flex; align-items: center; gap: 3px; font-size: 0.625rem; font-weight: 700; padding: 2px 6px; border-radius: 999px; }
+    .anomaly-flag.danger { background: var(--danger-dim); color: var(--danger); }
+    .anomaly-flag.warn { background: var(--warm-dim); color: var(--warm); }
+    .no-rows { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.875rem; }
+
+    /* ── PAGINATION ── */
+    .pagination { display: flex; align-items: center; gap: 6px; padding: 12px 20px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .page-info { font-size: 0.8125rem; color: var(--text-secondary); margin-right: auto; }
+    .page-btn { padding: 5px 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow); }
+    .page-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .page-btn:disabled { opacity: 0.32; cursor: default; box-shadow: none; }
+    .page-numbers { display: flex; gap: 4px; }
+    .page-num { min-width: 32px; padding: 5px 7px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; font-family: inherit; cursor: pointer; text-align: center; transition: all 0.15s; box-shadow: var(--shadow); }
+    .page-num:hover { border-color: var(--border-hover); color: var(--text); }
+    .page-num.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; box-shadow: 0 2px 8px rgba(22,163,74,0.25); }
+
+    /* ── FOOTER ── */
+    .footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); }
+
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .topbar { flex-wrap: wrap; padding: 12px 16px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      main { padding: 20px 16px 36px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .user-badge span { display: none; }
+      .page-top { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="logo-group">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22V8"/><path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+        <path d="M8 5.5C8 5.5 6 8 6 10"/><path d="M16 5.5c0 0 2 2.5 2 4.5"/><path d="M9 22h6"/>
+      </svg>
+      <span class="logo-text">Vaso</span>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Dashboard</a>
+      <a href="grafici.html">Grafici</a>
+      <a href="consigli.html">Consigli</a>
+      <a href="avanzate.html" class="active">Avanzate</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="status-dot offline" id="statusDot"></div>
+      <span class="status-text" id="connectionText">In attesa</span>
+      <div id="userInfo" class="user-badge" style="display:none;">
+        <div class="user-avatar" id="userInitial">U</div>
+        <span id="userEmail">utente</span>
+      </div>
+      <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="doLogout()">Esci</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-top">
+    <div>
+      <h2>Avanzate</h2>
+      <p id="dataRange">Log completo, statistiche e analisi anomalie — caricamento dati…</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn-pill active" data-tf="24h">24 ore</button>
+      <button class="btn-pill" data-tf="7d">7 giorni</button>
+      <button class="btn-pill" data-tf="all">Tutto</button>
+      <div class="sep"></div>
+      <button class="btn-pill only-anomalies" id="btnAnomalies" onclick="toggleAnomalies()">
+        Solo anomalie
+      </button>
+      <div class="sep"></div>
+      <button class="btn-export" onclick="exportCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Esporta CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card" id="statTemp">
+      <div class="stat-header">
+        <div class="stat-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.762a3.5 3.5 0 1 1-5.32-.634L14 8.634a3.5 3.5 0 0 1 .634 5.32L14 14.762Z"/><circle cx="12" cy="12" r="1"/></svg>
+          Temperatura
+        </div>
+        <span class="stat-trend" id="trendTemp">—</span>
+      </div>
+      <div class="stat-value"><span id="sTemp">--</span><span class="unit"> °C</span></div>
+      <div class="stat-grid">
+        <div class="stat-mini"><div class="stat-mini-label">Min</div><div class="stat-mini-val" id="sMinTemp" style="color:var(--info)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Max</div><div class="stat-mini-val" id="sMaxTemp" style="color:var(--danger)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Media</div><div class="stat-mini-val" id="sAvgTemp">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Var. σ</div><div class="stat-mini-val" id="sStdTemp">--</div></div>
+      </div>
+    </div>
+
+    <div class="stat-card" id="statHum">
+      <div class="stat-header">
+        <div class="stat-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0Z"/></svg>
+          Umidità aria
+        </div>
+        <span class="stat-trend" id="trendHum">—</span>
+      </div>
+      <div class="stat-value"><span id="sHum">--</span><span class="unit"> %</span></div>
+      <div class="stat-grid">
+        <div class="stat-mini"><div class="stat-mini-label">Min</div><div class="stat-mini-val" id="sMinHum" style="color:var(--info)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Max</div><div class="stat-mini-val" id="sMaxHum" style="color:var(--danger)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Media</div><div class="stat-mini-val" id="sAvgHum">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Var. σ</div><div class="stat-mini-val" id="sStdHum">--</div></div>
+      </div>
+    </div>
+
+    <div class="stat-card" id="statSoil">
+      <div class="stat-header">
+        <div class="stat-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="12" width="10" height="9" rx="1"/><path d="M9 12V8a3 3 0 0 1 6 0v4"/><path d="M10 16h4"/></svg>
+          Substrato
+        </div>
+        <span class="stat-trend" id="trendSoil">—</span>
+      </div>
+      <div class="stat-value"><span id="sSoil">--</span><span class="unit"> %</span></div>
+      <div class="stat-grid">
+        <div class="stat-mini"><div class="stat-mini-label">Min</div><div class="stat-mini-val" id="sMinSoil" style="color:var(--info)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Max</div><div class="stat-mini-val" id="sMaxSoil" style="color:var(--danger)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Media</div><div class="stat-mini-val" id="sAvgSoil">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Var. σ</div><div class="stat-mini-val" id="sStdSoil">--</div></div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 18V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12"/><path d="M6 14h12"/><path d="M8 4v-2"/><path d="M16 4v-2"/></svg>
+          Serbatoio
+        </div>
+        <span class="stat-trend" id="trendTank">—</span>
+      </div>
+      <div class="stat-value"><span id="sTank">--</span><span class="unit"> %</span></div>
+      <div class="stat-grid">
+        <div class="stat-mini" style="grid-column:span 2"><div class="stat-mini-label">Note</div><div class="stat-mini-val" style="font-size:0.75rem;font-weight:400;color:var(--text-secondary)">Serbatoio disponibile solo nel live — non incluso nello storico ESP32</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID: chart + feed -->
+  <div class="main-grid">
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <span class="chart-card-title">Andamento parametri</span>
+        <div class="dataset-toggles">
+          <button class="ds-btn" id="dsTemp" style="color:#d97706;border-color:#d97706" onclick="toggleDs('temp')">Temperatura</button>
+          <button class="ds-btn" id="dsHum"  style="color:#0284c7;border-color:#0284c7" onclick="toggleDs('hum')">Umidità aria</button>
+          <button class="ds-btn" id="dsSoil" style="color:#16a34a;border-color:#16a34a" onclick="toggleDs('soil')">Substrato</button>
+        </div>
+      </div>
+      <canvas id="mainChart"></canvas>
+    </div>
+
+    <div class="feed-card">
+      <div class="feed-title">
+        Anomalie rilevate
+        <span class="feed-badge" id="anomalyCount">0</span>
+      </div>
+      <div class="feed-list" id="feedList">
+        <div class="feed-empty">Nessuna anomalia nel periodo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG TABLE -->
+  <div class="log-card">
+    <div class="log-card-header">
+      <div class="log-header-top">
+        <span class="log-card-title">Log completo storico</span>
+        <div class="log-controls">
+          <span class="log-count" id="logCount">— righe</span>
+          <input type="text" class="log-search" id="logSearch" placeholder="Cerca per data/ora…" oninput="applyFilters()"/>
+        </div>
+      </div>
+      <div class="log-header-filters">
+        <div class="date-range-group">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--text-secondary);flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <label class="filter-label">Dal</label>
+          <input type="date" class="log-date" id="filterDateFrom" onchange="applyFilters()"/>
+          <label class="filter-label">Al</label>
+          <input type="date" class="log-date" id="filterDateTo" onchange="applyFilters()"/>
+          <button class="btn-reset-date" onclick="resetDateFilter()">✕ Reset date</button>
+        </div>
+        <div class="rows-per-page-group">
+          <label class="filter-label">Mostra</label>
+          <select class="log-select" id="rowsPerPageSel" onchange="changeRowsPerPage()">
+            <option value="10">10 righe</option>
+            <option value="25" selected>25 righe</option>
+            <option value="50">50 righe</option>
+            <option value="100">100 righe</option>
+            <option value="0">Tutte</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('ts')" data-col="ts">Data/Ora <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('temp')" data-col="temp">Temp <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('deltaTemp')" data-col="deltaTemp">Δ Temp <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('hum')" data-col="hum">Umid. aria <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('deltaHum')" data-col="deltaHum">Δ Umid. <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('soil')" data-col="soil">Substrato <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('deltaSoil')" data-col="deltaSoil">Δ Subs. <span class="sort-icon">↕</span></th>
+            <th>Stato</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="8" class="no-rows">Caricamento dati…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination" id="paginationRow" style="display:none;">
+      <span class="page-info" id="pageInfo"></span>
+      <button class="page-btn" id="btnPrevPage" onclick="goPage(-1)">‹ Prec</button>
+      <div class="page-numbers" id="pageNumbers"></div>
+      <button class="page-btn" id="btnNextPage" onclick="goPage(1)">Succ ›</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Ultimo aggiornamento: <strong id="lastUpdate">--</strong></span>
+    <span id="totalPoints">0 rilevazioni totali</span>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // ── CONFIG SOGLIE ANOMALIE ──
+  const THRESHOLDS = { temp: 2.5, hum: 10, soil: 15 };
+
+  // ── STATO ──
+  let allHistory = [];
+  let currentTf = '24h';
+  let onlyAnomalies = false;
+  let sortCol = 'ts'; let sortAsc = false;
+  let dsVisible = { temp: true, hum: true, soil: true };
+  let mainChart = null;
+  let liveTank = null;
+  let rowsPerPage = 25;
+  let currentPage = 1;
+
+  // ── UTILS ──
+  function reconstructTs(ts) {
+    if (ts > 1577836800000) return ts;
+    const N = Math.round((Date.now() - ts) / 4294967296);
+    return ts + N * 4294967296;
+  }
+  function fmt(v, d = 1) { return v == null ? '--' : Number(v).toFixed(d).replace('.', ','); }
+  function fmtTs(ts) {
+    const d = new Date(ts);
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit' }) + ' ' +
+           d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  function mean(arr) { return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0; }
+  function stddev(arr) {
+    if (arr.length < 2) return 0;
+    const m = mean(arr); return Math.sqrt(arr.reduce((s, v) => s + (v - m) ** 2, 0) / arr.length);
+  }
+  function trend(arr) {
+    if (arr.length < 4) return '—';
+    const n = Math.max(3, Math.floor(arr.length / 5));
+    const first = mean(arr.slice(0, n)); const last = mean(arr.slice(-n));
+    const d = last - first;
+    if (Math.abs(d) < 0.5) return '<span style="color:var(--text-secondary)">→ stabile</span>';
+    return d > 0
+      ? `<span style="color:var(--danger)">↑ +${fmt(d)}</span>`
+      : `<span style="color:var(--info)">↓ ${fmt(d)}</span>`;
+  }
+
+  // ── FILTRA DATI ──
+  function filtered() {
+    const now = Date.now();
+    if (currentTf === '24h') return allHistory.filter(h => now - h.ts < 86400000);
+    if (currentTf === '7d')  return allHistory.filter(h => now - h.ts < 604800000);
+    return allHistory;
+  }
+
+  // ── CALCOLA DELTAS E ANOMALIE ──
+  function withDeltas(data) {
+    return data.map((row, i) => {
+      const prev = i > 0 ? data[i - 1] : null;
+      const dt = prev ? row.temp - prev.temp : null;
+      const dh = prev ? row.hum  - prev.hum  : null;
+      const ds = prev ? row.soil - prev.soil : null;
+      const isDanger = (dt != null && Math.abs(dt) >= THRESHOLDS.temp * 1.5) ||
+                       (dh != null && Math.abs(dh) >= THRESHOLDS.hum  * 1.5) ||
+                       (ds != null && Math.abs(ds) >= THRESHOLDS.soil * 1.5);
+      const isWarn   = !isDanger && (
+                       (dt != null && Math.abs(dt) >= THRESHOLDS.temp) ||
+                       (dh != null && Math.abs(dh) >= THRESHOLDS.hum)  ||
+                       (ds != null && Math.abs(ds) >= THRESHOLDS.soil));
+      return { ...row, dt, dh, ds, isDanger, isWarn };
+    });
+  }
+
+  // ── RENDER TUTTO ──
+  function renderAll() {
+    const data = withDeltas(filtered());
+    if (!data.length) return;
+
+    const temps = data.map(d => d.temp);
+    const hums  = data.map(d => d.hum);
+    const soils = data.map(d => d.soil);
+    const last  = data[data.length - 1];
+
+    // Live values
+    const el = id => document.getElementById(id);
+    el('sTemp').textContent = fmt(last.temp);
+    el('sHum').textContent  = fmt(last.hum, 0);
+    el('sSoil').textContent = fmt(last.soil, 0);
+    el('sMinTemp').textContent = fmt(Math.min(...temps)); el('sMaxTemp').textContent = fmt(Math.max(...temps));
+    el('sMinHum').textContent  = fmt(Math.min(...hums),0); el('sMaxHum').textContent = fmt(Math.max(...hums),0);
+    el('sMinSoil').textContent = fmt(Math.min(...soils),0); el('sMaxSoil').textContent = fmt(Math.max(...soils),0);
+    el('sAvgTemp').textContent = fmt(mean(temps)); el('sStdTemp').textContent = '±' + fmt(stddev(temps));
+    el('sAvgHum').textContent  = fmt(mean(hums),0); el('sStdHum').textContent = '±' + fmt(stddev(hums),0);
+    el('sAvgSoil').textContent = fmt(mean(soils),0); el('sStdSoil').textContent = '±' + fmt(stddev(soils),0);
+    el('trendTemp').innerHTML = trend(temps);
+    el('trendHum').innerHTML  = trend(hums);
+    el('trendSoil').innerHTML = trend(soils);
+    if (liveTank != null) el('sTank').textContent = fmt(liveTank, 0);
+
+    el('lastUpdate').textContent = fmtTs(last.ts);
+    el('totalPoints').textContent = allHistory.length + ' rilevazioni totali';
+
+    const first = data[0]; const lastR = data[data.length - 1];
+    el('dataRange').textContent = `${data.length} rilevazioni dal ${fmtTs(first.ts)} al ${fmtTs(lastR.ts)}`;
+
+    renderChart(data);
+    renderFeed(data);
+    renderTable(data);
+  }
+
+  // ── CHART ──
+  function renderChart(data) {
+    const labels = data.map(d => {
+      const dt = new Date(d.ts);
+      return currentTf === '24h'
+        ? dt.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+        : dt.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }) + ' ' +
+          dt.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    });
+
+    const ds = [];
+    if (dsVisible.temp) ds.push({ label: 'Temp (°C)', data: data.map(d => d.temp), borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.07)', tension: 0.35, fill: true, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'yT' });
+    if (dsVisible.hum)  ds.push({ label: 'Umidità aria (%)', data: data.map(d => d.hum),  borderColor: '#0284c7', backgroundColor: 'rgba(2,132,199,0.07)', tension: 0.35, fill: false, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'y' });
+    if (dsVisible.soil) ds.push({ label: 'Substrato (%)', data: data.map(d => d.soil), borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.07)', tension: 0.35, fill: false, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'y' });
+
+    if (mainChart) mainChart.destroy();
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    mainChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: ds },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#fff', titleColor: '#111827', bodyColor: '#6b7280',
+            borderColor: 'rgba(0,0,0,0.1)', borderWidth: 1, padding: 12,
+            callbacks: {
+              afterBody(items) {
+                const idx = items[0]?.dataIndex;
+                if (idx == null || idx === 0) return [];
+                const row = data[idx];
+                const lines = [];
+                if (row.dt != null) lines.push('Δ Temp: ' + (row.dt > 0 ? '+' : '') + fmt(row.dt) + ' °C');
+                if (row.dh != null) lines.push('Δ Umid: ' + (row.dh > 0 ? '+' : '') + fmt(row.dh, 0) + ' %');
+                if (row.ds != null) lines.push('Δ Subs: ' + (row.ds > 0 ? '+' : '') + fmt(row.ds, 0) + ' %');
+                if (row.isDanger) lines.push('⚠ Anomalia critica');
+                else if (row.isWarn) lines.push('⚠ Variazione significativa');
+                return lines;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 11 }, maxTicksLimit: 8, maxRotation: 0 }, border: { display: false } },
+          y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#9ca3af', font: { size: 11 } }, border: { display: false }, position: 'left' },
+          yT: { min: -10, max: 50, grid: { display: false }, ticks: { color: '#d97706', font: { size: 11 } }, border: { display: false }, position: 'right' }
+        }
+      }
+    });
+  }
+
+  function toggleDs(key) {
+    dsVisible[key] = !dsVisible[key];
+    document.getElementById('ds' + key.charAt(0).toUpperCase() + key.slice(1)).classList.toggle('off', !dsVisible[key]);
+    renderChart(withDeltas(filtered()));
+  }
+
+  // ── FEED ANOMALIE ──
+  function renderFeed(data) {
+    const anomalies = data.filter(d => d.isDanger || d.isWarn).reverse();
+    document.getElementById('anomalyCount').textContent = anomalies.length;
+    const feed = document.getElementById('feedList');
+    if (!anomalies.length) { feed.innerHTML = '<div class="feed-empty">Nessuna anomalia nel periodo selezionato</div>'; return; }
+    feed.innerHTML = anomalies.map(row => {
+      const msgs = [];
+      if (row.dt != null && Math.abs(row.dt) >= THRESHOLDS.temp) msgs.push(`Temp: ${row.dt > 0 ? '+' : ''}${fmt(row.dt)}°C`);
+      if (row.dh != null && Math.abs(row.dh) >= THRESHOLDS.hum)  msgs.push(`Umid: ${row.dh > 0 ? '+' : ''}${fmt(row.dh, 0)}%`);
+      if (row.ds != null && Math.abs(row.ds) >= THRESHOLDS.soil) msgs.push(`Subs: ${row.ds > 0 ? '+' : ''}${fmt(row.ds, 0)}%`);
+      return `<div class="feed-item ${row.isDanger ? 'danger' : 'warn'}">
+        <div class="feed-item-time">${fmtTs(row.ts)}</div>
+        <div class="feed-item-msg">${row.isDanger ? '🔴' : '🟡'} ${msgs.join(' · ')}</div>
+        <div class="feed-item-delta">${fmt(row.temp)}°C · ${fmt(row.hum, 0)}% · ${fmt(row.soil, 0)}%</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── TABELLA ──
+  let tableData = [];
+
+  function renderTable(data) {
+    const search    = document.getElementById('logSearch').value.toLowerCase();
+    const fromVal   = document.getElementById('filterDateFrom').value;
+    const toVal     = document.getElementById('filterDateTo').value;
+    const fromTs    = fromVal ? new Date(fromVal).setHours(0, 0, 0, 0)      : null;
+    const toTs      = toVal   ? new Date(toVal).setHours(23, 59, 59, 999)   : null;
+
+    let rows = [...data].reverse();
+    if (onlyAnomalies) rows = rows.filter(r => r.isDanger || r.isWarn);
+    if (search)  rows = rows.filter(r => fmtTs(r.ts).toLowerCase().includes(search));
+    if (fromTs)  rows = rows.filter(r => r.ts >= fromTs);
+    if (toTs)    rows = rows.filter(r => r.ts <= toTs);
+
+    // Sort
+    rows.sort((a, b) => {
+      let va = a[sortCol] ?? -Infinity, vb = b[sortCol] ?? -Infinity;
+      if (sortCol === 'ts') { va = a.ts; vb = b.ts; }
+      return sortAsc ? va - vb : vb - va;
+    });
+
+    tableData = rows;
+    const total      = rows.length;
+    const rpp        = rowsPerPage;
+    const totalPages = rpp > 0 ? Math.max(1, Math.ceil(total / rpp)) : 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const pageRows = rpp > 0 ? rows.slice((currentPage - 1) * rpp, currentPage * rpp) : rows;
+    const start    = rpp > 0 ? (currentPage - 1) * rpp + 1 : 1;
+    const end      = rpp > 0 ? Math.min(currentPage * rpp, total) : total;
+
+    document.getElementById('logCount').textContent =
+      rpp > 0 && total > rpp ? `${start}–${end} di ${total} righe` : `${total} righe`;
+
+    if (!pageRows.length) {
+      document.getElementById('logBody').innerHTML = '<tr><td colspan="8" class="no-rows">Nessun dato corrisponde ai filtri applicati</td></tr>';
+      renderPagination(total, totalPages);
+      return;
+    }
+
+    function deltaSpan(v, threshold) {
+      if (v == null) return '<span class="delta neutral">--</span>';
+      const cls = Math.abs(v) < threshold ? 'neutral' : v > 0 ? 'pos' : 'neg';
+      return `<span class="delta ${cls}">${v > 0 ? '+' : ''}${fmt(v, 1)}</span>`;
+    }
+
+    document.getElementById('logBody').innerHTML = pageRows.map(row => {
+      const rowCls = row.isDanger ? 'row-anomaly-danger' : row.isWarn ? 'row-anomaly-warn' : '';
+      const flag = row.isDanger ? '<span class="anomaly-flag danger">⚠ critica</span>'
+                 : row.isWarn   ? '<span class="anomaly-flag warn">⚠ variazione</span>'
+                 : '<span style="color:var(--text-secondary);font-size:0.75rem">ok</span>';
+      return `<tr class="${rowCls}">
+        <td class="ts">${fmtTs(row.ts)}</td>
+        <td class="val">${fmt(row.temp)} °C</td>
+        <td>${deltaSpan(row.dt, THRESHOLDS.temp)}</td>
+        <td class="val">${fmt(row.hum, 0)} %</td>
+        <td>${deltaSpan(row.dh, THRESHOLDS.hum)}</td>
+        <td class="val">${fmt(row.soil, 0)} %</td>
+        <td>${deltaSpan(row.ds, THRESHOLDS.soil)}</td>
+        <td>${flag}</td>
+      </tr>`;
+    }).join('');
+
+    // Aggiorna sort icon
+    document.querySelectorAll('thead th').forEach(th => {
+      th.classList.toggle('sorted', th.dataset.col === sortCol);
+      const icon = th.querySelector('.sort-icon');
+      if (icon && th.dataset.col === sortCol) icon.textContent = sortAsc ? '↑' : '↓';
+      else if (icon) icon.textContent = '↕';
+    });
+
+    renderPagination(total, totalPages);
+  }
+
+  function renderPagination(total, totalPages) {
+    const rpp = rowsPerPage;
+    const row = document.getElementById('paginationRow');
+    if (rpp === 0 || totalPages <= 1) { row.style.display = 'none'; return; }
+    row.style.display = 'flex';
+
+    document.getElementById('pageInfo').textContent = `${total} righe totali`;
+    document.getElementById('btnPrevPage').disabled = currentPage <= 1;
+    document.getElementById('btnNextPage').disabled = currentPage >= totalPages;
+
+    // Numeri pagina con ellissi se necessario
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push('…');
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i);
+      if (currentPage < totalPages - 2) pages.push('…');
+      pages.push(totalPages);
+    }
+
+    document.getElementById('pageNumbers').innerHTML = pages.map(p =>
+      p === '…'
+        ? `<span style="padding:5px 3px;color:var(--text-secondary);font-size:0.875rem;line-height:1">…</span>`
+        : `<button class="page-num${p === currentPage ? ' active' : ''}" onclick="setPage(${p})">${p}</button>`
+    ).join('');
+  }
+
+  function setPage(p) { currentPage = p; renderTable(withDeltas(filtered())); }
+  function goPage(dir) { currentPage += dir; renderTable(withDeltas(filtered())); }
+
+  function changeRowsPerPage() {
+    rowsPerPage = Number(document.getElementById('rowsPerPageSel').value);
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function resetDateFilter() {
+    document.getElementById('filterDateFrom').value = '';
+    document.getElementById('filterDateTo').value = '';
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function applyFilters() { currentPage = 1; renderTable(withDeltas(filtered())); }
+
+  function sortTable(col) {
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = false; }
+    renderTable(withDeltas(filtered())); // non resetta la pagina sul sort
+  }
+
+  // ── TOOLBAR ──
+  document.querySelectorAll('.btn-pill[data-tf]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-pill[data-tf]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTf = btn.dataset.tf;
+      renderAll();
+    });
+  });
+
+  function toggleAnomalies() {
+    onlyAnomalies = !onlyAnomalies;
+    document.getElementById('btnAnomalies').classList.toggle('on', onlyAnomalies);
+    applyFilters();
+  }
+
+  // ── EXPORT CSV ──
+  function exportCSV() {
+    const data = withDeltas(filtered());
+    const header = 'Timestamp,Temperatura,Δ Temp,Umidità aria,Δ Umidità,Substrato,Δ Substrato,Stato\n';
+    const rows = data.map(r => [
+      fmtTs(r.ts),
+      fmt(r.temp), r.dt != null ? fmt(r.dt) : '',
+      fmt(r.hum, 0), r.dh != null ? fmt(r.dh, 0) : '',
+      fmt(r.soil, 0), r.ds != null ? fmt(r.ds, 0) : '',
+      r.isDanger ? 'critica' : r.isWarn ? 'variazione' : 'ok'
+    ].join(',')).join('\n');
+    const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `vaso_log_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDs1nz0VPtYxlXUDEB-z8XGNNe5w0c0VXw",
+    authDomain: "vasotest-7133a.firebaseapp.com",
+    databaseURL: "https://vasotest-7133a-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "vasotest-7133a",
+    storageBucket: "vasotest-7133a.firebasestorage.app",
+    messagingSenderId: "291811803411",
+    appId: "1:291811803411:web:c01e2b199a7f812b911ae6",
+    measurementId: "G-WRRE3DV7DR"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'login.html'; return; }
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('userEmail').textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'Utente');
+    document.getElementById('userInitial').textContent = (user.email || user.displayName || 'U')[0].toUpperCase();
+
+    const macSnap = await get(ref(db, 'vaso/' + user.uid + '/device_mac'));
+    if (!macSnap.exists()) { window.location.href = 'config.html'; return; }
+    const mac = macSnap.val();
+
+    // Leggi il live per il serbatoio
+    get(ref(db, 'vaso/devices/' + mac + '/live')).then(snap => {
+      if (snap.exists()) {
+        const d = snap.val();
+        liveTank = Number(d.tank ?? d.waterLevel ?? 0);
+        document.getElementById('connectionText').textContent = 'Live';
+        document.getElementById('statusDot').classList.remove('offline');
+        if (allHistory.length) renderAll();
+      }
+    });
+
+    // Listener real-time sullo storico (come grafici.html)
+    onValue(ref(db, 'vaso/devices/' + mac + '/storico'), (snap) => {
+      if (!snap.exists()) {
+        document.getElementById('logBody').innerHTML = '<tr><td colspan="8" class="no-rows">Nessun dato storico disponibile</td></tr>';
+        return;
+      }
+      const raw = snap.val() || {};
+      const flat = [];
+      Object.keys(raw).forEach(k => {
+        const node = raw[k];
+        if (node.temperature !== undefined) {
+          flat.push(node);
+        } else {
+          Object.values(node).forEach(inner => {
+            if (inner && inner.temperature !== undefined) flat.push(inner);
+          });
+        }
+      });
+      allHistory = flat
+        .map(e => ({
+          ts:   reconstructTs(e.timestamp),
+          temp: Number(e.temperature),
+          hum:  Number(e.humidity),
+          soil: Number(e.soil)
+        }))
+        .sort((a, b) => a.ts - b.ts);
+
+      renderAll();
+    });
+  });
+
+  window.doLogout = async () => { await signOut(auth); window.location.href = 'login.html'; };
+</script>
+</body>
+</html>

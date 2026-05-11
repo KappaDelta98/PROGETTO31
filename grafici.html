@@ -183,6 +183,7 @@
         <a href="index.html">Dashboard</a>
         <a href="grafici.html" class="active">Grafici</a>
         <a href="consigli.html">Consigli</a>
+        <a href="avanzate.html">Avanzate</a>
       </nav>
 
       <div class="header-right" id="authStatus">…</div>
@@ -284,7 +285,7 @@
       return allHistory;
     }
 
-    function makeChartConfig(label, data, color, yMin, yMax) {
+    function makeChartConfig(label, data, color, yMin, yMax, stepSize) {
       return {
         type: 'line',
         data: {
@@ -322,7 +323,7 @@
               min: yMin,
               max: yMax,
               grid: { color: 'rgba(0,0,0,0.05)' },
-              ticks: { color: '#9ca3af', font: { size: 11, family: 'Inter' } },
+              ticks: { color: '#9ca3af', font: { size: 11, family: 'Inter' }, ...(stepSize ? { stepSize } : {}) },
               border: { display: false },
             },
             x: {
@@ -335,10 +336,10 @@
       };
     }
 
-    function updateChart(id, label, data, color, yMin, yMax) {
+    function updateChart(id, label, data, color, yMin, yMax, stepSize) {
       if (charts[id]) charts[id].destroy();
       const ctx = document.getElementById(id).getContext('2d');
-      charts[id] = new Chart(ctx, makeChartConfig(label, data, color, yMin, yMax));
+      charts[id] = new Chart(ctx, makeChartConfig(label, data, color, yMin, yMax, stepSize));
     }
 
     function renderCharts() {
@@ -347,8 +348,8 @@
         document.getElementById('statusText').textContent = 'Nessun dato nel periodo selezionato.';
         return;
       }
-      updateChart('tempChart', 'Temperatura (°C)', history.map(h => ({ t: h.timestamp, v: h.temperature })), '#d97706', -10, 50);
-      updateChart('humChart', 'Umidità Aria (%)', history.map(h => ({ t: h.timestamp, v: h.humidity })), '#0284c7', 0, 100);
+      updateChart('tempChart', 'Temperatura (°C)', history.map(h => ({ t: h.timestamp, v: h.temperature })), '#d97706', -10, 50, 5);
+      updateChart('humChart', 'Umidità Aria (%)', history.map(h => ({ t: h.timestamp, v: h.humidity })), '#0284c7', 0, 100, 5);
       updateChart('soilChart', 'Umidità Terreno (%)', history.map(h => ({ t: h.timestamp, v: h.soil })), '#16a34a', 0, 100);
       updateChart('tankChart', 'Serbatoio (%)', history.map(h => ({ t: h.timestamp, v: h.tank || 0 })), '#7c3aed', 0, 100);
       const last = new Date(history[history.length - 1].timestamp);

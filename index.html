@@ -309,6 +309,7 @@
         <a href="index.html" class="active">Dashboard</a>
         <a href="grafici.html">Grafici</a>
         <a href="consigli.html">Consigli</a>
+        <a href="avanzate.html">Avanzate</a>
       </nav>
 
       <div class="topbar-right">
@@ -518,8 +519,8 @@
       el('tempChartVal').textContent = fmt(d.temperature, 1) + ' °C';
       el('humChartVal').textContent = fmt(d.humidity) + ' %';
 
-      drawChart('tempChart', 'temp', -10, 50, '#d97706', 'rgba(217,119,6,0.1)', '°C');
-      drawChart('humChart', 'hum', 0, 100, '#0284c7', 'rgba(2,132,199,0.1)', '%');
+      drawChart('tempChart', 'temp', -10, 50, '#d97706', 'rgba(217,119,6,0.1)', '°C', 5);
+      drawChart('humChart', 'hum', 0, 100, '#0284c7', 'rgba(2,132,199,0.1)', '%', 5);
     }
 
     function pushHistory() {
@@ -528,7 +529,7 @@
       if (state.history.length > 48) state.history.shift();
     }
 
-    function drawChart(canvasId, key, minY, maxY, color, fill, unit) {
+    function drawChart(canvasId, key, minY, maxY, color, fill, unit, yTick) {
       const canvas = el(canvasId);
       if (!canvas) return;
       const rect = canvas.parentElement.getBoundingClientRect();
@@ -545,20 +546,18 @@
       const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
       const step = cw / (data.length - 1);
 
-      // Grid lines
+      // Grid lines + Y labels
+      const gridStep = yTick || Math.round((maxY - minY) / 4);
       ctx.strokeStyle = 'rgba(0,0,0,0.06)';
       ctx.lineWidth = 1;
-      for (let i = 0; i <= 3; i++) {
-        const y = pad.t + (i * ch / 3);
-        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-      }
-
-      // Y labels
       ctx.fillStyle = 'rgba(0,0,0,0.35)';
-      ctx.font = '18px Inter, sans-serif';
+      ctx.font = '14px Inter, sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(maxY + unit, pad.l - 8, pad.t + 6);
-      ctx.fillText(minY + unit, pad.l - 8, h - pad.b + 6);
+      for (let v = minY; v <= maxY; v += gridStep) {
+        const y = (h - pad.b) - ((v - minY) / (maxY - minY)) * ch;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+        ctx.fillText(v + unit, pad.l - 8, y + 5);
+      }
 
       // Fill gradient
       const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
