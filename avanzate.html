@@ -296,7 +296,10 @@
       </div>
       <div class="stat-value"><span id="sTank">--</span><span class="unit"> %</span></div>
       <div class="stat-grid">
-        <div class="stat-mini" style="grid-column:span 2"><div class="stat-mini-label">Note</div><div class="stat-mini-val" style="font-size:0.75rem;font-weight:400;color:var(--text-secondary)">Serbatoio disponibile solo nel live — non incluso nello storico ESP32</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Min</div><div class="stat-mini-val" id="sMinTank" style="color:var(--info)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Max</div><div class="stat-mini-val" id="sMaxTank" style="color:var(--danger)">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Media</div><div class="stat-mini-val" id="sAvgTank">--</div></div>
+        <div class="stat-mini"><div class="stat-mini-label">Var. σ</div><div class="stat-mini-val" id="sStdTank">--</div></div>
       </div>
     </div>
   </div>
@@ -310,6 +313,7 @@
           <button class="ds-btn" id="dsTemp" style="color:#d97706;border-color:#d97706" onclick="toggleDs('temp')">Temperatura</button>
           <button class="ds-btn" id="dsHum"  style="color:#0284c7;border-color:#0284c7" onclick="toggleDs('hum')">Umidità aria</button>
           <button class="ds-btn" id="dsSoil" style="color:#16a34a;border-color:#16a34a" onclick="toggleDs('soil')">Substrato</button>
+          <button class="ds-btn" id="dsTank" style="color:#7c3aed;border-color:#7c3aed" onclick="toggleDs('tank')">Serbatoio</button>
         </div>
       </div>
       <canvas id="mainChart"></canvas>
@@ -400,7 +404,7 @@
   let currentTf = '24h';
   let onlyAnomalies = false;
   let sortCol = 'ts'; let sortAsc = false;
-  let dsVisible = { temp: true, hum: true, soil: true };
+  let dsVisible = { temp: true, hum: true, soil: true, tank: true };
   let mainChart = null;
   let liveTank = null;
   let rowsPerPage = 25;
@@ -468,6 +472,7 @@
     const temps = data.map(d => d.temp);
     const hums  = data.map(d => d.hum);
     const soils = data.map(d => d.soil);
+    const tanks = data.map(d => d.tank).filter(v => v != null);
     const last  = data[data.length - 1];
 
     // Live values
@@ -484,7 +489,16 @@
     el('trendTemp').innerHTML = trend(temps);
     el('trendHum').innerHTML  = trend(hums);
     el('trendSoil').innerHTML = trend(soils);
-    if (liveTank != null) el('sTank').textContent = fmt(liveTank, 0);
+    if (tanks.length) {
+      el('sTank').textContent    = fmt(last.tank != null ? last.tank : tanks[tanks.length - 1], 0);
+      el('sMinTank').textContent = fmt(Math.min(...tanks), 0);
+      el('sMaxTank').textContent = fmt(Math.max(...tanks), 0);
+      el('sAvgTank').textContent = fmt(mean(tanks), 0);
+      el('sStdTank').textContent = '±' + fmt(stddev(tanks), 0);
+      el('trendTank').innerHTML  = trend(tanks);
+    } else if (liveTank != null) {
+      el('sTank').textContent = fmt(liveTank, 0);
+    }
 
     el('lastUpdate').textContent = fmtTs(last.ts);
     el('totalPoints').textContent = allHistory.length + ' rilevazioni totali';
@@ -511,6 +525,7 @@
     if (dsVisible.temp) ds.push({ label: 'Temp (°C)', data: data.map(d => d.temp), borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.07)', tension: 0.35, fill: true, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'yT' });
     if (dsVisible.hum)  ds.push({ label: 'Umidità aria (%)', data: data.map(d => d.hum),  borderColor: '#0284c7', backgroundColor: 'rgba(2,132,199,0.07)', tension: 0.35, fill: false, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'y' });
     if (dsVisible.soil) ds.push({ label: 'Substrato (%)', data: data.map(d => d.soil), borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.07)', tension: 0.35, fill: false, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'y' });
+    if (dsVisible.tank) ds.push({ label: 'Serbatoio (%)', data: data.map(d => d.tank), borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.07)', tension: 0.35, fill: false, pointRadius: data.length > 60 ? 0 : 2, pointHoverRadius: 5, borderWidth: 2, yAxisID: 'y', spanGaps: true });
 
     if (mainChart) mainChart.destroy();
     const ctx = document.getElementById('mainChart').getContext('2d');
@@ -805,7 +820,8 @@
           ts:   reconstructTs(e.timestamp),
           temp: Number(e.temperature),
           hum:  Number(e.humidity),
-          soil: Number(e.soil)
+          soil: Number(e.soil),
+          tank: e.tank != null ? Number(e.tank) : null
         }))
         .sort((a, b) => a.ts - b.ts);
 
